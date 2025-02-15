@@ -20,6 +20,7 @@ public class CategoryController {
 
     // 최상위 카테고리 목록을 가져오는 메소드
     //시~~~~~발
+    //여기는 디벨롭 입니다.
     @GetMapping("/categories")
     public String getCategories(Model model) {
         List<Category> categories = service.getTopCategories();  // 최상위 카테고리만 가져옴
