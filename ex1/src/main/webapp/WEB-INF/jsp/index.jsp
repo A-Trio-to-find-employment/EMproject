@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>    
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
@@ -8,42 +7,12 @@
 <head>
     <meta charset="UTF-8">
     <title>도서 검색</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; text-align: center; }
-        .nav { display: flex; justify-content: space-between; background: #f8f8f8; padding: 10px; width: 100%; box-sizing: border-box; position: relative; }
-        .nav a { flex: 1; text-align: center; text-decoration: none; font-weight: bold; color: black; padding: 10px 0; border-right: 1px solid #ccc; cursor: pointer; }
-        .nav a:last-child { border-right: none; }
-
-        .container { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 20px; }
-        .search-bar { margin: 20px; }
-        .book-section { width: 50%; padding: 15px; border: 1px solid #ddd; margin: 10px 0; }
-        
-        /* 드롭다운 스타일 */
-        .dropdown {
-            display: none;
-            position: absolute;
-            top: 40px; /* 메뉴 아래 위치 */
-            background: white;
-            border: 1px solid #ccc;
-            padding: 5px;
-            width: 150px;
-        }
-        .dropdown a {
-            display: block;
-            padding: 5px;
-            text-decoration: none;
-            color: black;
-        }
-        .dropdown a:hover {
-            background: #ddd;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 <body>
     <div class="nav">
         <a href="/index">HOME</a>
-
-        <!-- 분야보기 -->
+        
         <div style="position: relative;">
             <a onclick="toggleDropdown()">분야보기</a>
             <div id="categoryDropdown" class="dropdown">
