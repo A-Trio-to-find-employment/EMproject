@@ -6,7 +6,7 @@ public class Category {
 	private String cat_id;
     private String cat_name;
     private String parent_id;
-    private List<Category> subCategories; // 하위 카테고리 목록
+    private List<Category> subCategories; /// 하위 카테고리 목록
     public List<Category> getSubCategories() {
         return subCategories;
     }
