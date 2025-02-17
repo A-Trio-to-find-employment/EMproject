@@ -16,5 +16,4 @@ public class Users {
 	private String birth;
 	private String phone;
 	private Integer grade;
-
 }
