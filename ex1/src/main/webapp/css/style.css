@@ -74,3 +74,6 @@ body {
     border: 1px solid #ddd; 
     margin: 10px 0; 
 }
+ ul { list-style-type: none; padding-left: 20px; }
+        .category-link { cursor: pointer; color: blue; text-decoration: underline; }
+        .sub-category { display: none; }  /* 초기에는 하위 카테고리 숨기기 */
