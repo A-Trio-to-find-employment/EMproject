@@ -11,12 +11,14 @@
 </head>
 <body>
     <div class="nav">
+
         <a href="/index">HOME</a>     
+
         <div style="position: relative;">
             <a onclick="toggleDropdown()">분야보기</a>
             <div id="categoryDropdown" class="dropdown">
-                <a href="domesticBooks.jsp">국내도서</a>
-                <a href="foreignBooks.jsp">외국도서</a>
+                <a href="/field.html?cat_id=0">국내도서</a>
+                <a href="/field.html?cat_id=1">외국도서</a>
             </div>
         </div>
 

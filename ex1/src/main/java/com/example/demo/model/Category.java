@@ -6,8 +6,16 @@ public class Category {
 	private String cat_id;
     private String cat_name;
     private String parent_id;
+    private boolean hasSubCategories;
+    
+    public boolean isHasSubCategories() {
+		return hasSubCategories;
+	}
 
-    private List<Category> subCategories; /// 하위 카테고리 목록
+	public void setHasSubCategories(boolean hasSubCategories) {
+		this.hasSubCategories = hasSubCategories;
+	}
+	private List<Category> subCategories; /// 하위 카테고리 목록
 
     public List<Category> getSubCategories() {
         return subCategories;

@@ -74,3 +74,51 @@ body {
     border: 1px solid #ddd; 
     margin: 10px 0; 
 }
+ ul { list-style-type: none; padding-left: 20px; }
+
+.category-link {
+	cursor: pointer;
+	color: blue;
+	text-decoration: underline;
+}
+
+.sub-category {
+	display: none;
+} /* 초기에는 하위 카테고리 숨기기 */
+
+/* fieldlist css */
+.container {
+	display: flex; /* 사이드바와 콘텐츠 영역을 나란히 배치 */
+}
+
+.sidebar {
+	width: 200px; /* 사이드바 너비 */
+	background-color: #f8f8f8; /* 배경색 */
+	padding: 20px;
+	position: absolute; /* 화면 왼쪽에 고정 */
+	left: 20px; /* 왼쪽 여백 */
+	top: 120px; /* 상단 여백 */
+}
+
+.content {
+	flex: 1;
+	padding: 10px;
+}
+
+.category {
+	padding: 10px;
+	border-bottom: 1px solid #ddd;
+	cursor: pointer;
+}
+
+.category:hover {
+	background-color: #e0e0e0; /* 마우스 오버 효과 */
+}
+
+.book-list {
+	margin-top: 20px;
+}
+
+.filters {
+	margin-top: 10px;
+} /* fieldlist css */
