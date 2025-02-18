@@ -66,7 +66,7 @@
 
         if (hasSubCategories === 'false' || hasSubCategories === false) {
             console.log("Redirecting to purchase.html");
-            window.location.href = '/purchase.html?cat_id=' + cat_id;
+            window.location.href = '/booklist.html?cat_id=' + cat_id;
         } else {
             console.log("Redirecting to field.html");
             window.location.href = '/field.html?cat_id=' + cat_id;
