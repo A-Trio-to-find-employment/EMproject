@@ -65,12 +65,8 @@
         console.log("Clicked Category - cat_id:", cat_id, "hasSubCategories:", hasSubCategories);  // 디버깅 로그 추가
 
         if (hasSubCategories === 'false' || hasSubCategories === false) {
-            console.log("Redirecting to purchase.html");
-<<<<<<< Updated upstream
+            console.log("Redirecting to booklist.html");
             window.location.href = '/booklist.html?cat_id=' + cat_id;
-=======
-            window.location.href = '/purchase.html?cat_id=' + cat_id;
->>>>>>> Stashed changes
         } else {
             console.log("Redirecting to field.html");
             window.location.href = '/field.html?cat_id=' + cat_id;

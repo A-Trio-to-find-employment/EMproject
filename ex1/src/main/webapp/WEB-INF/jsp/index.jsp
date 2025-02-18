@@ -11,9 +11,7 @@
 </head>
 <body>
     <div class="nav">
-
         <a href="/index">HOME</a>     
-
         <div style="position: relative;">
             <a onclick="toggleDropdown()">분야보기</a>
             <div id="categoryDropdown" class="dropdown">
@@ -21,11 +19,10 @@
                 <a href="/field.html?cat_id=1">외국도서</a>
             </div>
         </div>
-
         <a href="#">이벤트</a>        
         <a href="/signup">회원가입</a>
-        <a href="#">로그인</a>
-        <a href="#">마이페이지</a>
+        <a href="/login">로그인</a>
+        <a href="/mypage">마이페이지</a>
         <a href="#">고객센터</a>
     </div>
 

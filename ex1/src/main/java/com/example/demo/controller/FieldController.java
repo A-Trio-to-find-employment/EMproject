@@ -32,22 +32,14 @@ public class FieldController {
 	        mav.addObject("fieldlist", fieldlist);
 	        mav.addObject("BODY", "fieldlist.jsp");
 	    } 
-<<<<<<< Updated upstream
-	    
-=======
-	    else {
-	    	mav.addObject("BODY", "booklist.jsp");
-	    }
->>>>>>> Stashed changes
 
 	    return mav;
 	}
 
-	 @RequestMapping(value = "/fields.html")//마지막 하위카테고리면 그것을 클릭했을때 상품이 보여짐
-	    public ModelAndView fields(String cat_id) {
-	        ModelAndView mav = new ModelAndView();	   
-	        
-	        return mav;
-	    }
+	@RequestMapping(value = "/booklist.html")//마지막 하위카테고리면 그것을 클릭했을때 상품이 보여짐
+	public ModelAndView fields(String cat_id) {
+		ModelAndView mav = new ModelAndView();	   
+		return mav;
+	}
 	 
 }
