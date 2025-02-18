@@ -32,9 +32,7 @@ public class FieldController {
 	        mav.addObject("fieldlist", fieldlist);
 	        mav.addObject("BODY", "fieldlist.jsp");
 	    } 
-	    else {
-	    	mav.addObject("BODY", "booklist.jsp");
-	    }
+	    
 
 	    return mav;
 	}
