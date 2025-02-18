@@ -4,9 +4,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>로그인 완료</title>
 </head>
 <body>
-<h2>로그인 성공입니다.</h2>
+<script>
+alert("로그인 되었습니다.");
+location.href="/index";
+</script>
 </body>
 </html>

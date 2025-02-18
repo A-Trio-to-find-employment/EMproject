@@ -12,7 +12,7 @@ import com.example.demo.model.Users;
 import com.example.demo.service.LoginService;
 import com.example.demo.utils.LoginValidator;
 
-import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class LoginController {
@@ -27,7 +27,7 @@ public class LoginController {
 		return mav;
 	}
 	@PostMapping(value = "/login")
-	public ModelAndView secondfa(Users users, BindingResult br) {
+	public ModelAndView secondfa(Users users, BindingResult br, HttpSession session) {
 		System.out.println("login mapping");
 		ModelAndView mav = new ModelAndView();
 		this.loginValidator.validate(users, br);
@@ -38,8 +38,8 @@ public class LoginController {
 		try {
 			Users loginUser = this.loginService.getUser(users);
 			if(loginUser != null) {
-				mav.setViewName("loginSuccess");
-				mav.addObject("loginUser",loginUser);
+				mav.setViewName("index");
+				session.setAttribute("loginUser", loginUser.getUser_id());
 				return mav;
 			}else {
 				br.reject("error.login.user");

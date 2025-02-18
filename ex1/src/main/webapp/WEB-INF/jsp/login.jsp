@@ -7,7 +7,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>마이페이지 2차 인증</title>
+    <title>로그인</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <style>
         .container { margin-left: 25%; padding: 20px; }
