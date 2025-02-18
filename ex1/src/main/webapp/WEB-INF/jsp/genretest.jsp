@@ -26,5 +26,22 @@
         <a href="#">고객센터</a>
     </div>
 <h3>선호도 조사 페이지입니다.</h3>
+
+<script type="text/javascript">
+        function toggleDropdown() {
+            var dropdown = document.getElementById("categoryDropdown");
+            dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
+        }
+
+        // 다른 곳 클릭하면 드롭다운 닫힘
+        document.addEventListener("click", function(event) {
+            var dropdown = document.getElementById("categoryDropdown");
+            var categoryLink = document.querySelector(".nav div a");
+
+            if (!dropdown.contains(event.target) && event.target !== categoryLink) {
+                dropdown.style.display = "none";
+            }
+        });
+    </script>
 </body>
 </html>

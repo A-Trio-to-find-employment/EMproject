@@ -11,13 +11,7 @@
 </head>
 <body>
     <div class="nav">
-        <a href="/index">HOME</a>
-<<<<<<< HEAD
-        <a href="#">분야보기</a>
-        <a href="#">이벤트</a>
-        <a href="/signup">회원가입</a>
-=======
-        
+        <a href="/index">HOME</a>     
         <div style="position: relative;">
             <a onclick="toggleDropdown()">분야보기</a>
             <div id="categoryDropdown" class="dropdown">
@@ -27,8 +21,7 @@
         </div>
 
         <a href="#">이벤트</a>        
-        <a href="#">회원가입</a>
->>>>>>> branch 'main' of https://github.com/A-Trio-to-find-employment/EMproject.git
+        <a href="/signup">회원가입</a>
         <a href="#">로그인</a>
         <a href="#">마이페이지</a>
         <a href="#">고객센터</a>
