@@ -1,0 +1,20 @@
+@charset "UTF-8";
+table { 
+    width: 60%; 
+    margin: 0 auto; 
+    border-collapse: collapse; 
+}
+td, th { 
+    padding: 10px; 
+    border: 1px solid #ddd; 
+}
+input[type="text"], input[type="password"], input[type="email"], input[type="date"], input[type="tel"] { 
+    width: 100%; 
+}
+input[type="button"] { 
+    width: auto; 
+}
+input[type="radio"], input[type="label"] {
+    display: inline-block; 
+    margin-right: 10px;
+}

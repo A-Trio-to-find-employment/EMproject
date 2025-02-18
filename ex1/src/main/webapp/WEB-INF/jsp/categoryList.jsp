@@ -7,11 +7,9 @@
     <meta charset="UTF-8">
     <title>카테고리 목록</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        ul { list-style-type: none; padding-left: 20px; }
-        .category-link { cursor: pointer; color: blue; text-decoration: underline; }
-        .sub-category { display: none; }  /* 초기에는 하위 카테고리 숨기기 */
-    </style>
+
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+
 </head>
 <body>
 
