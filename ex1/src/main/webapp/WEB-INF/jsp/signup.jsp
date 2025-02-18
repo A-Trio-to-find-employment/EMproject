@@ -8,9 +8,26 @@
 <head>
     <meta charset="UTF-8">
     <title>회원 가입</title>
+<<<<<<< Updated upstream
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <link rel="stylesheet" type="text/css" href="/css/signupstyle.css">
     
+=======
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; text-align: center; }
+        .nav { display: flex; justify-content: space-between; background: #f8f8f8; padding: 10px; width: 100%; box-sizing: border-box; }
+        .nav a { flex: 1; text-align: center; text-decoration: none; font-weight: bold; color: black; padding: 10px 0; border-right: 1px solid #ccc; }
+        .nav a:last-child { border-right: none; }
+        .container { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 20px; }
+        .search-bar { display:inline-block; margin: 20px; }
+        .book-section { width: 50%; padding: 15px; border: 1px solid #ddd; margin: 10px 0; }
+        table { width: 60%; margin: 0 auto; border-collapse: collapse; }
+        td, th { padding: 10px; border: 1px solid #ddd; }
+        input[type="text"], input[type="password"], input[type="email"], input[type="date"], input[type="tel"] { width: 100%; }
+        input[type="button"] { width: auto; }
+        input[type="radio"], input[type="label"] {display: inline-block; margin-right: 10px;}
+    </style>
+>>>>>>> Stashed changes
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script type="text/javascript">
         function daumZipCode() {
@@ -49,6 +66,7 @@
     </script>
 </head>
 <body>
+<<<<<<< Updated upstream
 <div class="nav">
     <a href="/index">HOME</a>
 
@@ -66,6 +84,26 @@
     <a href="#">마이페이지</a>
     <a href="#">고객센터</a>
 </div>
+=======
+    <div class="nav">
+        <div class="nav">
+        <a href="/index">HOME</a>     
+        <div style="position: relative;">
+            <a onclick="toggleDropdown()">분야보기</a>
+            <div id="categoryDropdown" class="dropdown">
+                <a href="domesticBooks.jsp">국내도서</a>
+                <a href="foreignBooks.jsp">외국도서</a>
+            </div>
+        </div>
+
+        <a href="#">이벤트</a>        
+        <a href="/signup">회원가입</a>
+        <a href="#">로그인</a>
+        <a href="#">마이페이지</a>
+        <a href="#">고객센터</a>
+    </div>
+    </div>
+>>>>>>> Stashed changes
 	<br/><br/>
     <div align="center">
         <form:form action="/signupResult" method="post" modelAttribute="users" onsubmit="return validateForm()">
