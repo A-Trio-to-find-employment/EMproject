@@ -30,8 +30,7 @@ public class CategoryController {
     // 하위 카테고리를 가져오는 메소드
     @GetMapping("/category/sub/{parent_id}")
     @ResponseBody
-    public List<Category> getSubCategories(@PathVariable("parent_id") String parentId) {
-        System.out.println("Parent ID: " + parentId);  // 로그에 parentId를 출력
+    public List<Category> getSubCategories(@PathVariable("parent_id") String parentId) {        
         return service.getSubCategories(parentId);  // JSON으로 하위 카테고리 반환
     }
 }
