@@ -52,8 +52,7 @@ public class PreferenceController {
 	@PostMapping("/savePreference")
     public ModelAndView savePreference(@RequestParam("cat_ids") String[] catIds, HttpSession session) {
         // 세션에서 사용자 ID 가져오기
-        Users user = (Users) session.getAttribute("loginUser");
-        String userId = user.getUser_id();
+        String userId = (String)session.getAttribute("loginUser");
         if (userId == null) {
         	ModelAndView mav = new ModelAndView("login");
             return mav; // 또는 에러 페이지로 이동
