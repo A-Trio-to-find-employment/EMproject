@@ -14,4 +14,8 @@ public class LoginService {
 	public Users getUser(Users users) {
 		return this.loginMapper.getUser(users);
 	}
+	
+	public void modifyUser(Users users) {
+		this.loginMapper.modifyUser(users);
+	}
 }

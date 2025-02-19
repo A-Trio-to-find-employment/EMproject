@@ -28,7 +28,10 @@
    			<a href="/signup">회원가입</a>
     		<a href="/login">로그인</a>
 		</c:if>
-        <a href="/mypage">마이페이지</a>
+        <a href="#">이벤트</a>        
+        <a href="/signup">회원가입</a>
+        <a href="/login">로그인</a>
+        <a href="/secondfa">마이페이지</a>
         <a href="#">고객센터</a>
     </div>
 

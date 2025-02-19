@@ -27,7 +27,6 @@ public class LoginValidator implements Validator {
 		if(errors.hasErrors()) {
 			errors.reject("error.input.user_id");
 		}
-		System.out.println("validate ok");
 	}
 
 }

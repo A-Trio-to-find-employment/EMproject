@@ -7,17 +7,20 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>마이페이지 2차 인증</title>
+    <title>회원 정보</title>
 	<link rel="stylesheet" type="text/css" href="/css/style.css">
 	<style>
 		.sidebar { float: left; width: 20%; border: 1px solid #ddd; box-sizing: border-box; padding: 20px; text-align: left; }
         .sidebar h3 { border-bottom: 1px solid #ccc; padding-bottom: 10px; }
         .sidebar ul { list-style: none; padding: 0; }
         .sidebar li { margin: 10px 0; }
-        .container { margin-left: 25%; padding: 20px; }
-        .secondfa { margin-top: 50px; }
-        .secondfa input { display: block; margin: 10px auto; padding: 10px; width: 300px; }
-        .secondfa button { padding: 10px 20px; margin-top: 20px; cursor: pointer; }
+        .container { margin-left: 7%; padding: 20px; }
+        .myInfo { margin-top: 0px; }
+        .myInfo input { display: block; margin: 3px auto; padding: 10px; width: 300px; }
+        .myInfo button { padding: 10px 20px; margin-top: 20px; cursor: pointer; }
+        .btn {padding: 5px 10px;font-size: 14px;width: auto;display: inline-block;
+    				margin: 10px 5px;cursor: pointer;}
+        
 	</style>
 </head>
 <body>
@@ -47,13 +50,13 @@
         <h3>나의 등급 <span style="float: right;">일반 회원</span></h3>
         <p>주문금액이 10만원 이상일 경우 우수 회원이 됩니다.</p>
         <ul>
-            <li><a href="">주문내역</a></li>
+            <li><a href="#">주문내역</a></li>
             <li><a href="#">주문내역/배송조회</a></li>
             <li><a href="#">반품/교환/취소 신청 및 조회</a></li>
             <li><a href="#">쿠폰</a></li>
             <li><a href="#">쿠폰조회</a></li>
             <li><a href="#">리뷰 관리</a></li>
-            <li><a href="#">회원 정보</a></li>
+            <li><a href="/myInfo">회원 정보</a></li>
             <li><a href="#">선호도 조사</a></li>
         </ul>
         <p><strong><a href="#">나의 1:1 문의내역</a></strong></p>
@@ -61,42 +64,97 @@
 
 	 <div class="container">
 	        
-	        <h2>마이페이지에 들어가려면 2차 인증을 해주시기 바랍니다.</h2>
-	        <div class="secondfa">
-	            <form:form action="" method="post" modelAttribute="users">
-	                <spring:hasBindErrors name="users">
-	                    <font color="red">
-	                        <c:forEach var="error" items="${errors.globalErrors}">
-	                            <spring:message code="${error.code}"/>
-	                        </c:forEach>
-	                    </font>
-	                </spring:hasBindErrors>
-	                <label for="user_id">아이디</label>
-	                <input type="text" id="user_id" name="user_id">
-	
-	                <label for="password">비밀번호</label>
-	                <input type="password" id="password" name="password">
-	
-	                <button type="submit">확인</button>
-	            </form:form>
-        </div>
-    </div>
-    
-    <script>
-        function toggleDropdown() {
-            var dropdown = document.getElementById("categoryDropdown");
-            dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
-        }
+	        <h2>회원 정보</h2>
+	        <div class="myInfo">
+	        <div align="center">
+			<h2>내 정보 보기</h2>
+			<form:form action="/mypage/modify" method="post" modelAttribute="users">
+			<table>
+				<tr><th>이름</th><td><form:input path="user_name"/>
+		           	<font color="red"><form:errors path="user_name"/></font></td></tr>
+		   		<tr><th>아이디</th><td><form:input path="user_id" />
+		        	<font color="red"><form:errors path="user_id"/></font></td></tr>
+		        <tr><th>비밀번호</th><td><form:input path="password" id="password"/>
+		        	<font color="red"><form:errors path="password" /></font></td></tr>
+		        <tr><th>비밀번호 재입력</th><td><input type="password" name="confirmPassword" id="confirmPassword"/></td></tr>
+		        <tr><th>주소</th><td><form:input path="address" readonly="true"/>
+		        	<font color="red"><form:errors path="address"/></font></td></tr>
+		        <tr><th>주소 상세</th><td><form:input path="address_detail" />
+		        	<font color="red"><form:errors path="address_detail"/></font></td></tr>
+		        <tr><th>우편번호</th><td><form:input path="zipcode" readonly="true" />
+		        	<button type="button" class="btn btn-default" onclick="daumZipCode()">
+		        	<i class="fa fa-search"></i> 우편번호 찾기</button></td></tr>
+		        <tr><th>이메일</th><td><form:input path="email" />
+		        	<font color="red"><form:errors path="email"/></font></td></tr>
+		        <tr><th>생년월일</th><td><form:input path="birth" type="date"/>
+		        	<font color="red"><form:errors path="birth"/></font></td></tr>
+		        <tr><th>전화번호</th><td><form:input path="phone" />
+		        	<font color="red"><form:errors path="phone"/></font></td></tr> 
+		    	<tr><td align="center" colspan="2"><input type="submit" value="수정" class="btn"/>
+		    		<input type="reset" value="취 소" class="btn"></td></tr>
+		    </table>
+	</form:form><br/><br/>
+</div>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript">
+    function daumZipCode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                var addr = ''; // 주소 변수
+                var extraAddr = ''; // 참고항목 변수
 
-        // 다른 곳 클릭하면 드롭다운 닫힘
-        document.addEventListener("click", function(event) {
-            var dropdown = document.getElementById("categoryDropdown");
-            var categoryLink = document.querySelector(".nav div a");
+                if (data.userSelectedType === 'R') { 
+                    addr = data.roadAddress;
+                } else { 
+                    addr = data.jibunAddress;
+                }
 
-            if (!dropdown.contains(event.target) && event.target !== categoryLink) {
-                dropdown.style.display = "none";
+                if(data.userSelectedType === 'R'){
+                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                        extraAddr += data.bname;
+                    }
+                    if(data.buildingName !== '' && data.apartment === 'Y'){
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    if(extraAddr !== ''){
+                        extraAddr = ' (' + extraAddr + ')';
+                    }
+                    document.getElementById("address").value = extraAddr;
+                } else {
+                    document.getElementById("address").value = '';
+                }
+
+                document.getElementById('zipcode').value = data.zonecode;
+                document.getElementById("address").value = addr;
+                document.getElementById("address_detail").focus();
             }
-        });
-    </script>
+        }).open();
+    }
+</script>
+<script type="text/javascript">
+function validateForm() {
+    var password = document.getElementById("password").value;
+    var confirmPassword = document.getElementById("confirmPassword").value;
+    if (password !== confirmPassword) {
+        alert("비밀번호가 일치하지 않습니다.");
+        return false; // 폼 제출을 막음
+    }
+    return true;
+}
+function toggleDropdown() {
+    var dropdown = document.getElementById("categoryDropdown");
+    dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
+}
+
+// 다른 곳 클릭하면 드롭다운 닫힘
+document.addEventListener("click", function(event) {
+    var dropdown = document.getElementById("categoryDropdown");
+    var categoryLink = document.querySelector(".nav div a");
+
+    if (!dropdown.contains(event.target) && event.target !== categoryLink) {
+        dropdown.style.display = "none";
+    }
+});
+</script>
 </body>
 </html>
