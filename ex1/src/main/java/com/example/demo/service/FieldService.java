@@ -33,12 +33,12 @@ public class FieldService {
 	        if (book == null) return null;
 
 	        // 카테고리 경로 가져오기
-	        String categoryPath = getCategoryById(book.getIsbn());
+	        List<String> categoryPath = getCategoryById(book.getIsbn());
 	        book.setCategoryPath(categoryPath);
 
 	        return book;
 	 }
-	 public String getCategoryById(Long isbn) {
+	 public List<String> getCategoryById(Long isbn) {
 		    return mapper.getCategoryById(isbn); // ✅ SQL에서 이미 "국내 > 소설 > 장르소설" 형태로 가져옴
 		}
 }

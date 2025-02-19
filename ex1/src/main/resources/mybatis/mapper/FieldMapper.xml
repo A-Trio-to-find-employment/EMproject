@@ -47,11 +47,10 @@
 SELECT (SELECT LISTAGG(c.cat_name, ' > ') WITHIN GROUP (ORDER BY LEVEL DESC) 
         FROM categories c 
         START WITH c.cat_id = bc.cat_id 
-        CONNECT BY PRIOR c.parent_id = c.cat_id) AS category_path
+        CONNECT BY PRIOR c.parent_id = c.cat_id) AS categoryPath
 FROM book b
 JOIN book_categories bc ON b.isbn = bc.isbn
 WHERE b.isbn = #{isbn, jdbcType=BIGINT}
-
 </select>
 
 

@@ -57,11 +57,11 @@ public class FieldController {
 		ModelAndView mav = new ModelAndView("fieldlayout");
 	    // 1. 책 정보 가져오기
 		 Book book = service.getBookDetail(isbn);
-		 System.out.println("책 정보: " + book);
-
-	    // 3. ModelAndView에 데이터 추가
+		List<String> bookcategory = book.getCategoryPath(); 
 	    mav.addObject("BODY", "bookdetail.jsp"); // bookdetail.jsp 로드
-	    mav.addObject("book", book); // 책 정보 추가	    
+	    mav.addObject("book", book); // 책 정보 추가
+	    mav.addObject("bookcategory", bookcategory); // 책 정보 추가
+	    
 	    return mav;
 	}
 	

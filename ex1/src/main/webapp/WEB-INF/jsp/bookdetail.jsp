@@ -46,11 +46,13 @@
         <div class="book-extra">
             <h3>도서 정보</h3>
             <table class="info-table">
-                <tr>
-                    <th>카테고리</th>
-                    <td>${book.categoryPath}</td>
-                </tr>
-                <tr>
+					<tr>
+						<th>카테고리</th>
+						<td><c:forEach var="category" items="${book.categoryPath}">
+								<p>${category}</p>
+							</c:forEach></td>
+					</tr>
+					<tr>
                     <th>발행일</th>
                     <td>${book.pub_date}</td>
                 </tr>

@@ -1,5 +1,7 @@
 package com.example.demo.model;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +19,6 @@ public class Book {
 	private String reg_date;
 	private String cat_id;
 	private String image_name;
-	private String categoryPath;
+	private List<String> categoryPath;
 	
 }

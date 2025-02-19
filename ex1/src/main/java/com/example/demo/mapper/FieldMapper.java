@@ -14,5 +14,5 @@ public interface FieldMapper {
 	 List<Book>getBookList(String cat_id);
 	 String getCategoriesName(String cat_id);
 	 Book getBookDetail(Long isbn);
-	 String getCategoryById(Long isbn);
+	 List<String> getCategoryById(Long isbn);
 	 }
