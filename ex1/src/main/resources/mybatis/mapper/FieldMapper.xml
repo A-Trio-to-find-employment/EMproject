@@ -12,22 +12,7 @@
     select count(*) FROM categories where parent_id = #{cat_id}
 	</select>
 <!-- 특정 카테고리에 속한 책 목록 조회 -->
-<select id="getBookList" parameterType="String" resultType="Book">
-    select isbn,book_title,
-           (select listagg(author, ', ') within group (order by author)
-            from book_author
-            where isbn = book.isbn) as authors,
-           price,
-           publisher
-    from book
-    where isbn IN (select isbn from book_categories where cat_id = #{cat_id})
-</select>
-	<select id="getCategoriesName" parameterType="String" resultType="String">
-		select cat_name from categories where cat_id=#{cat_id}
-	</select>
-	<select id="">
-		select 
-	</select>
+
 	
 <!-- 책 상세 정보 조회 -->
 <select id="getBookDetail" parameterType="java.lang.Long" resultType="book">
@@ -52,6 +37,33 @@ FROM book b
 JOIN book_categories bc ON b.isbn = bc.isbn
 WHERE b.isbn = #{isbn, jdbcType=BIGINT}
 </select>
+<!-- 책을 필터적용해서 정렬해서 보여주는 쿼리 -->
+<select id="getorderByBook" parameterType="String" resultType="Book">
+    select isbn, book_title,
+           (select listagg(author, ', ') within group (order by author)
+            from book_author
+            where isbn = book.isbn) as authors,
+           price,
+           publisher,
+           pub_date  <!-- 출판 날짜 추가 -->
+    from book
+    where isbn IN (select isbn from book_categories where cat_id = #{cat_id})
+    <choose>
+        <when test="sort == 'sales'">
+            ORDER BY SALES DESC
+        </when>
+        <when test="sort == 'review'">
+            ORDER BY REVIEW_COUNT DESC
+        </when>
+        <when test="sort == 'rating'">
+            ORDER BY TOTAL_RATING DESC
+        </when>
+        <otherwise>
+            ORDER BY PUB_DATE DESC  <!-- 기본값: 최신순 -->
+        </otherwise>
+    </choose>
+</select>
+
 
 
 </mapper>

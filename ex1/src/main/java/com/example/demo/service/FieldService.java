@@ -22,9 +22,6 @@ public class FieldService {
 	 public boolean countSubCategories(int catId) {
 	        return mapper.countSubCategories(catId) > 0;
 	    }
-	 public List<Book>getBookList(String cat_id){
-		 return mapper.getBookList(cat_id);
-	 }
 	 public String getCategoriesName(String cat_id) {
 		 return mapper.getCategoriesName(cat_id);
 	 }
@@ -39,6 +36,9 @@ public class FieldService {
 	        return book;
 	 }
 	 public List<String> getCategoryById(Long isbn) {
-		    return mapper.getCategoryById(isbn); // ✅ SQL에서 이미 "국내 > 소설 > 장르소설" 형태로 가져옴
+		    return mapper.getCategoryById(isbn); // SQL에서 이미 "국내 > 소설 > 장르소설" 형태로 가져옴
 		}
+	 public List<Book> getorderByBook(String cat_id, String sort) { // 반환 타입 확인!
+	        return mapper.getorderByBook(cat_id, sort);
+	    }
 }
