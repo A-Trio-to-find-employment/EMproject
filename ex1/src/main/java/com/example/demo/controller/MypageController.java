@@ -23,7 +23,7 @@ public class MypageController {
 	
 	@GetMapping(value = "/mypage")
 	public ModelAndView mypage(HttpSession session){
-		String loginUser = (String)session.getAttribute("loginUser");
+		Users loginUser = (Users)session.getAttribute("loginUser");
 		if(loginUser != null) {
 			ModelAndView mav = new ModelAndView("mypage");
 			return mav;
