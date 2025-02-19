@@ -12,6 +12,8 @@ import com.example.demo.model.Users;
 import com.example.demo.service.LoginService;
 import com.example.demo.utils.LoginValidator;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class MypageController {
 	@Autowired
@@ -20,9 +22,15 @@ public class MypageController {
 	public LoginValidator loginValidator;
 	
 	@GetMapping(value = "/mypage")
-	public ModelAndView mypage(){
-		ModelAndView mav = new ModelAndView("mypage");
-		return mav;
+	public ModelAndView mypage(HttpSession session){
+		String loginUser = (String)session.getAttribute("loginUser");
+		if(loginUser != null) {
+			ModelAndView mav = new ModelAndView("mypage");
+			return mav;
+		} else {
+			ModelAndView mav = new ModelAndView("login");
+			return mav;
+		}
 	}
 	@PostMapping(value = "/secondfa")
 	public ModelAndView secondfa(Users user, BindingResult br) {
