@@ -43,7 +43,6 @@ public class LoginController {
 			if(loginUser != null) {
 				mav.setViewName("index");
 				session.setAttribute("loginUser", loginUser.getUser_id());
-//				session.setAttribute("loginUser", loginUser);
 				mav.setViewName("loginSuccess");
 				mav.addObject("loginUser",loginUser);
 				return mav;

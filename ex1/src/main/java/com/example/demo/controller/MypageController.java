@@ -36,7 +36,7 @@ public class MypageController {
 			Users loginUser = this.loginService.getUser(users);
 			if(loginUser != null) {
 				mav.setViewName("secondfaSuccess");
-				mav.addObject("loginUser",loginUser);
+//				mav.addObject("loginUser",loginUser);
 				return mav;
 			}else {
 				br.reject("error.login.user");
@@ -52,8 +52,9 @@ public class MypageController {
 	@GetMapping(value = "/myInfo")
 	public ModelAndView myInfo(Users users, HttpSession session) {
 		
-		Users loginUser = (Users)session.getAttribute("loginUser");
-		
+		String loginUser = (String)session.getAttribute("loginUser");
+		this.loginService.getUserById(loginUser);
+		session.setAttribute("loginUser", loginUser);
 		ModelAndView mav = new ModelAndView("mypage");
 		if(loginUser != null) {
 			mav.addObject("users",loginUser);
