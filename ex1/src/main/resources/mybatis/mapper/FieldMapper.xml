@@ -13,6 +13,9 @@
 	</select>
 <!-- 특정 카테고리에 속한 책 목록 조회 -->
 
+	<select id="getCategoriesName" parameterType="String" resultType="String">
+		select cat_name from categories where cat_id=#{cat_id}
+	</select>
 	
 <!-- 책 상세 정보 조회 -->
 <select id="getBookDetail" parameterType="java.lang.Long" resultType="book">
