@@ -7,7 +7,7 @@
 		insert into users (user_id, password, user_name, address, address_detail,
 			zipcode, email, birth, phone, grade)
 			values (#{user_id}, #{password},#{user_name},#{address},#{address_detail},
-				#{zipcode},#{email},#{birth},#{phone}, 0)
+				#{zipcode},#{email},#{birth},#{phone}, #{grade})
 	</insert>
 </mapper>
 

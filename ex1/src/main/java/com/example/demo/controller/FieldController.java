@@ -23,20 +23,20 @@ public class FieldController {
 	    boolean hasSubCategories = service.countSubCategories(Integer.parseInt(cat_id));	    
 	    if (hasSubCategories) {
 	        List<Category> fieldlist = service.getCategories(cat_id);
-
 	        // 각 카테고리에 대해 hasSubCategories 값을 설정
 	        for (Category category : fieldlist) {
 	            boolean subCategoriesExist = service.countSubCategories(Integer.parseInt(category.getCat_id()));
 	            category.setHasSubCategories(subCategoriesExist);	            
 	        }
-
 	        mav.addObject("fieldlist", fieldlist);
 	        mav.addObject("BODY", "fieldlist.jsp");
 	    } 
+
 	    else {
 	        // 서브 카테고리가 없으면 booklist.html로 리다이렉트
 	        mav.setViewName("redirect:/booklist.html?cat_id=" + cat_id);
 	    }
+
 	    return mav;
 	}
 

@@ -7,11 +7,11 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>마이페이지 2차 인증</title>
+    <title>로그인</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <style>
         .container { margin-left: 25%; padding: 20px; }
-        .login { margin-top: 50px; }
+        .login { margin-top: 10px; }
         .login input { display: block; margin: 10px auto; padding: 10px; width: 300px; }
         .login button { padding: 10px 20px; margin-top: 20px; cursor: pointer; }
     </style>
@@ -31,9 +31,9 @@
         <a href="/login">로그인</a>
         <a href="/mypage">마이페이지</a>
         <a href="#">고객센터</a>
-    </div>
-<div class="container">
-	<h2 align="center">~~책들의 세계로</h2>
+    </div><br/>
+    <h2 align="center">~~책들의 세계로</h2>
+	<div class="container">
 	<div class="login">
 		<form:form action="/login" method="post" modelAttribute="users">
 			<spring:hasBindErrors name="users">

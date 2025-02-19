@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.demo.model.Users;
 import com.example.demo.service.SignupService;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
@@ -25,7 +26,8 @@ public class SignupController {
 	}
 	
 	@PostMapping(value="/signupResult")
-	public ModelAndView signupResult(@Valid Users users, BindingResult br) {
+	public ModelAndView signupResult(@Valid Users users, BindingResult br, HttpSession session) {
+		users.setGrade(0);
 		ModelAndView mav = new ModelAndView();
 		if(br.hasErrors()) {
 			mav.getModel().putAll(br.getModel());
@@ -35,8 +37,9 @@ public class SignupController {
 		try {
 			this.signupService.insertUser(users);
 			 // 회원가입이 정상적으로 끝났으면, 성공 페이지로 이동
-	        mav.setViewName("genretest");  // 회원가입 성공 시 보여줄 페이지 이름
+	        mav.setViewName("gopreftest");  // 회원가입 성공 시 보여줄 페이지 이름
 	        mav.addObject("user", users); // 가입한 사용자 정보를 뷰로 전달
+	        session.setAttribute("loginUser", users.getUser_id());
 	        return mav;
 		}catch(Exception e) {
 			br.reject("signup.fail", "회원 가입 중 문제가 발생했습니다. 다시 시도해주세요.");
