@@ -4,7 +4,6 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<<<<<<< HEAD
 <title>로그인 완료</title>
 </head>
 <body>

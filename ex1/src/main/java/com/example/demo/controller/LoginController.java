@@ -41,6 +41,8 @@ public class LoginController {
 			//로그인 성공 후 정보 가져오기
 			Users loginUser = this.loginService.getUser(users);
 			if(loginUser != null) {
+				mav.setViewName("index");
+				session.setAttribute("loginUser", loginUser.getUser_id());
 				session.setAttribute("loginUser", loginUser);
 				mav.setViewName("loginSuccess");
 				mav.addObject("loginUser",loginUser);
