@@ -12,7 +12,9 @@ public interface MyMapper {
 
 	    // 특정 카테고리의 하위 카테고리 조회
 	    
-	    List<Category> getSubCategories(String parentId);
+	List<Category> getSubCategories(String parentId);
 	    
-	    List<Category> getAllCategories(); // 모든 카테고리 조회
+	List<Category> getAllCategories(); // 모든 카테고리 조회
+	
+	String getCatName(String cat_id);
 }

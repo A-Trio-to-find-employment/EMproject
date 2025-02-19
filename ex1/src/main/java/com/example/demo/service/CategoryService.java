@@ -12,13 +12,16 @@ import com.example.demo.model.Category;
 public class CategoryService {
 	@Autowired
 	private MyMapper mymapper;
-	 public List<Category> getTopCategories(){		 
-		 return mymapper.getTopCategories();
-	 }
+	public List<Category> getTopCategories(){		 
+		return mymapper.getTopCategories();
+	}
 	    
-	 public List<Category> getSubCategories(String parentId){
-		 return this.mymapper.getSubCategories(parentId);
-	 }
+	public List<Category> getSubCategories(String parentId){
+		return this.mymapper.getSubCategories(parentId);
+	}
 
+	public String getCatName(String cat_id) {
+		return this.mymapper.getCatName(cat_id);
+	}
 
 }

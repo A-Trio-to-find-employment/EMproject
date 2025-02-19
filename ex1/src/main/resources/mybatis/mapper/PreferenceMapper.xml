@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.example.demo.mapper.PreferenceMapper">
+	
+	<select id="getMaxPrefId" parameterType="java.lang.Long" resultType="java.lang.Long">
+		select count(*) from preference_test
+	</select>
+
+    <insert id="insertPref" parameterType="PreferenceTest">
+        insert into preference_test values(#{pref_id}, #{user_id})
+    </insert>
+	
+	<insert id="insertUserPref" parameterType="UserPreference">
+		insert into user_preference values(#{pref_id}, #{cat_id}, 1)
+	</insert>
+	
+	<select id="getPrefIdByUser" parameterType="String" resultType="java.lang.Long">
+		select pref_id, user_id from preference_test where user_id = #{user_id}
+	</select>
+	<select id="getUserPref" parameterType="java.lang.Long" resultType="UserPreference">
+		select pref_id, cat_id, pref_score from user_preference where pref_id = #{pref_id}
+	</select>
+</mapper>
+
+	
+
+
+
+

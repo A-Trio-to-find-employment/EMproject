@@ -19,7 +19,9 @@
         FROM categories
         WHERE parent_id = #{parentId}
     </select>
-
+	<select id="getCatName" parameterType="String" resultType="String">
+		select cat_name from categories where cat_id = #{cat_id}
+	</select>
 </mapper>
 
 	
