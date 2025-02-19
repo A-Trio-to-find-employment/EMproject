@@ -22,6 +22,19 @@
 	<select id="getUserPref" parameterType="java.lang.Long" resultType="UserPreference">
 		select pref_id, cat_id, pref_score from user_preference where pref_id = #{pref_id}
 	</select>
+	
+	<select id="findPrefByUserId" resultType="java.lang.Long">
+        SELECT pt.PREF_ID
+        FROM preference_test pt
+        JOIN user_preference up ON pt.PREF_ID = up.PREF_ID
+        WHERE pt.USER_ID = #{userId} AND up.CAT_ID = #{catId}
+    </select>
+	<select id="findScoreByPref" parameterType="java.lang.Long" resultType="Integer">
+		select pref_score from user_preference where pref_id = #{pref_id}
+	</select>
+	<update id="updateScore" parameterType="UserPreference">
+		update user_preference set pref_score = #{pref_score} where pref_id = #{pref_id}
+	</update>
 </mapper>
 
 	

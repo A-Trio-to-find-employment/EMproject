@@ -49,6 +49,7 @@
             <li><a href="#">리뷰 관리</a></li>
             <li><a href="#">회원 정보</a></li>
             <li><a href="#">선호도 조사</a></li>
+            <li><a href="/showprefresult">선호도 조사 결과</a></li>
         </ul>
         <p><strong><a href="#">나의 1:1 문의내역</a></strong></p>
     </div>

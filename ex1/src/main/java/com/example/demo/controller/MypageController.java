@@ -51,7 +51,6 @@ public class MypageController {
 	}
 	@GetMapping(value = "/myInfo")
 	public ModelAndView myInfo(Users users, HttpSession session) {
-		
 		String loginUser = (String)session.getAttribute("loginUser");
 		this.loginService.getUserById(loginUser);
 		session.setAttribute("loginUser", loginUser);

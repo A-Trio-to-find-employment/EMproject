@@ -35,4 +35,19 @@ public class PreferenceService {
 		UserPreference userPreference = this.preferenceMapper.getUserPref(pref_id);
 		return userPreference;
 	}
+	
+	public Long findPrefByUserId(String userId, String catId) {
+		Long pref_id = this.preferenceMapper.findPrefByUserId(userId, catId);
+		return pref_id;
+	}
+	
+    public Integer findScoreByPref(Long prefId) {
+    	Integer score = this.preferenceMapper.findScoreByPref(prefId);
+    	return score;
+    }
+    
+    public void updateScore(UserPreference userPreference) {
+    	this.preferenceMapper.updateScore(userPreference);
+    }
+
 }

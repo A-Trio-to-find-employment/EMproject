@@ -10,9 +10,7 @@
 <meta charset="UTF-8">
 <title>내 선호도 조사 결과</title>
 <link rel="stylesheet" type="text/css" href="/css/style.css">
-<style>
-	.container { margin-left: 25%; padding: 20px; }
-</style>
+<link rel="stylesheet" type="text/css" href="/css/prefstyle.css">
 </head>
 <body>
 	<div class="nav">
@@ -49,17 +47,22 @@
             <li><a href="#">리뷰 관리</a></li>
             <li><a href="#">회원 정보</a></li>
             <li><a href="/gogenretest">선호도 조사</a></li>
+            <li><a href="/showprefresult">선호도 조사 결과</a></li>
         </ul>
         <p><strong><a href="#">나의 1:1 문의내역</a></strong></p>
     </div>
     
     <div class="container">
 		<h2>선호도 조사 결과</h2>
-		<table border="1">
-			<tr><th>선호 장르</th><th>선호도 점수</th></tr>
-			<c:forEach var="pref" items="${ preferences }">
-            <tr><td>${ pref[0] }</td><td>${ pref[1] }</td></tr>
-        	</c:forEach>
+		<table>
+			<thead>
+				<tr><th>선호 장르</th><th>선호도 점수</th></tr>
+			</thead>
+			<tbody>
+				<c:forEach var="pref" items="${ preferences }">
+	            <tr><td>${ pref[0] }</td><td>${ pref[1] }</td></tr>
+	        	</c:forEach>
+			</tbody>
 		</table>
     </div>
 </body>
