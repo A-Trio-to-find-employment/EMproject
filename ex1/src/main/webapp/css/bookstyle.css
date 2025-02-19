@@ -1,0 +1,126 @@
+/* 전체 페이지 스타일 */
+body {
+    font-family: Arial, sans-serif;
+    width: 100%;
+    max-width: 1800px;
+    margin: 0 auto;
+    
+}
+
+/* 도서 목록 컨테이너 */
+.container {
+    width: 100%;
+}
+
+/* 정렬 옵션 */
+.sorting {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.sorting a {
+    text-decoration: none;
+    color: #007bff;
+    margin: 0 10px;
+}
+
+.sorting a:hover {
+    text-decoration: underline;
+}
+
+/* 도서 목록 스타일 */
+.book-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* 개별 도서 항목 */
+.book-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f8f8;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+/* 책 이미지 */
+.book-image-box {
+    flex-basis: 20%;  /* 이미지 영역 비율 설정 */
+    display: flex;
+    justify-content: center;
+}
+
+.book-image {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* 책 정보 */
+.book-info {
+    flex-grow: 1;
+    padding: 0 20px;
+}
+
+.book-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.book-title a {
+    text-decoration: none;
+    color: #333;
+}
+
+.book-title a:hover {
+    text-decoration: underline;
+}
+
+.book-author {
+    color: #666;
+    font-size: 14px;
+}
+
+.book-price {
+    color: #d9534f;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.book-publisher {
+    font-size: 14px;
+    color: #777;
+}
+
+/* 버튼 영역 */
+.actions {
+    display: flex;
+    flex-direction: column;  /* 세로 배치 */
+    gap: 10px;
+}
+
+.actions button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 120px;
+    text-align: center;
+}
+
+.actions .buy-now {
+    background: #d9534f;
+}
+
+.actions button:hover {
+    opacity: 0.8;
+}
