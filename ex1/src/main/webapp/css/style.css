@@ -1,9 +1,11 @@
 @charset "UTF-8";
-body { 
-    font-family: Arial, sans-serif; 
-    margin: 0; 
-    padding: 0; 
-    text-align: center; 
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .nav { 
@@ -122,3 +124,5 @@ body {
 .filters {
 	margin-top: 10px;
 } /* fieldlist css */
+
+

@@ -7,10 +7,52 @@
    <select id="getCategories" parameterType="String" resultType="Category">
 		select cat_id,cat_name from categories where parent_id=#{parent_id}
 	</select>
-	
+
 	<select id="countSubCategories" resultType="Integer" parameterType="Integer">
     select count(*) FROM categories where parent_id = #{cat_id}
 	</select>
+<!-- 특정 카테고리에 속한 책 목록 조회 -->
+<select id="getBookList" parameterType="String" resultType="Book">
+    select isbn,book_title,
+           (select listagg(author, ', ') within group (order by author)
+            from book_author
+            where isbn = book.isbn) as authors,
+           price,
+           publisher
+    from book
+    where isbn IN (select isbn from book_categories where cat_id = #{cat_id})
+</select>
+	<select id="getCategoriesName" parameterType="String" resultType="String">
+		select cat_name from categories where cat_id=#{cat_id}
+	</select>
+	<select id="">
+		select 
+	</select>
+	
+<!-- 책 상세 정보 조회 -->
+<select id="getBookDetail" parameterType="java.lang.Long" resultType="book">
+      SELECT isbn, book_title,
+        (SELECT LISTAGG(author, ', ') WITHIN GROUP (ORDER BY author) 
+         FROM book_author WHERE isbn = book.isbn) AS authors,
+        publisher, price, stock,
+        TO_CHAR(pub_date, 'YYYY-MM-DD') AS pub_date,
+        TO_CHAR(reg_date, 'YYYY-MM-DD') AS reg_date,
+        cat_id, image_name
+    FROM book
+    WHERE isbn = #{isbn, jdbcType=BIGINT}
+</select>
+
+<!-- 카테고리 정보 조회 -->
+<select id="getCategoryById" parameterType="java.lang.Long" resultType="String">
+SELECT (SELECT LISTAGG(c.cat_name, ' > ') WITHIN GROUP (ORDER BY LEVEL DESC) 
+        FROM categories c 
+        START WITH c.cat_id = bc.cat_id 
+        CONNECT BY PRIOR c.parent_id = c.cat_id) AS categoryPath
+FROM book b
+JOIN book_categories bc ON b.isbn = bc.isbn
+WHERE b.isbn = #{isbn, jdbcType=BIGINT}
+</select>
+
 
 </mapper>
 

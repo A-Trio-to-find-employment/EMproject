@@ -33,15 +33,22 @@
         <a href="#">고객센터</a>
     </div>
 
+
+</div>
+
+
 <div class="container">
-    <div class="sidebar">
-        <c:forEach var="category" items="${fieldlist}">
-            <div class="category" 
-                 onclick="loadCategory('${category.cat_id}', '${category.hasSubCategories}')">
-                ${category.cat_name}
-            </div>
-        </c:forEach>
-    </div>
+   <div class="sidebar">
+    <!-- 🔙 뒤로가기 버튼 추가 -->
+    <button class="back-btn" onclick="goBack()">⬅ 뒤로가기</button>
+    
+    <c:forEach var="category" items="${fieldlist}">
+        <div class="category" 
+             onclick="loadCategory('${category.cat_id}', '${category.hasSubCategories}')">
+            ${category.cat_name}
+        </div>
+    </c:forEach>
+</div>
       <!-- 동적으로 변경되는 부분 -->
     <div class="content">
         <jsp:include page="${BODY}" />
@@ -76,7 +83,10 @@
             window.location.href = '/field.html?cat_id=' + cat_id;
         }
     }
-    
+    function goBack() {
+        window.history.back();
+    }
+
 </script>
 
 </html>
