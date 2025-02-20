@@ -30,7 +30,6 @@
 
     <c:choose>
         <c:when test="${empty BODY}">  
-            <!-- BODY 값이 없을 때만 도서 검색 및 추천 섹션을 표시 -->
             <div class="container">
                 <div class="search-bar">
                     <label for="filter">필터</label>
@@ -55,7 +54,6 @@
             </div>
         </c:when>
         <c:otherwise>
-            <!-- BODY 값이 있으면 해당 JSP 포함 (container 숨김) -->
             <div class="content">
                 <jsp:include page="${BODY}"></jsp:include>
             </div>
