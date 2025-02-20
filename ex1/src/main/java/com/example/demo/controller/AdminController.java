@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class AdminController {
+public class AdminController { 
 	@GetMapping(value = "/adminPage")   
 	public ModelAndView adminPage() {
 		ModelAndView mav = new ModelAndView("admin");

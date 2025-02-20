@@ -29,7 +29,7 @@
     </div>
 
     <c:choose>
-        <c:when test="${empty BODY}">
+        <c:when test="${empty BODY}">  
             <!-- BODY 값이 없을 때만 도서 검색 및 추천 섹션을 표시 -->
             <div class="container">
                 <div class="search-bar">
