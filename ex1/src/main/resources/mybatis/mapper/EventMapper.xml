@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.example.demo.mapper.EventMapper">
+	<select id="getEventList" parameterType="StartEndKey" resultType="Event">
+        select event_code, event_title, event_start, event_end
+        from (
+			select rownum rn, a.*
+            from (select event_code, event_title, 
+            	to_char(event_start, 'YYYY-MM-DD') as event_start, 
+                to_char(event_end, 'YYYY-MM-DD') as event_end
+                from event where event_start <![CDATA[<=]]> SYSDATE 
+					and event_end >= SYSDATE
+					<if test="key != null and key != ''">
+						and (event_title LIKE '%' || #{key} || '%' 
+						or event_content LIKE '%' || #{key} || '%')
+					</if>
+				order by event_start ASC) a
+            where rownum <![CDATA[<=]]> #{end}) where rn > #{start}
+    </select>
+    <select id="getTotalCount" resultType="Integer">
+    	select count(*) from event
+    </select>
+    <select id="getEventDetail" parameterType="java.lang.Long" resultType="Event">
+    	select event_code, event_title, event_content, coupon_id, 
+    		to_char(event_start, 'YYYY-MM-DD') as event_start, 
+    		to_char(event_end, 'YYYY-MM-DD') as event_end
+    		from event where event_code = #{event_code}
+    </select>
+</mapper>
+
+	
+
+
+
+
