@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.example.demo.mapper.GoodsMapper">
+	<select id="getGoodsList" parameterType="StartEnd" resultType="Book">
+		select isbn, book_title, authors, publisher, price, stock
+		from(select rownum rn, a.*
+			from (select isbn, book_title, 
+				(SELECT LISTAGG(DISTINCT author, ', ') WITHIN GROUP (ORDER BY author) 
+		 		FROM book_author 
+		 		WHERE isbn = book.isbn) AS authors, publisher, price, stock
+		 		from book) a)
+				where rn > #{start} and rn <![CDATA[<]]> #{end}
+
+	</select>
+	<select id="getGoodsDetail" parameterType="java.lang.Long" resultType="Book">
+		select image_name, isbn, book_title, 
+		(SELECT LISTAGG(DISTINCT author, ', ') WITHIN GROUP (ORDER BY author) 
+ 		FROM book_author 
+ 		WHERE isbn = book.isbn) AS authors, publisher, cat_id, price, stock
+ 		from book where isbn ＝ #{isbn, jdbcType=BIGINT}
+	</select>
+	
+</mapper>
+
+	
+
+
+
+

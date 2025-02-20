@@ -55,10 +55,6 @@
             </div>
         </c:when>
         <c:otherwise>
-<<<<<<< HEAD
-            <!-- BODY 값이 있으면 해당 JSP 포함 (container 숨김) -->
-=======
->>>>>>> main
             <div class="content">
                 <jsp:include page="${BODY}"></jsp:include>
             </div>

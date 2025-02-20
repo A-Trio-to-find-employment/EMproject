@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>상품 목록</title>
 </head>
 <body>
 <h2 align="center">바디 테스트 완료</h2>
