@@ -24,7 +24,7 @@
         <a href="/signup">회원가입</a>
         <a href="/login">로그인</a>
         <a href="/secondfa">마이페이지</a>
-        <a href="#">고객센터</a>
+        <a href="/qna">고객센터</a>
     </div>
 <div align="center">
 <h2>로그인 성공입니다.</h2>

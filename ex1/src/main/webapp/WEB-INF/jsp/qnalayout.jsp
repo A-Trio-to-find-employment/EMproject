@@ -32,21 +32,24 @@
         <a href="/mypage">마이페이지</a>
         <a href="/qna">고객센터</a>
     </div>
-</div>
-
 
 <div class="container">
-   <div class="sidebar">
-    <!-- 🔙 뒤로가기 버튼 추가 -->
-    <button class="back-btn" onclick="goBack()">⬅ 뒤로가기</button>
-    
-    <c:forEach var="category" items="${fieldlist}">
-        <div class="category" 
-             onclick="loadCategory('${category.cat_id}', '${category.hasSubCategories}')">
-            ${category.cat_name}
-        </div>
-    </c:forEach>
-</div>
+ <!-- Sidebar 메뉴 -->
+    <div class="sidebar">
+        <h3>FAQ</h3>
+        <ul>
+            <li><a href="/qna">자주 있는 문의</a></li>
+
+        </ul>
+        <h3>1:1 문의</h3>
+        <c:if test="${sessionScope.loginUser != null}">
+   		<ul>
+            <li><a href="/#">나의 문의 내역</a></li>
+            <li><a href="/qnawrite">문의 등록</a></li>
+        </ul>
+		</c:if>
+        
+    </div>
       <!-- 동적으로 변경되는 부분 -->
     <div class="content">
         <jsp:include page="${BODY}" />

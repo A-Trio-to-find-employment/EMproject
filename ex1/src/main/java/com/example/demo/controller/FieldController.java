@@ -41,12 +41,11 @@ public class FieldController {
 	}
 
 	@RequestMapping(value = "/booklist.html")//마지막 하위카테고리면 그것을 클릭했을때 상품이 보여짐
-	public ModelAndView fields(String cat_id) {
+	public ModelAndView fields(String cat_id, String sort) {
         ModelAndView mav = new ModelAndView("fieldlayout");
-
-        List<Book> bookList = service.getBookList(cat_id); // 도서 목록 가져오기
-        String categoryName = service.getCategoriesName(cat_id); // 카테고리 이름 가져오기
-        mav.addObject("bookList", bookList); // 도서 목록 전달
+        List<Book> bookLists = service.getorderByBook(cat_id, sort); // 정렬된 도서 목록 가져오기        
+        String categoryName = service.getCategoriesName(cat_id); // 카테고리 이름 가져오기        
+        mav.addObject("bookList", bookLists); // 도서 목록 전달        
         mav.addObject("cat_name", categoryName); // 카테고리 이름 전달
         mav.addObject("BODY", "booklist.jsp"); // booklist.jsp를 BODY로 설정
         
