@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.example.demo.mapper.QnaMapper">
+	<select id="getQnaBoard" resultType="QnaBoard">
+	select write_number, user_id, title,content from qna_board
+	</select>
+	<select id="getMaxWid" resultType="Integer">
+		select max(qna_number) from qna
+	</select>
+	<insert id="putQna" parameterType="Qna">
+		insert into qna values(#{qna_number},#{user_id},#{qna_title},#{qna_detail},
+			sysdate,0,#{qna_image})
+	</insert>
+</mapper>
+
+	
+
+
+
+
