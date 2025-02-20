@@ -11,6 +11,9 @@ public class LoginService {
 	@Autowired
 	private LoginMapper loginMapper;
 	
+	public Users getUserById(String id) {
+		return this.loginMapper.getUserById(id);
+	}
 	public Users getUser(Users users) {
 		return this.loginMapper.getUser(users);
 	}

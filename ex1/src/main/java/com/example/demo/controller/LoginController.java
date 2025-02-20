@@ -30,7 +30,6 @@ public class LoginController {
 	}
 	@PostMapping(value = "/login")
 	public ModelAndView secondfa(Users users, BindingResult br, HttpSession session) {
-
 		ModelAndView mav = new ModelAndView();
 		this.loginValidator.validate(users, br);
 		if(br.hasErrors()) {
@@ -43,9 +42,8 @@ public class LoginController {
 			if(loginUser != null) {
 				mav.setViewName("index");
 				session.setAttribute("loginUser", loginUser.getUser_id());
-//				session.setAttribute("loginUser", loginUser);
-				mav.setViewName("loginSuccess");
-				mav.addObject("loginUser",loginUser);
+//				mav.setViewName("loginSuccess");
+//				mav.addObject("loginUser",loginUser);
 				return mav;
 			}else {
 				br.reject("error.login.user");

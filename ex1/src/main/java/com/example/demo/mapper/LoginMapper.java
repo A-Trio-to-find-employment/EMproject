@@ -8,4 +8,5 @@ import com.example.demo.model.Users;
 public interface LoginMapper {
 	Users getUser(Users users);
 	void modifyUser(Users users);
+	Users getUserById(String id);
 }

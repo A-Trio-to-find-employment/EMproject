@@ -13,6 +13,7 @@ import com.example.demo.service.LoginService;
 import com.example.demo.utils.LoginValidator;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @Controller
 public class MypageController {
@@ -36,7 +37,7 @@ public class MypageController {
 			Users loginUser = this.loginService.getUser(users);
 			if(loginUser != null) {
 				mav.setViewName("secondfaSuccess");
-				mav.addObject("loginUser",loginUser);
+//				mav.addObject("loginUser",loginUser);
 				return mav;
 			}else {
 				br.reject("error.login.user");
@@ -50,29 +51,42 @@ public class MypageController {
 		}
 	}
 	@GetMapping(value = "/myInfo")
-	public ModelAndView myInfo(Users users, HttpSession session) {
-		
-		Users loginUser = (Users)session.getAttribute("loginUser");
-		
+
+	public ModelAndView myInfo(HttpSession session) {
 		ModelAndView mav = new ModelAndView("mypage");
-		if(loginUser != null) {
-			mav.addObject("users",loginUser);
+		String loginUser = (String)session.getAttribute("loginUser");
+		if(loginUser == null) {
+			mav.addObject("error", "로그인을 한 후 다시 시도해주세요.");
+			return mav;
+		}
+		Users users = this.loginService.getUserById(loginUser);
+		if(users != null) {
+			mav.addObject("users",users);
+			mav.addObject("user_id",users.getUser_id());
+		}else {
+			mav.addObject("error", "회원 정보를 찾을 수 없습니다.");
 		}
 		return mav;
 	}
 	@PostMapping(value = "/mypage/modify")
-	public ModelAndView modify(Users users, BindingResult br) {
-		ModelAndView mav = new ModelAndView();
+	public ModelAndView modify(@Valid Users users, BindingResult br) {
+		ModelAndView mav = new ModelAndView("mypage");
 		this.loginValidator.validate(users, br);
 		if(br.hasErrors()) {
-			mav.addObject("mypage.jsp");
+			mav.addObject("errors", br.getAllErrors());
 			mav.getModel().putAll(br.getModel());
 			return mav;
 		}
 		this.loginService.modifyUser(users);
-		Users newuser = this.loginService.getUser(users);
-		mav.addObject("myInfoupdate");
-		mav.addObject(newuser);
+//		Users newuser = this.loginService.getUser(users);
+		Users newuser = this.loginService.getUserById(users.getUser_id());
+		if(newuser != null) {
+			mav.addObject(newuser);
+			mav.addObject("users",users);
+			mav.addObject("myInfoupdate");
+		}else {
+			mav.addObject("error", "회원 정보 수정 실패");
+		}
 		return mav;
 	}
 }

@@ -42,7 +42,7 @@
    			<a href="/signup">회원가입</a>
     		<a href="/login">로그인</a>
 		</c:if>
-        <a href="/mypage">마이페이지</a>
+        <a href="/secondfa">마이페이지</a>
         <a href="#">고객센터</a>
     </div>
 
@@ -57,7 +57,8 @@
             <li><a href="#">쿠폰조회</a></li>
             <li><a href="#">리뷰 관리</a></li>
             <li><a href="/myInfo">회원 정보</a></li>
-            <li><a href="#">선호도 조사</a></li>
+            <li><a href="/gogenretest">선호도 조사</a></li>
+			<li><a href="/showprefresult">선호도 조사 결과</a></li>
         </ul>
         <p><strong><a href="#">나의 1:1 문의내역</a></strong></p>
     </div>
@@ -72,7 +73,7 @@
 			<table>
 				<tr><th>이름</th><td><form:input path="user_name"/>
 		           	<font color="red"><form:errors path="user_name"/></font></td></tr>
-		   		<tr><th>아이디</th><td><form:input path="user_id" />
+		   		<tr><th>아이디</th><td><form:input path="user_id" readonly="true"/>
 		        	<font color="red"><form:errors path="user_id"/></font></td></tr>
 		        <tr><th>비밀번호</th><td><form:input path="password" id="password"/>
 		        	<font color="red"><form:errors path="password" /></font></td></tr>

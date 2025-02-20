@@ -3,17 +3,24 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 	
 <mapper namespace="com.example.demo.mapper.LoginMapper">
+	<select id="getUserById" parameterType="String" 
+							resultType="Users">
+		select user_id, password, user_name, address, address_detail, zipcode, email,
+		to_char(birth,'YYYY-MM-DD') "birth", phone, 0 from users
+		where user_id=#{user_id}
+	</select>
 	<select id="getUser" parameterType="Users" 
 							resultType="Users">
 		select user_id, password, user_name, address, address_detail, zipcode, email,
 		to_char(birth,'YYYY-MM-DD') "birth", phone, 0 from users
 		where user_id=#{user_id} and password=#{password}
 	</select>
-	<insert id="modifyUser" parameterType="Users">
-		insert into users values(#{user_id}, #{password}, #{user_name}, #{address}, 
-		#{address_detail}, #{zipcode}, #{email}, to_date(#{birth},'YYYY/MM/DD'),
-		#{phone}, 0)
-	</insert>
+	<update id="modifyUser" parameterType="Users">
+		update users set password = #{password}, user_name = #{user_name}, 
+		address = #{address}, address_detail = #{address_detail}, zipcode =  #{zipcode},
+		email = #{email}, birth =  to_date(#{birth},'YYYY/MM/DD'), phone = #{phone}
+		where user_id = #{user_id}
+	</update>
 
 </mapper>
 
