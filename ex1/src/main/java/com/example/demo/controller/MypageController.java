@@ -20,10 +20,15 @@ public class MypageController {
 	@Autowired
 	public LoginService loginService;
 	@Autowired
-	public LoginValidator loginValidator;
+	public LoginValidator loginValidator; 
 	
 	@GetMapping(value = "/secondfa")
-	public ModelAndView mypage(){
+	public ModelAndView mypage(HttpSession session){
+		String loginUser = (String)session.getAttribute("loginUser");
+		if(loginUser == null) {
+			ModelAndView mav = new ModelAndView("loginFail");
+			return mav;
+		}
 		ModelAndView mav = new ModelAndView("secondfa");
 		return mav;
 	}
