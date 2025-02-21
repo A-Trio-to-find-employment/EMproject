@@ -11,8 +11,31 @@
 	</select>
 	<insert id="putQna" parameterType="Qna">
 		insert into qna values(#{qna_number},#{user_id},#{qna_title},#{qna_detail},
-			sysdate,0,#{qna_image})
+			sysdate,0,#{qna_image, jdbcType=VARCHAR})
 	</insert>
+	
+	<select id="getTotal" parameterType="String" resultType="Integer">
+		select count(*) from qna where user_id=#{user_id}
+	</select>
+	
+	<select id="qnaList" parameterType="StartEnd" resultType="Qna">
+		select qna_number, qna_title,user_id, qna_index, qna_date 
+		from (select rownum rank, a.*
+		        from(
+		        	select qna_number, qna_title, user_id, qna_index,
+			     	to_char(qna_date,'YYYY/MM/DD') as "QNA_DATE"
+			     	from qna where user_id=#{user_id}
+			     	order by qna_number desc
+			     	) a)
+		where rank > #{start} and rank <![CDATA[<]]> #{end}	
+	</select>
+	<select id="getqnaList" parameterType="Integer" resultType="Qna">
+		select qna_number, user_id, qna_title, qna_detail, qna_date, qna_index,qna_image
+		from qna where qna_number=#{quna_number}
+	</select>
+	<select id="getAnsContent" parameterType="Integer" resultType="String">
+		select ans_content from qna_ans where qna_number=#{qna_number} 
+	</select>
 </mapper>
 
 	

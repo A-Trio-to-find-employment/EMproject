@@ -9,17 +9,29 @@
 <meta charset="UTF-8">
 <title>문의 작성</title>
 <link rel="stylesheet" type="text/css" href="/css/QnaWriteFormstyle.css">
+
+<script>
+function submitForm(event) {
+    event.preventDefault(); // 기본 폼 제출 방지
+
+    if (confirm("등록되었습니다.\n문의내역으로 이동하시겠습니까?")) {
+        document.getElementById("qnaForm").submit(); // 폼 제출
+    }
+}
+</script>
+
 </head>
 <body>
 
 <div class="qna-container">
     <h3>문의 작성</h3>
-    <form:form action="/qnawriteform" method="post" enctype="multipart/form-data" modelAttribute="Qna">
+    <form:form id="qnaForm" action="/qnawriteform" method="post" enctype="multipart/form-data" modelAttribute="Qna">
         <table>
             <tr>
                 <th>제 목</th>
-                <td><form:input path="qna_title" value="${qna_title }"/></td>
-            </tr>
+                <td><form:input path="qna_title" value="${qna_title }"/>
+                <font color="red"><form:errors path="qna_title"/></font></td></tr>
+            
             <tr>
                 <th>첨부파일</th>
                 <td>
@@ -36,7 +48,7 @@
             </tr>
             <tr>
                 <td colspan="2" class="btn-group">
-                    <input type="submit" value="등 록"/>
+                    <input type="submit" value="등 록" onclick="submitForm(event)"/>
                     <input type="reset" value="취 소"/>
                 </td>
             </tr>

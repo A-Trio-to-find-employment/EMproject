@@ -44,18 +44,19 @@
         <h3>1:1 문의</h3>
         <c:if test="${sessionScope.loginUser != null}">
    		<ul>
-            <li><a href="/#">나의 문의 내역</a></li>
+            <li><a href="/qnalist">나의 문의 내역</a></li>
             <li><a href="/qnawrite">문의 등록</a></li>
         </ul>
 		</c:if>
         
     </div>
       <!-- 동적으로 변경되는 부분 -->
+      </div>
     <div class="content">
         <jsp:include page="${BODY}" />
     </div>
        
-</div>
+
 </body>
 <script>
     function toggleDropdown() {
