@@ -29,7 +29,12 @@ public class MypageController {
 			ModelAndView mav = new ModelAndView("loginFail");
 			return mav;
 		}
+<<<<<<< HEAD
+=======
+		Users users = this.loginService.getUserById(loginUser);
+>>>>>>> yong
 		ModelAndView mav = new ModelAndView("secondfa");
+		mav.addObject("users", users);
 		return mav;
 	}
 	@PostMapping(value = "/secondfa")
@@ -45,18 +50,18 @@ public class MypageController {
 //				mav.addObject("loginUser",loginUser);
 				return mav;
 			}else {
-				br.reject("error.login.user");
+				br.reject("error.login.users");
 				mav.getModel().putAll(br.getModel());
 				return mav;
 			}
 		}catch(EmptyResultDataAccessException e) {
-			br.reject("error.login.user");
+			br.reject("error.login.users");
 			mav.getModel().putAll(br.getModel());
 			return mav;
 		}
 	}
+	
 	@GetMapping(value = "/myInfo")
-
 	public ModelAndView myInfo(HttpSession session) {
 		ModelAndView mav = new ModelAndView("mypage");
 		String loginUser = (String)session.getAttribute("loginUser");
@@ -67,7 +72,7 @@ public class MypageController {
 		Users users = this.loginService.getUserById(loginUser);
 		if(users != null) {
 			mav.addObject("users",users);
-			mav.addObject("user_id",users.getUser_id());
+			mav.addObject("user_id", users.getUser_id());
 		}else {
 			mav.addObject("error", "회원 정보를 찾을 수 없습니다.");
 		}

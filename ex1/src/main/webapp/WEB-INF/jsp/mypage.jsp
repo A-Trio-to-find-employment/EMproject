@@ -35,7 +35,7 @@
         </div>
         <a href="#">이벤트</a>
         <c:if test="${sessionScope.loginUser != null}">
-        	<p>사용자 : ${ sessionScope.loginUser }</p>
+        	<p>사용자 : ${sessionScope.loginUser}</p>
    			<a href="/logout">로그아웃</a>
 		</c:if>
 		<c:if test="${sessionScope.loginUser == null}">
@@ -63,38 +63,41 @@
         <p><strong><a href="#">나의 1:1 문의내역</a></strong></p>
     </div>
 
-	 <div class="container">
-	        
-	        <h2>회원 정보</h2>
-	        <div class="myInfo">
-	        <div align="center">
-			<h2>내 정보 보기</h2>
-			<form:form action="/mypage/modify" method="post" modelAttribute="users">
-			<table>
-				<tr><th>이름</th><td><form:input path="user_name"/>
-		           	<font color="red"><form:errors path="user_name"/></font></td></tr>
-		   		<tr><th>아이디</th><td><form:input path="user_id" readonly="true"/>
-		        	<font color="red"><form:errors path="user_id"/></font></td></tr>
-		        <tr><th>비밀번호</th><td><form:input path="password" id="password"/>
-		        	<font color="red"><form:errors path="password" /></font></td></tr>
-		        <tr><th>비밀번호 재입력</th><td><input type="password" name="confirmPassword" id="confirmPassword"/></td></tr>
-		        <tr><th>주소</th><td><form:input path="address" readonly="true"/>
-		        	<font color="red"><form:errors path="address"/></font></td></tr>
-		        <tr><th>주소 상세</th><td><form:input path="address_detail" />
-		        	<font color="red"><form:errors path="address_detail"/></font></td></tr>
-		        <tr><th>우편번호</th><td><form:input path="zipcode" readonly="true" />
-		        	<button type="button" class="btn btn-default" onclick="daumZipCode()">
-		        	<i class="fa fa-search"></i> 우편번호 찾기</button></td></tr>
-		        <tr><th>이메일</th><td><form:input path="email" />
-		        	<font color="red"><form:errors path="email"/></font></td></tr>
-		        <tr><th>생년월일</th><td><form:input path="birth" type="date"/>
-		        	<font color="red"><form:errors path="birth"/></font></td></tr>
-		        <tr><th>전화번호</th><td><form:input path="phone" />
-		        	<font color="red"><form:errors path="phone"/></font></td></tr> 
-		    	<tr><td align="center" colspan="2"><input type="submit" value="수정" class="btn"/>
-		    		<input type="reset" value="취 소" class="btn"></td></tr>
-		    </table>
-	</form:form><br/><br/>
+<div class="container">
+<h2>회원 정보</h2>
+<div class="myInfo">
+	<div align="center">
+	<h2>내 정보 보기</h2>
+	<form:form action="/mypage/modify" method="post" modelAttribute="users"
+		onsubmit="validateForm()">
+		<table>
+			<tr><th>이름</th><td><form:input path="user_name"/>
+		   		<font color="red"><form:errors path="user_name"/></font></td></tr>
+		   	<tr><th>아이디</th><td><form:input path="user_id" readonly="true"/>
+		    	<font color="red"><form:errors path="user_id"/></font></td></tr>
+		    <tr><th>비밀번호</th><td><form:password path="password" id="password"/>
+		    	<font color="red"><form:errors path="password" /></font></td></tr>
+		    <tr><th>비밀번호 재입력</th><td><input type="password" name="confirmPassword" id="confirmPassword"/></td></tr>
+		    <tr><th>주소</th><td><form:input path="address" readonly="true"/>
+		    	<font color="red"><form:errors path="address"/></font></td></tr>
+		    <tr><th>주소 상세</th><td><form:input path="address_detail" />
+		    	<font color="red"><form:errors path="address_detail"/></font></td></tr>
+		    <tr><th>우편번호</th><td><form:input path="zipcode" readonly="true" />
+		    	<button type="button" class="btn btn-default" onclick="daumZipCode()">
+		    	<i class="fa fa-search"></i> 우편번호 찾기</button></td></tr>
+		    <tr><th>이메일</th><td><form:input path="email" />
+		    	<font color="red"><form:errors path="email"/></font></td></tr>
+			<tr><th>생년월일</th><td><form:input path="birth" type="date"/>
+		    	<font color="red"><form:errors path="birth"/></font></td></tr>
+		    <tr><th>전화번호</th><td><form:input path="phone" />
+		    	<font color="red"><form:errors path="phone"/></font></td></tr> 
+		    <tr><td align="center" colspan="2"><input type="submit" value="수정" class="btn"/>
+		    	<input type="reset" value="취 소" class="btn"></td></tr>
+		</table>
+	</form:form>
+	</div>
+	<br/><br/>
+</div>
 </div>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript">

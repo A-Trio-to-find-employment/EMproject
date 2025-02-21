@@ -19,7 +19,7 @@ public class Users {
     private String password;
 
     @NotNull(message = "이름은 필수 입력 항목입니다.")
-    @Size(min = 1, message = "사용할 닉네임을 입력해주세요")
+    @Size(min = 1, message = "이름을 입력해주세요")
     private String user_name;
 
     @NotNull(message = "주소는 필수 입력 항목입니다.")
