@@ -29,10 +29,7 @@ public class MypageController {
 			ModelAndView mav = new ModelAndView("loginFail");
 			return mav;
 		}
-<<<<<<< HEAD
-=======
 		Users users = this.loginService.getUserById(loginUser);
->>>>>>> yong
 		ModelAndView mav = new ModelAndView("secondfa");
 		mav.addObject("users", users);
 		return mav;
