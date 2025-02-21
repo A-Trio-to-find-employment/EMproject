@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.example.demo.mapper.AnsMapper">
+<select id="qnaList" parameterType="StartEnd" resultType="Qna">
+		select qna_number, qna_title,user_id, qna_index, qna_date 
+		from (select rownum rank, a.*
+		        from(
+		        	select qna_number, qna_title, user_id, qna_index,
+			     	to_char(qna_date,'YYYY/MM/DD') as "QNA_DATE"
+			     	from qna 
+			     	order by qna_number desc
+			     	) a)
+		where rank > #{start} and rank <![CDATA[<]]> #{end}	
+	</select>
+	<select id="getqnaList" parameterType="Integer" resultType="Qna">
+		select qna_number, user_id, qna_title, qna_detail, qna_date, qna_index,qna_image
+		from qna  where qna_number=#{quna_number} 
+	</select>
+		<select id="getTotal"  resultType="Integer">
+		select count(*) from qna 
+	</select>
+	<insert id="InsertQnaAns" parameterType="QnaAns">
+	 insert into qna_ans values(#{qna_number}, #{qna_ans}, #{ans_title}, #{ans_content})
+	</insert>
+	<update id="UpdateIndex" parameterType="Integer">
+	update qna set qna_index=1 where qna_number=#{qna_number}
+	</update>
+	<select id="getMaxQnaAnsId" resultType="Integer">
+    SELECT MAX(qna_ans) FROM qna_ans
+</select>
+
+</mapper>
+
+	
+
+
+
+

@@ -10,4 +10,5 @@ public class QnaAns {
 	private Integer qna_ans;
 	private String ans_title;
 	private String ans_content;
+	private Integer qna_index;
 }

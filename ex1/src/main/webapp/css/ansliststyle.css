@@ -1,0 +1,102 @@
+@charset "UTF-8";
+body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+     
+        }
+
+     .nav { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    background: #f8f8f8; 
+    padding: 10px; 
+    width: 100%; 
+    box-sizing: border-box; 
+}
+
+.nav > div, .nav a { 
+    width: 100px;  /* 모든 메뉴 크기 통일 */
+    text-align: center; 
+    text-decoration: none; 
+    font-weight: bold; 
+    color: black; 
+    padding: 10px 0; 
+    border-right: 1px solid #ccc; 
+    cursor: pointer; 
+}
+
+.nav a:last-child { 
+    border-right: none; 
+}
+
+        .content {
+            width: 80%;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 60%;
+            border-collapse: collapse;
+            text-aligin: center;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            padding: 8px 12px;
+            margin: 0 5px;
+            background: #4A00E0;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .pagination .current {
+            font-weight: bold;
+            color: #6A00F4;
+        }
+
+
+/* 분야보기 드롭다운 스타일 */
+.dropdown { 
+    display: none; 
+    position: absolute; 
+    top: 100%; 
+    left: 50%;
+    transform: translateX(-50%);
+    background: white; 
+    border: 1px solid #ccc; 
+    padding: 5px; 
+    width: 150px; 
+}
+
+.dropdown a { 
+    display: block; 
+    padding: 5px; 
+    text-decoration: none; 
+    color: black; 
+}
+
+.dropdown a:hover { 
+    background: #ddd; 
+}

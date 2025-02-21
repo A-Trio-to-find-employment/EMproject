@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.example.demo.model.Qna;
-import com.example.demo.model.QnaAns;
 import com.example.demo.model.QnaBoard;
 import com.example.demo.model.StartEnd;
 

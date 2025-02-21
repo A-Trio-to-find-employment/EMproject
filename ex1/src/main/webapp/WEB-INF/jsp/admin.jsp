@@ -16,7 +16,7 @@
     <div class="nav">
         <a href="/adminPage">HOME</a>     
         <a href="/manageGoods">상품 관리</a>
-        <a href="#">고객 문의</a>
+        <a href="/anslist">고객 문의</a>
         <a href="#">이벤트 관리</a>        
         <a href="#">교환 및 반품 현황</a>
         <a href="#">통계 내역</a>
