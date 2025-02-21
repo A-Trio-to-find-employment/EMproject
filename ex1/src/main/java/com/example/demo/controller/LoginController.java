@@ -46,12 +46,12 @@ public class LoginController {
 //				mav.addObject("loginUser",loginUser);
 				return mav;
 			}else {
-				br.reject("error.login.user");
+				br.reject("error.login.users");
 				mav.getModel().putAll(br.getModel());
 				return mav;
 			}
 		}catch(EmptyResultDataAccessException e) {
-			br.reject("error.login.user");
+			br.reject("error.login.users");
 			mav.getModel().putAll(br.getModel());
 			return mav;
 		}

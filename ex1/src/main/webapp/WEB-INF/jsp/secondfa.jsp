@@ -30,9 +30,15 @@
                 <a href="/field.html?cat_id=1">외국도서</a>
             </div>
         </div>
-        <a href="#">이벤트</a>        
-        <a href="/signup">회원가입</a>
-        <a href="/login">로그인</a>
+        <a href="#">이벤트</a>
+        <c:if test="${sessionScope.loginUser != null}">
+        	<p>사용자 : ${sessionScope.loginUser}</p>
+   			<a href="/logout">로그아웃</a>
+		</c:if>
+		<c:if test="${sessionScope.loginUser == null}">
+   			<a href="/signup">회원가입</a>
+    		<a href="/login">로그인</a>
+		</c:if>
         <a href="/secondfa">마이페이지</a>
         <a href="#">고객센터</a>
     </div>
@@ -44,12 +50,11 @@
             <li><a href="">주문내역</a></li>
             <li><a href="#">주문내역/배송조회</a></li>
             <li><a href="#">반품/교환/취소 신청 및 조회</a></li>
-            <li><a href="#">쿠폰</a></li>
             <li><a href="#">쿠폰조회</a></li>
             <li><a href="#">리뷰 관리</a></li>
             <li><a href="#">회원 정보</a></li>
             <li><a href="#">선호도 조사</a></li>
-            <li><a href="/showprefresult">선호도 조사 결과</a></li>
+            <li><a href="#">선호도 조사 결과</a></li>
         </ul>
         <p><strong><a href="#">나의 1:1 문의내역</a></strong></p>
     </div>
@@ -66,12 +71,14 @@
 	                        </c:forEach>
 	                    </font>
 	                </spring:hasBindErrors>
+	                <br/>
 	                <label for="user_id">아이디</label>
-	                <input type="text" id="user_id" name="user_id">
+	                <form:input path="user_id"/>
+	                <font color="red"><form:errors path="user_id"/></font>
 	
 	                <label for="password">비밀번호</label>
-	                <input type="password" id="password" name="password">
-	
+	                <form:password path="password"/><form:errors path="password"/>
+					<font color="red"><form:errors path="password"/></font>
 	                <button type="submit">확인</button>
 	            </form:form>
         </div>
