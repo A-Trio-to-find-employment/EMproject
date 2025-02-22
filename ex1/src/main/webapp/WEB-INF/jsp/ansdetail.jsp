@@ -37,6 +37,7 @@
 <input type="hidden" name="qna_number" value="${qna.qna_number}">
 <input type="hidden" name="ans_title" value="${qna.qna_title}">
 
+
 <div align="center">
 <h3>나의 문의 내역 상세보기</h3>
 <table>
