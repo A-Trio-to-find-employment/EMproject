@@ -23,5 +23,22 @@ public class CategoryService {
 	public String getCatName(String cat_id) {
 		return this.mymapper.getCatName(cat_id);
 	}
-
+	public void insertCategory(Category category) {
+		this.mymapper.insertCategory(category);
+	}
+	public void deleteCategory(String cat_id) {
+		this.mymapper.deleteCategory(cat_id);
+	}
+	public Integer getMaxHaWeuiCategoryId() {
+		return this.mymapper.getMaxHaWeuiCategoryId();
+	}
+	public boolean checkSubCategories(String cat_id) {
+		 if ("0".equals(cat_id)) {  // cat_id가 0일 경우
+		        return false;
+		    }
+		    
+		    Integer count = mymapper.checkSubCategories(cat_id);
+		    return count != null && count > 0;
+	}
+		
 }

@@ -22,6 +22,26 @@
 	<select id="getCatName" parameterType="String" resultType="String">
 		select cat_name from categories where cat_id = #{cat_id}
 	</select>
+	
+	<select id="getMaxHaWeuiCategoryId"  resultType="Integer">
+	SELECT MAX(TO_NUMBER(REGEXP_SUBSTR(cat_id, '\d+'))) + 1 FROM categories
+	</select>
+	
+	<delete id="deleteCategory" parameterType="String">
+    delete from categories where cat_id = #{cat_id}
+    </delete>
+    
+	<insert id="insertCategory" parameterType="Category">
+    insert into categories (cat_id ,cat_name, parent_id)
+    values (#{cat_id},#{cat_name}, #{parent_id})
+    </insert>
+	
+	<select id="checkSubCategories" parameterType="String" resultType="Integer">
+        select count(*) 
+        from categories
+        where parent_id = #{catId}
+    </select>
+	
 </mapper>
 
 	
