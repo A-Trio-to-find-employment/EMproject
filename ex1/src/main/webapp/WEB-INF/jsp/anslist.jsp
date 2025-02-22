@@ -52,7 +52,16 @@
             <tr class="qna-row" data-confirm="${qna.qna_index == 1 ? 'O' : 'X'}">
                 <td>${qna.qna_number}</td>
                 <td>${qna.user_id}</td>
-                <td><a href="/ansdetail?ID=${qna.qna_number}">${qna.qna_title}</a></td>
+                <td>
+    <c:choose>
+        <c:when test="${qna.qna_index == 1}">
+            ${qna.qna_title}  <!-- 링크 없이 제목만 출력 -->
+        </c:when>
+        <c:otherwise>
+            <a href="/ansdetail?ID=${qna.qna_number}">${qna.qna_title}</a>
+        </c:otherwise>
+    </c:choose>
+</td>
                 <td>${qna.qna_index == 1 ? 'O' : 'X'}</td>
             </tr>
         </c:forEach>

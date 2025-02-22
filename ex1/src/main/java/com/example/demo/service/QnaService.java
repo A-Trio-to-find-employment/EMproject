@@ -39,4 +39,11 @@ public class QnaService {
 	public String getAnsContent(Integer qna_number) {
 		return this.mapper.getAnsContent(qna_number);
 	}
+	public void deleteqna(Integer qna_number) {
+		this.mapper.deleteqna(qna_number);
+	}
+	
+	public void deleteans(Integer qna_number) {
+		this.mapper.deleteans(qna_number);
+	}
 }

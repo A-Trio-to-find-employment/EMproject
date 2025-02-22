@@ -15,7 +15,9 @@ public interface QnaMapper {
 	void putQna(Qna qna);
 	Integer getTotal(String user_id);//나의 문의내역 갯 수 검색
 	List<Qna> qnaList(StartEnd st);//나의 문의내역 목록을 검색
-	
+	void deleteqna(Integer qna_number);
 	Qna getqnaList(Integer qna_number);
 	String getAnsContent(Integer qna_number);
+	void deleteans(Integer qna_number);
+	
 }

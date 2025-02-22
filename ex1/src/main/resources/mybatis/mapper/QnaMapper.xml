@@ -36,6 +36,12 @@
 	<select id="getAnsContent" parameterType="Integer" resultType="String">
 		select ans_content from qna_ans where qna_number=#{qna_number} 
 	</select>
+	<delete id="deleteqna" parameterType="Integer">
+		delete from qna where qna_number=#{qna_number}
+	</delete>
+	<delete id="deleteans" parameterType="Integer">
+		delete from qna_ans where qna_number=#{qna_number}
+	</delete>
 </mapper>
 
 	

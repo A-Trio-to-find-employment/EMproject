@@ -33,6 +33,19 @@ public class QnaController {
 	@Autowired
 	public LoginService loginService;
 	
+	@GetMapping(value="/qnaDelete")
+	public ModelAndView qnaDelete(Integer qna_number,Integer qna_index) {
+		ModelAndView mav= new ModelAndView();
+		if(qna_index==0) {
+			this.service.deleteqna(qna_number);
+		}
+		else {
+			this.service.deleteans(qna_number);
+			this.service.deleteqna(qna_number);
+		}
+		mav.setViewName("redirect:/qnalist");
+		return mav;
+	}
 	
 	@GetMapping(value="/qnadetail")
 	public ModelAndView qnadetail( HttpSession session ,Integer ID) {

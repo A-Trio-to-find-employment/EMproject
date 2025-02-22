@@ -39,8 +39,8 @@
            <tr><th>답 변</th><td><textarea rows="5" cols="60" readonly="readonly">${qna.ans_content}</textarea></td></tr>
 			</c:if>
 	<tr><td colspan="2" align="center">		
-		<a href="javascript:goModify()">[수정]</a>
-		<a href="javascript:goDelete()">[삭제]</a>
+		
+		<a href="javascript:goDelete('${qna.qna_number}', '${qna.qna_index}')">[삭제]</a>
 		<a href="/qnalist">[목록]</a></td></tr>
 		
 </table>
@@ -48,14 +48,14 @@
 
 <script type="text/javascript">
 
-function goModify(){
-	document.frm.action = "/qnaModify";
-	document.frm.submit();//서블릿 호출
+
+
+function goDelete(qna_number, qna_index) {
+    if (confirm("정말 삭제하시겠습니까?")) {
+        location.href = "/qnaDelete?qna_number=" + qna_number + "&qna_index=" + qna_index;
+    }
 }
-function goDelete(){
-	document.frm.action = "/qnaDelete";
-	document.frm.submit();//서블릿 호출
-}
+
 </script>
 </body>
 </html>
