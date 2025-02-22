@@ -11,4 +11,9 @@ import com.example.demo.model.StartEnd;
 public interface GoodsMapper {
 	List<Book> getGoodsList(StartEnd se);
 	Book getGoodsDetail(Long isbn); 
+	Integer getGoodsCount();
+	List<Book> getGoodsByName(StartEnd se);
+	void updateGoods(Book book);
+	void addGoods(Book book);
+	Integer getIsbnDup(Long isbn);
 }
