@@ -44,14 +44,17 @@
 		 		 cat_id=#{cat_id}, price=#{price}
 	</update>
 	<select id="getIsbnDup" parameterType="java.lang.Long" resultType="Integer">
-		select count(*) from book where where isbn=#{isbn}
+		select count(*) from book where isbn=#{isbn, jdbcType=BIGINT}
 	</select>
 	<insert id="addGoods" parameterType="Book">
 		insert into book values(#{image_name}, #{isbn}, #{book_title}, 
 				(SELECT LISTAGG(author, ', ') WITHIN GROUP (ORDER BY author) 
 		 		FROM book_author 
 		 		WHERE isbn = book.isbn) AS authors=#{authors}, #{publisher},
-		 		 #{pub_date}, #{cat_id}, price=#{price})
+		 		 #{pub_date}, #{cat_id}, #{price})
+	</insert>
+	<insert id="addCat" parameterType="">
+		insert into 
 	</insert>
 </mapper>
 

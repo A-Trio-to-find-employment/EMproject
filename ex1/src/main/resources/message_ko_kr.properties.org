@@ -3,3 +3,4 @@ error.input.password=비밀번호가 맞는지 확인해주세요.
 error.empty.user_id=아이디를 입력해주세요.
 error.empty.password=비밀번호를 입력해주세요.
 error.login.users=ID와 비밀번호를 확인해주세요.
+error.coverImage.empty=앞표지를 업로드해야 합니다.

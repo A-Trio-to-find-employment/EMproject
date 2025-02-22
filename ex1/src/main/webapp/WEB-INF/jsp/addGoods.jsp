@@ -25,9 +25,6 @@
 <div align="center">
 <script type="text/javascript">
 function isbnCheck(){
-    if(document.isbnFrm.isbn.value == ''){
-        alert("ISBN을 입력하세요."); return;
-    }
     var url = "/manageGoods/isbnCheck?ISBN=" + document.isbnFrm.isbn.value;
     window.open(url, "__blank__", "width=450,height=200,top=200,left=600");
 }
@@ -43,66 +40,68 @@ enctype="multipart/form-data" onsubmit="return validate(this)" name="isbnFrm">
             <th>앞표지</th>
             <td>
                 <input type="file" name="coverImage" id="coverImage" onchange="previewImage(event)">
+                <font color="red"><form:errors path="coverImage"/></font>
                 <div id="imagePreview">이미지 미리보기</div>
+            	
             </td>
         </tr>
         <tr>
             <th>제목</th>
             <td>
-                <form:input path="title"/>
-                <form:errors path="title" cssClass="error" />
+                <form:input path="book_title"/><font color="red">
+                <form:errors path="book_title"/></font>
             </td>
         </tr>
         <tr>
             <th>재고</th>
             <td>
-                <form:input path="stock"/>
-                <form:errors path="stock" cssClass="error" />
+                <form:input path="stock"/><font color="red">
+                <form:errors path="stock"/></font>
             </td>
         </tr>
         <tr>
             <th>발행일</th>
             <td>
-                <form:input type="date" path="publishDate"/>
-                <form:errors path="publishDate" cssClass="error" />
+                <form:input type="date" path="pub_date"/><font color="red">
+                <form:errors path="pub_date"/></font>
             </td>
         </tr>
         <tr>
             <th>출판사</th>
             <td>
-                <form:input path="publisher"/>
-                <form:errors path="publisher" cssClass="error" />
+                <form:input path="publisher"/><font color="red">
+                <form:errors path="publisher"/></font>
             </td>
         </tr>
         <tr>
             <th>ISBN</th>
             <td>
-                <form:input path="isbn"/>
-                <form:errors path="isbn" cssClass="error" />
+                <form:input path="isbn"/><font color="red" size="3">
+                <form:errors path="isbnChecked"/></font>
                 <input type="button" value="ISBN 중복 검사" onclick="isbnCheck()">
             </td>
         </tr>
         <tr>
             <th>카테고리</th>
             <td>
-                <form:select path="category">
+                <form:select path="cat_id"><font color="red">
                     <form:option value="domestic">국내 도서</form:option>
                     <form:option value="foreign">해외 도서</form:option>
                 </form:select>
-                <form:errors path="category" cssClass="error" />
+                <form:errors path="cat_id"/></font>
             </td>
         </tr>
         <tr>
             <th>저자</th>
             <td>
-                <form:input path="author"/>
-                <form:errors path="author" cssClass="error" />
+                <form:input path="authors"/><font color="red">
+                <form:errors path="authors"/></font>
             </td>
         </tr>
         <tr>
             <td colspan="2" align="center">
                 <input type="submit" value="추가">
-                <input type="reset" value="삭제">
+                <input type="reset" value="취소">
             </td>
         </tr>
     </table>
@@ -118,38 +117,7 @@ function previewImage(event) {
     }
     reader.readAsDataURL(event.target.files[0]);
 }
-
 function validate(frm) {
-    if (frm.title.value.trim() === '') {
-        alert("제목을 입력하세요.");
-        frm.title.focus();
-        return false;
-    }
-    if (frm.stock.value.trim() === '') {
-        alert("재고를 입력하세요.");
-        frm.stock.focus();
-        return false;
-    }
-    if (frm.publishDate.value.trim() === '') {
-        alert("발행일을 입력하세요.");
-        frm.publishDate.focus();
-        return false;
-    }
-    if (frm.publisher.value.trim() === '') {
-        alert("출판사를 입력하세요.");
-        frm.publisher.focus();
-        return false;
-    }
-    if (frm.isbn.value.trim() === '') {
-        alert("ISBN을 입력하세요.");
-        frm.isbn.focus();
-        return false;
-    }
-    if (frm.author.value.trim() === '') {
-        alert("저자를 입력하세요.");
-        frm.author.focus();
-        return false;
-    }
     return confirm("정말로 추가하시겠습니까?");
 }
 </script>
