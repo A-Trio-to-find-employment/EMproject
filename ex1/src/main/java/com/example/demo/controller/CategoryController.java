@@ -15,12 +15,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.model.Category;
 import com.example.demo.service.CategoryService;
+import com.example.demo.service.PreferenceService;
 
 @Controller
 public class CategoryController {
 
     @Autowired
     private CategoryService service;
+    
+    @Autowired
+    private PreferenceService preferenceService;
 
     // 최상위 카테고리 목록을 가져오는 메소드
 
@@ -46,7 +50,9 @@ public class CategoryController {
         Map<String, Object> response = new HashMap<>();        
         try {
             // 카테고리 삭제 로직
+        	this.preferenceService.DeleteUserPreference(categoryId);
         	this.service.deleteCategory(categoryId);
+        	
             response.put("success", true);
         } catch (Exception e) {
             response.put("success", false);

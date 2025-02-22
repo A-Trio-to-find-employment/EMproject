@@ -23,6 +23,7 @@ public class LoginController {
 	@Autowired
 	public LoginValidator loginValidator;
 	
+	
 	@GetMapping(value = "/login")
 	public ModelAndView login(Users user) {
 		ModelAndView mav = new ModelAndView("login");

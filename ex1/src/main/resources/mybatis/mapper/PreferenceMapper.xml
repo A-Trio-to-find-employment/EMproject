@@ -35,6 +35,9 @@
 	<update id="updateScore" parameterType="UserPreference">
 		update user_preference set pref_score = #{pref_score} where pref_id = #{pref_id}
 	</update>
+	<delete id="DeleteUserPreference">
+	delete from user_preference where cat_id=#{cat_id}
+	</delete>
 </mapper>
 
 	

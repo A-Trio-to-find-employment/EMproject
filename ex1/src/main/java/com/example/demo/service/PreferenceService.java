@@ -49,5 +49,8 @@ public class PreferenceService {
     public void updateScore(UserPreference userPreference) {
     	this.preferenceMapper.updateScore(userPreference);
     }
+    public void DeleteUserPreference(String cat_id) {//jws가 추가하고 가요 카테고리 지울려면 유저 선호도 조사에 있는거 지워야 합니다.
+    	this.preferenceMapper.DeleteUserPreference(cat_id);
+    }
 
 }

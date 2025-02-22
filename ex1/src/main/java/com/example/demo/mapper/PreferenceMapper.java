@@ -22,4 +22,5 @@ public interface PreferenceMapper {
 	void insertUserPref(UserPreference userPreference);
 	List<Long> getPrefIdByUser(String userId);
 	UserPreference getUserPref(Long pref_id);
+	void DeleteUserPreference(String cat_id);
 }
