@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class Review {
 	private Integer review_id;
-	private Integer isbn;
+	private Long isbn;
 	private String user_id;
 	private Integer rating;
 	private String content;

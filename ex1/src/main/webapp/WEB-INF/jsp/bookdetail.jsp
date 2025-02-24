@@ -14,8 +14,8 @@
 
         <!-- 상단 정보 (이미지 + 도서 정보) -->
         <div class="book-top">
-            <div class="book-image">
-                <img src="/images/${book.image_name}" alt="${book.book_title}">
+            <div class="book-image">                
+                <img src="${pageContext.request.contextPath}/upload/${book.image_name}" width="250" height="200"/>
             </div>
             <div class="book-info">
                 <h1>${book.book_title}</h1>
@@ -63,26 +63,57 @@
             </table>
 
             <!-- 리뷰 섹션 -->
-            <h3>리뷰</h3>
-            <div class="reviews">
-                <c:choose>
-                    <c:when test="${empty reviews}">
-                        <p>등록된 리뷰가 없습니다.</p>
-                    </c:when>
-                    <c:otherwise>
-                        <c:forEach var="review" items="${reviews}">
-                            <div class="review-item">
-                                <p><strong>${review.userName}:</strong> ${review.content}</p>
-                                <p>⭐ ${review.rating} / 5</p>
-                            </div>
-                        </c:forEach>
-                    </c:otherwise>
-                </c:choose>
-            </div>
-        </div>
-
-    </div>
+<h3>리뷰</h3>
+<div class="reviews">
+    <c:choose>
+        <c:when test="${empty review}">
+            <p>등록된 리뷰가 없습니다.</p>
+        </c:when>
+        <c:otherwise>
+            <c:forEach var="review" items="${review}">
+                <div class="review-item">
+                    <p class="review-date">📅 ${review.reg_date}</p>
+                    <p>${review.content}</p>
+                    <div class="review-footer">
+                        <span class="review-rating">⭐ ${review.rating} / 5</span>
+                        
+                        <!-- AJAX 신고 버튼 -->
+                        <button type="button" onclick="reportReview(${review.review_id})">🚨 신고</button>
+                    </div>
+                </div>
+            </c:forEach>
+        </c:otherwise>
+    </c:choose>
 </div>
 
+<script>
+function reportReview(review_id) {
+    if (confirm("이 리뷰를 신고하시겠습니까?")) {
+        fetch('/reportReview', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({ review_id: review_id })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("신고가 접수되었습니다.");
+                location.reload(); // 새로고침하여 반영
+            } else {
+                alert("신고에 실패했습니다.");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("오류가 발생했습니다.");
+        });
+    }
+}
+</script>
+
+
+	</div>
 </body>
 </html>

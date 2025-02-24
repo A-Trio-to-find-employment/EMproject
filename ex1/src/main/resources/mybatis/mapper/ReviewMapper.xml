@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.ReviewMapper">
+	<select id="getReview" parameterType="java.lang.Long"
+		resultType="Review">
+		select review_id,isbn,user_id,rating,content,reg_date from
+		review where isbn=#{isbn}
+	</select>	
+	
+	<update id="increaseReportCount" parameterType="Integer">
+		update review
+		set singo = singo + 1
+		where review_id = #{review_id}
+	</update>
+
+	<!-- 신고 횟수가 10 이상인 리뷰 삭제 -->
+	<delete id="deleteReportedReviews">
+		delete from review
+		where singo >= 10
+	</delete>
+	
+</mapper>
+
+	

@@ -3,7 +3,7 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 	
 <mapper namespace="com.example.demo.mapper.MyMapper">
-
+	
     <select id="getAllCategories" resultType="Category">
        SELECT * FROM categories
     </select>

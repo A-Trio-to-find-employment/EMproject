@@ -9,12 +9,16 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.model.Book;
 import com.example.demo.model.Category;
+import com.example.demo.model.Review;
 import com.example.demo.service.FieldService;
+import com.example.demo.service.ReviewService;
 
 @Controller
 public class FieldController {
 	@Autowired
 	private FieldService service;
+	@Autowired
+	private ReviewService reviewservice;
 	
 	@RequestMapping(value = "/field.html")
 	public ModelAndView field(String cat_id) {
@@ -56,7 +60,9 @@ public class FieldController {
 		ModelAndView mav = new ModelAndView("fieldlayout");
 	    // 1. 책 정보 가져오기
 		 Book book = service.getBookDetail(isbn);
-		List<String> bookcategory = book.getCategoryPath(); 
+		List<String> bookcategory = book.getCategoryPath();
+		List<Review> review = this.reviewservice.getReview(isbn);
+		mav.addObject("review",review);
 	    mav.addObject("BODY", "bookdetail.jsp"); // bookdetail.jsp 로드
 	    mav.addObject("book", book); // 책 정보 추가
 	    mav.addObject("bookcategory", bookcategory); // 책 정보 추가
