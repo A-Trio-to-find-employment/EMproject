@@ -9,7 +9,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.model.Book;
 import com.example.demo.model.Category;
+import com.example.demo.model.Qna;
 import com.example.demo.model.Review;
+import com.example.demo.model.StartEnd;
 import com.example.demo.service.FieldService;
 import com.example.demo.service.ReviewService;
 
@@ -56,13 +58,31 @@ public class FieldController {
         return mav;
 	}
 	@RequestMapping(value = "bookdetail.html")
-	public ModelAndView bookdetail(Long isbn) {
+	public ModelAndView bookdetail(Long isbn,Integer PAGE_NUM) {
 		ModelAndView mav = new ModelAndView("fieldlayout");
 	    // 1. 책 정보 가져오기
 		 Book book = service.getBookDetail(isbn);
-		List<String> bookcategory = book.getCategoryPath();
-		List<Review> review = this.reviewservice.getReview(isbn);
-		mav.addObject("review",review);
+		List<String> bookcategory = book.getCategoryPath();		
+		
+		int currentPage = 1;
+		if(PAGE_NUM != null) currentPage = PAGE_NUM;
+		int count = this.reviewservice.getTotal();
+		int startRow = 0; int endRow = 0; int totalPageCount = 0;
+		if(count > 0) {
+			totalPageCount = count / 5;
+			if(count % 5 != 0) totalPageCount++;
+			startRow = (currentPage - 1) * 5;
+			endRow = ((currentPage - 1) * 5) + 6;
+			if(endRow > count) endRow = count;
+		}
+		StartEnd se = new StartEnd(); se.setStart(startRow); se.setEnd(endRow); se.setIsbn(isbn);
+		List<Review> review = this.reviewservice.ReviewList(se);		
+		mav.addObject("START",startRow); 
+		mav.addObject("END", endRow);
+		mav.addObject("TOTAL", count);	
+		mav.addObject("currentPage",currentPage);
+		mav.addObject("LIST",review); 
+		mav.addObject("pageCount",totalPageCount);		
 	    mav.addObject("BODY", "bookdetail.jsp"); // bookdetail.jsp 로드
 	    mav.addObject("book", book); // 책 정보 추가
 	    mav.addObject("bookcategory", bookcategory); // 책 정보 추가

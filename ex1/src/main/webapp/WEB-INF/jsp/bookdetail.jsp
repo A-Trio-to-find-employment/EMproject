@@ -66,11 +66,11 @@
 <h3>리뷰</h3>
 <div class="reviews">
     <c:choose>
-        <c:when test="${empty review}">
+        <c:when test="${empty LIST}">
             <p>등록된 리뷰가 없습니다.</p>
         </c:when>
         <c:otherwise>
-            <c:forEach var="review" items="${review}">
+            <c:forEach var="review" items="${LIST}">
                 <div class="review-item">
                     <p class="review-date">📅 ${review.reg_date}</p>
                     <p>${review.content}</p>
@@ -86,6 +86,37 @@
     </c:choose>
 </div>
 
+<div class="pagination">
+        <c:set var="currentPage" value="${currentPage }"/>
+        <c:set var="pageCount" value="${pageCount }"/>
+        <c:set var="startPage" 
+            value="${currentPage - (currentPage % 10 == 0 ? 10 : (currentPage % 10)) + 1 }"/>
+        <c:set var="endPage" value="${ startPage + 9 }"/>	
+
+        <c:if test="${endPage > pageCount }">
+            <c:set var="endPage" value="${pageCount }"/>
+        </c:if>
+
+        <c:if test="${startPage > 10 }">
+            <a href="/bookdetail.html?PAGE_NUM=${startPage - 1}&isbn=${book.isbn}">[이전]</a>
+        </c:if>
+
+        <c:forEach begin="${startPage }" end="${endPage }" var="i">
+            <c:if test="${currentPage == i }">
+                <span class="current">${ i }</span>
+            </c:if>
+            <c:if test="${currentPage != i }">
+                <a href="/bookdetail.html?PAGE_NUM=${ i }&isbn=${book.isbn}">${ i }</a>
+            </c:if>
+        </c:forEach>
+
+        <c:if test="${endPage < pageCount }">
+            <a href="/bookdetail.html?PAGE_NUM=${endPage + 1 }&isbn=${book.isbn}">[다음]</a>
+        </c:if>
+    </div>
+   </div>
+</div>
+    
 <script>
 function reportReview(review_id) {
     if (confirm("이 리뷰를 신고하시겠습니까?")) {

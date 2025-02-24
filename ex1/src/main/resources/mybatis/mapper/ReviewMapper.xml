@@ -19,7 +19,20 @@
 		delete from review
 		where singo >= 10
 	</delete>
-	
+	<select id="ReviewList" parameterType="StartEnd" resultType="Review">
+		select review_id, isbn,user_id, rating, content, reg_date 
+		from (select rownum rank, a.*
+		        from(
+		        	select review_id, isbn, user_id, rating,content,
+			     	to_char(reg_date,'YYYY/MM/DD') as "REG_DATE"
+			     	from review where isbn=#{isbn}
+			     	order by rating desc
+			     	) a)
+		where rank > #{start} and rank <![CDATA[<]]> #{end}	
+	</select>
+	<select id="getTotal" resultType="Integer">
+		select count(*) from review 
+	</select>
 </mapper>
 
 	

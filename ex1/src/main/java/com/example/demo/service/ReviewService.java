@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.mapper.ReviewMapper;
 import com.example.demo.model.Review;
+import com.example.demo.model.StartEnd;
 @Service
 public class ReviewService {
 	@Autowired
@@ -20,4 +21,10 @@ public class ReviewService {
 		 mapper.deleteReportedReviews(); // 신고 10개 이상 리뷰 삭제
 	        return true;
 	    }
+	 public Integer getTotal() {
+		 return this.mapper.getTotal();
+	 }
+	 public List<Review> ReviewList(StartEnd st){
+		 return this.mapper.ReviewList(st);
+	 }
 }
