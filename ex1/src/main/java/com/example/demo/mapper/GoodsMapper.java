@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.example.demo.model.Book;
+import com.example.demo.model.Category;
 import com.example.demo.model.StartEnd;
 
 @Mapper
@@ -16,4 +17,8 @@ public interface GoodsMapper {
 	void updateGoods(Book book);
 	void addGoods(Book book);
 	Integer getIsbnDup(Long isbn);
+	
+	
+	List<Category> getCategoriesByParentId(String parentId);
+	String getCategoryPath(String catId);
 }

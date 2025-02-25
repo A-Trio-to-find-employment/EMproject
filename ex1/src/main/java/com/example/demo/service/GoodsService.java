@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.mapper.GoodsMapper;
 import com.example.demo.model.Book;
+import com.example.demo.model.Category;
 import com.example.demo.model.StartEnd;
 
 @Service
@@ -39,7 +40,21 @@ public class GoodsService {
 	public Integer getIsbnDup(Long isbn) {
 		return this.goodsMapper.getIsbnDup(isbn);
 	}
-	public void addGoods(Book book) {
+//	public void addGoods(Book book) {
+//		this.goodsMapper.addGoods(book);
+//	}
+	public void addGoods(Book book,String selectedCat) {
+		book.setCat_id(selectedCat);
 		this.goodsMapper.addGoods(book);
 	}
+	
+	
+	public List<Category> getCategoriesByParentId(String parnetId){
+		return this.goodsMapper.getCategoriesByParentId(parnetId);
+	}
+	public String getCategoryPath(String catId) {
+		return this.goodsMapper.getCategoryPath(catId);
+	}
+	
+	
 }

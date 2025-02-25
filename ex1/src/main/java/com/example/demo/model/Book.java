@@ -28,7 +28,7 @@ public class Book {
 	@NotEmpty(message = "출판사를 기입하세요.")
 	private String publisher;
 	@NotNull(message = "가격을 기입하세요.")
-	@Range(min=0,max=1000000,message = "{min}과 {max}사이로 입력하세요.")
+	@Range(min=1,max=1000000,message = "{min}과 {max}사이로 입력하세요.")
 	private Integer price;
 	private Integer total_rating;
 	@NotNull(message = "재고를 넣어주세요.")
