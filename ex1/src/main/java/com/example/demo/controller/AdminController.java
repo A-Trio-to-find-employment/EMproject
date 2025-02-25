@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.model.Book;
+import com.example.demo.model.BookCategories;
 import com.example.demo.model.Category;
 import com.example.demo.service.GoodsService;
 import com.example.demo.utils.CoverValidator;
@@ -73,6 +75,24 @@ public class AdminController {
 		mav.addObject("BODY","goodsList.jsp");
 		return mav;
 	}
+	@PostMapping(value = "manageGoods/insertStock")
+	public ModelAndView insertStock(Long isbn, @RequestParam("amount") 
+					int amount, Model model) {
+		System.out.println("ISBN: "+isbn);
+		System.out.println("수량: "+amount);
+		ModelAndView mav = new ModelAndView("admin");
+		if (isbn == null || amount <= 0) {
+	        mav.addObject("error", "유효한 ISBN과 수량을 입력하세요.");
+	        mav.addObject("BODY", "insertStock.jsp");
+	        return mav;
+	    }
+		this.goodsService.insertStock(isbn, amount);
+		Book book = this.goodsService.getGoodsDetail(isbn);
+		model.addAttribute("BOOK",book);
+		model.addAttribute("AMOUNT", amount);
+		mav.addObject("BODY","insertStockComplete.jsp");
+		return mav;
+	}
 	@GetMapping(value = "/manageGoods/detail")   //시작
 	public ModelAndView goodsDetail(Long isbn) {
 		ModelAndView mav = new ModelAndView("admin");
@@ -105,9 +125,9 @@ public class AdminController {
 		return mav;
 	}
 	@PostMapping(value = "/manageGoods/insert")
-	public ModelAndView goodsInsert(@Valid Book book, BindingResult br, 
-			HttpSession session, @RequestParam("cat_id") String selectedCat, 
-			@RequestParam("authors") String authors) {
+	public ModelAndView goodsInsert(@Valid Book book,
+			BindingResult br, HttpSession session, @RequestParam("cat_id") 
+			String selectedCat, @RequestParam("authors") String authors) {
 		ModelAndView mav = new ModelAndView("admin");
 		this.coverValidator.validate(book, br);
 		if(br.hasErrors()) {
@@ -150,6 +170,12 @@ public class AdminController {
 		book.setAuthors(authors);
 		
 		this.goodsService.addGoods(book, selectedCat);//책 객체와 cat_id 동시에 불러옴
+		
+		BookCategories bookcat = new BookCategories();
+		bookcat.setIsbn(book.getIsbn());
+		bookcat.setCat_id(selectedCat);
+		this.goodsService.addInfoCategory(bookcat);
+		
 		System.out.println("선택된 카테고리 ID: " + selectedCat);
 		System.out.println("INSERT SQL 실행: " + book);
 //		System.out.println("DB INSERT 결과: " + result);

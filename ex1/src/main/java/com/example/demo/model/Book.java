@@ -40,6 +40,7 @@ public class Book {
 	
 	private String cat_id;
 	
+	private Integer amount;
 	private String image_name;
 	private MultipartFile coverImage;
 	private List<String> categoryPath;

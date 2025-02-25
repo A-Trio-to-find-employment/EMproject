@@ -39,7 +39,18 @@
 										${goods.book_title }</a></td>
 				<td>${goods.authors }</td><td>${goods.publisher }</td>
 				<td><fmt:formatNumber value="${goods.price }" groupingUsed="true" currencySymbol="￦"/></td>
-				<td>${goods.stock }</td></tr>
+				<td>${goods.stock }</td>
+<%-- 				<td><form id="otherGoods_${goods.isbn}" action="/manageGoods/insertStock" method="post"style="display: inline;"> --%>
+<%--             		<input type="hidden" name="isbn" value="${goods.isbn}"/>	 --%>
+<%-- 			        <input type="number" id="amount_${goods.isbn}" name="amount" min="1" required placeholder="수량 입력"/> --%>
+<%-- 			        <input type="submit" onclick="theOtherGoods('${goods.isbn}')" value="재고 추가"/> --%>
+<!-- 			    </td></tr> -->
+			    <td><form action="/manageGoods/insertStock" method="post"style="display: inline;">
+            		<input type="hidden" name="isbn" value="${goods.isbn}"/>	
+			        <input type="number" id=amount name="amount" min="1"/>
+<!-- 			         required placeholder="수량 입력" -->
+			        <input type="submit" value="재고 추가"/>
+			    </td></tr>
 		</c:forEach>	
 		</tr></table>
 <c:set var="currentPage" value="${requestScope.currentPage }"/>
@@ -61,7 +72,17 @@
 <c:if test="${endPage < pageCount }">
 	<a href="/manageGoods?pageNo=${endPage + 1 }">[다음]</a>
 </c:if>
-</div>	
+</div>
+<!-- <script type="text/javascript">	 -->
+// function theOtherGoods(isbn) {
+//         var amountInput = document.getElementById("amount_" + isbn);
+//         if (!amountInput.value || isNaN(amountInput.value) || parseInt(amountInput.value) <= 0) {
+//             alert("올바른 수량을 입력하세요.");
+//             return;
+//         }
+//         document.getElementById("otherGoods_" + isbn).submit();
+//     }
+<!-- </script> -->
 </body>
 </html>
 

@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BookCategories {
-	private Integer isbn;
+	private Long isbn;
 	private String cat_id;
 }

@@ -44,10 +44,12 @@
 		select count(*) from book where isbn=#{isbn, jdbcType=BIGINT}
 	</select>
 	<insert id="addGoods" parameterType="Book">
-        insert into book (image_name, isbn, book_title, publisher, pub_date, cat_id, price, stock, total_rating)
-        values (#{image_name}, #{isbn}, #{book_title}, #{publisher}, #{pub_date}, #{cat_id}, #{price}, #{stock}, 0)
+        insert into book (image_name, isbn, book_title, publisher, pub_date, price, stock, total_rating)
+        values (#{image_name}, #{isbn}, #{book_title}, #{publisher}, #{pub_date}, #{price}, #{stock}, 0)
     </insert>
-    
+    <update id="insertStock" parameterType="map">
+    	update book set stock = stock + #{amount} where isbn = #{isbn}
+    </update>
     
     <insert id="addBookAuthors" parameterType="map">
         insert into book_author (isbn, author)
@@ -68,6 +70,9 @@
 	    START WITH cat_id = #{cat_id}
 	    CONNECT BY PRIOR parent_id = cat_id
 	</select>
+	<insert id="addInfoCategory" parameterType="BookCategories">
+		insert into book_categories (isbn, cat_id) values (#{isbn}, #{cat_id}) 
+	</insert>
 </mapper>
 
 	
