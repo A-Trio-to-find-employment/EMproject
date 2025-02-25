@@ -63,6 +63,7 @@
     </div>
     <div class="content">
         <h2 align="center">장바구니</h2>
+        <c:if test="${ cartList != null }">
         <div class="table-container">
         <table border="1" class="cart-table">
             <tr>
@@ -97,7 +98,7 @@
     		</c:when>
     		<c:otherwise>
         	<!-- 쿠폰이 적용되지 않은 경우 -->
-        	<form action="/cart/applyCoupon" method="post">
+        	<form action="/cart/applyCoupon" method="post" onsubmit="return validateCouponSelection(this);">
             	<input type="hidden" name="cart_id" value="${cart.cart_id}">
             	<select name="coupon_id">
                 <option value="">쿠폰 선택</option>
@@ -113,7 +114,7 @@
 			</c:choose>
 							
                     </td>
-                    <td>${ subList[status.index] }</td>
+                    <td>${ subList[status.index] }원</td>
                     <td>
                         <form action="/cart/deleteCart" method="post">
                             <input type="hidden" name="cart_id" value="${cart.cart_id}">
@@ -131,7 +132,7 @@
         </div>
         <div class="table-container">
         <br/><br/>
-        <form action="/cart/checkout" method="post" onclick="orderCheck()">
+        <form action="/cart/checkout" method="post">
         <input type="hidden" name="total" value="${ totalPrice }"/>
         <table border="1" class="cart-table">
         	<tr><th>주소</th><td align="left"><input type="text" name="address" id="address" value="${ userInfo.address }" readonly="readonly"/></td></tr>
@@ -140,10 +141,23 @@
 		    	<button type="button" class="btn btn-default" onclick="daumZipCode()">
 		    	<i class="fa fa-search"></i> 우편번호 찾기</button></td></tr>
         </table>
-        	<input type="submit" value="구매하기">
+        	<input type="submit" value="구매하기" onclick="return orderCheck(event)">
         </form>
     	</div>
+    	</c:if>
+    	<c:if test="${ cartList == null }">
+    	<h3 align="center">장바구니가 비어있습니다.</h3>
+    	</c:if>
     </div>
+    <script type="text/javascript">
+    function validateCouponSelection(form) {
+        if (form.coupon_id.value === "") {
+            alert("쿠폰을 선택해 주세요.");
+            return false; // 폼 제출 방지
+        }
+        return true; // 폼 제출 허용
+    }
+	</script>
     <script>
         function toggleDropdown() {
             var dropdown = document.getElementById("categoryDropdown");
@@ -157,6 +171,28 @@
                 dropdown.style.display = "none";
             }
         });
+        function orderCheck(event) {
+            // 주소 필드 값 가져오기
+            var address = document.getElementById("address").value.trim();
+            var addressDetail = document.getElementById("address_detail").value.trim();
+            var zipcode = document.getElementById("zipcode").value.trim();
+
+            // 주소 정보가 모두 입력되었는지 확인
+            if (address === "" || addressDetail === "" || zipcode === "") {
+                alert("주소, 주소 상세, 우편번호를 모두 입력해 주세요.");
+                event.preventDefault(); // 폼 제출 방지
+                return false;
+            }
+
+            // 결제 확인 메시지
+            var confirmation = confirm("정말 결제하시겠습니까?");
+            if (!confirmation) {
+                event.preventDefault(); // 폼 제출 방지
+                return false;
+            }
+
+            return true; // 폼 제출 허용
+        }
     </script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	<script type="text/javascript">

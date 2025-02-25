@@ -11,7 +11,7 @@
 	</select>
 	<insert id="insertOrders" parameterType="Orders">
 		insert into orders values(#{order_id}, #{user_id}, #{address}, #{address_detail}, 
-			#{zipcode}, #{total_price}, 0, sysdate)
+			#{zipcode}, #{total_price}, 0, CURRENT_TIMESTAMP)
 	</insert>
 	<insert id="insertOrdersDetail" parameterType="Orders_detail">
 	 	insert into orders_detail values(#{order_detail_id}, #{order_id}, #{isbn},
