@@ -1,0 +1,57 @@
+@charset "UTF-8";
+
+/* 콘텐츠 영역 조정 */
+.content {
+    /* 사이드바의 너비만큼 왼쪽 마진을 줍니다 (예: 사이드바 너비가 220px일 경우) */
+    margin-left: 220px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* 테이블 컨테이너를 중앙 정렬 */
+.table-container {
+    display: flex;
+    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center;     /* 수직 중앙 정렬 */
+    width: 100%;
+}
+
+/* 테이블 스타일 */
+.cart-table {
+    width: auto; /* 내용에 맞게 너비 조절 */
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+}
+
+/* 테이블 헤더 스타일 */
+.cart-table th {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+/* 테이블 데이터 스타일 */
+.cart-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+}
+
+/* 홀수 줄에 배경색 */
+.cart-table tr:nth-child(odd) {
+    background-color: #f2f2f2;
+}
+
+/* 마우스 오버 시 행의 배경색 변경 */
+.cart-table tr:hover {
+    background-color: #ddd;
+}
+
+/* 이미지 크기 조정 */
+.cart-table img {
+    max-width: 100px;
+    height: auto;
+}

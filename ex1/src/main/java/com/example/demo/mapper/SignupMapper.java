@@ -7,4 +7,5 @@ import com.example.demo.model.Users;
 @Mapper
 public interface SignupMapper {
 	void insertUser(Users users);
+	String checkId(String user_id);
 }

@@ -10,5 +10,6 @@ public class Coupon {
 	private Integer discount_percentage;
 	private String valid_from;
 	private String valid_until;
-	
+	private String coupon_code;
+	private String cat_id;
 }
