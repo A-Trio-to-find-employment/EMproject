@@ -31,4 +31,8 @@ public class OrderService {
 	public void insertOrdersDetail(Orders_detail detail) {
 		this.orderMapper.insertOrdersDetail(detail);
 	}
+	
+	public void insertOrdersDetailTwo(Orders_detail detail) {
+		this.orderMapper.insertOrdersDetailTwo(detail);
+	}
 }
