@@ -41,4 +41,5 @@ public class CouponService {
 		Usercoupon userCoupon = this.couponMapper.getUserCouponDetail(uc);
 		return userCoupon;
 	}
+	
 }

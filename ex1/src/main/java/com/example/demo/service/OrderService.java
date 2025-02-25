@@ -41,4 +41,7 @@ public class OrderService {
 	public Integer getTotal(String user_id) {
 		return this.orderMapper.getTotal(user_id);
 	}
+	public String getCouponName(Integer quponid) {
+		return this.orderMapper.getCouponName(quponid);
+	}
 }

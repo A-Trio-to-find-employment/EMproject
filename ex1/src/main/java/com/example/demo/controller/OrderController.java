@@ -50,10 +50,10 @@ public class OrderController {
         se.setEnd(endRow);
         se.setUser_id(user);
         
-
+        
         // 주문 목록을 가져오는 서비스 호출
         List<MyOrders> myorderlist = this.orderservice.getMyOrders(se);       
-
+        
         // ModelAndView에 데이터 추가        
         mav.addObject("START", startRow);
         mav.addObject("END", endRow);

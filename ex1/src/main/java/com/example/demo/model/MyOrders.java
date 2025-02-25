@@ -16,4 +16,5 @@ private Integer delivery_status;
 private String book_title;
 private Integer subtotal;
 private Integer coupon_id;
+private String coupon_code;
 } 

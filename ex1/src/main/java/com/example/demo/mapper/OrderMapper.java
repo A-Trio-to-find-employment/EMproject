@@ -17,4 +17,5 @@ public interface OrderMapper {
 	void insertOrdersDetail(Orders_detail detail);
 	List<MyOrders> getMyOrders(StartEnd se);
 	Integer getTotal(String user_id);
+	String getCouponName(Integer quponid);
 }

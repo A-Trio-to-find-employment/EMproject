@@ -18,43 +18,53 @@
 	 		#{quantity}, 0)
 	</insert>
 	<select id="getMyOrders" parameterType="StartEnd" resultType="MyOrders">
-	SELECT 
-    order_id, 
-    order_status, 
-    TO_CHAR(created_at, 'YYYY-MM-DD') AS created_at, 
-    order_detail_id, 
-    isbn, 
-    quantity, 
-    delivery_status,
-    book_title,
-    subtotal,
-    coupon_id
-FROM (
-    SELECT rownum AS rank, a.*
+    SELECT 
+        order_id, 
+        order_status, 
+        TO_CHAR(created_at, 'YYYY-MM-DD') AS created_at, 
+        order_detail_id, 
+        isbn, 
+        quantity, 
+        delivery_status,
+        book_title,
+        subtotal,
+        coupon_id,
+        coupon_code
     FROM (
-        SELECT 
-            o.order_id, 
-            o.order_status, 
-            o.created_at,
-            d.order_detail_id, 
-            d.isbn, 
-            d.subtotal,
-            d.coupon_id,
-            d.quantity, 
-            d.delivery_status,
-            b.book_title
-        FROM orders o
-        JOIN orders_detail d ON o.order_id = d.order_id
-        JOIN book b ON d.isbn = b.isbn
-        WHERE o.user_id = #{user_id, jdbcType=VARCHAR}
-        ORDER BY o.created_at DESC
-    ) a
-)
-where rank > #{start} and rank <![CDATA[<=]]> #{end}
-	
-	</select>
+        SELECT rownum AS rank, a.*
+        FROM (
+            SELECT 
+                o.order_id, 
+                o.order_status, 
+                o.created_at,
+                d.order_detail_id, 
+                d.isbn, 
+                d.subtotal,
+                d.coupon_id,
+                d.quantity, 
+                d.delivery_status,
+                b.book_title,
+                c.coupon_code 
+            FROM orders o
+            JOIN orders_detail d ON o.order_id = d.order_id
+            JOIN book b ON d.isbn = b.isbn
+            LEFT JOIN coupon c ON d.coupon_id = c.coupon_id -- 쿠폰 테이블 조인
+            WHERE o.user_id = #{user_id, jdbcType=VARCHAR}
+            ORDER BY o.created_at DESC
+        ) a
+    )
+    WHERE rank > #{start} AND rank <![CDATA[<=]]> #{end}
+</select>
+
 	<select id="getTotal" parameterType="String" resultType="Integer">
-		select count(*) from orders_detail where user_id=#{user_id}
+	SELECT COUNT(*)
+	FROM orders_detail od
+	JOIN orders o ON od.order_id = o.order_id
+	WHERE o.user_id = #{userId}
+
+	</select>
+	<select id="getCouponName" parameterType="Integer" resultType="String">
+	select coupon_code from coupon where coupon_id=#{coupon_id}
 	</select>
 </mapper>
 
