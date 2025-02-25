@@ -111,7 +111,7 @@ enctype="multipart/form-data" onsubmit="return validate(this)" name="isbnFrm">
 		        <div id="sub"></div>
 		        <div id="last"></div>
 		    </div>
-		    <button type="button" onclick="confirm()">선택</button>
+		    <button type="button" onclick="confirmCategory()">선택</button>
 		    <button type="button" onclick="closeCategoryModal()">닫기</button>
 		</div>
 
@@ -203,7 +203,7 @@ function selectedCategory(catId, catName) {
             closeCategoryModal();
         }).catch(error => console.error("카테고리 경로 로딩 오류:", error));
 }
-function confirm() {
+function confirmCategory() {
     if (!selectedCatId) {
         alert("카테고리를 선택해주세요.");
         return;
@@ -227,16 +227,16 @@ function previewImage(event) {
         output.innerHTML = '<img src="' + reader.result + '" width="400" height="300"/>';
     }
     reader.readAsDataURL(event.target.files[0]);
+}	
+function validate(frm) {
+	console.log("validate() 함수 실행됨!");
+    if (!confirm("정말로 추가하시겠습니까?")) {
+        console.log("사용자가 취소를 선택함");
+        return false; // 제출 방지
+    }
+    console.log("사용자가 확인을 선택함");
+    return true; // 정상 제출
 }
-	function validate(frm) {
-	    console.log("validate() 함수 실행됨!");
-	    if (!confirm("정말로 추가하시겠습니까?")) {
-	        console.log("사용자가 취소를 선택함");
-	        return false; // 제출 방지
-	    }
-	    console.log("사용자가 확인을 선택함");
-	    return true; // 정상 제출
-	}
 </script>
 </body>
 </html>

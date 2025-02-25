@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.mapper.GoodsMapper;
 import com.example.demo.model.Book;
+import com.example.demo.model.BookCategories;
 import com.example.demo.model.Category;
 import com.example.demo.model.StartEnd;
 
@@ -54,7 +55,9 @@ public class GoodsService {
             }
         }
 	}
-	
+	public void insertStock(Long isbn, int amount) {
+		this.goodsMapper.insertStock(isbn, amount);
+	}
 	
 	public List<Category> getCategoriesByParentId(String parnetId){
 		return this.goodsMapper.getCategoriesByParentId(parnetId);
@@ -62,6 +65,8 @@ public class GoodsService {
 	public String getCategoryPath(String catId) {
 		return this.goodsMapper.getCategoryPath(catId);
 	}
-	
+	public void addInfoCategory(BookCategories bookcat) {
+		this.goodsMapper.addInfoCategory(bookcat);
+	}
 	
 }
