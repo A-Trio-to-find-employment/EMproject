@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,10 @@ public class GoodsService {
 		return this.goodsMapper.getGoodsList(se);
 	}
 	public Book getGoodsDetail(Long isbn) {
-		return this.goodsMapper.getGoodsDetail(isbn);
+		Book book = this.goodsMapper.getGoodsDetail(isbn);
+		List<String> authors = this.goodsMapper.getBookAuthors(isbn);
+		book.setAuthors(String.join(",", authors));
+		return book;
 	}
 	public Integer getGoodsCount() {
 		return this.goodsMapper.getGoodsCount();
@@ -40,12 +44,15 @@ public class GoodsService {
 	public Integer getIsbnDup(Long isbn) {
 		return this.goodsMapper.getIsbnDup(isbn);
 	}
-//	public void addGoods(Book book) {
-//		this.goodsMapper.addGoods(book);
-//	}
 	public void addGoods(Book book,String selectedCat) {
 		book.setCat_id(selectedCat);
 		this.goodsMapper.addGoods(book);
+		if (book.getAuthors() != null) {
+            List<String> authorList = Arrays.asList(book.getAuthors().split(","));
+            for (String author : authorList) {
+                goodsMapper.addBookAuthors(book.getIsbn(), author);
+            }
+        }
 	}
 	
 	

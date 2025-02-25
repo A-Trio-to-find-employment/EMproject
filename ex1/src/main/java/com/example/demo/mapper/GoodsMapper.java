@@ -17,8 +17,9 @@ public interface GoodsMapper {
 	void updateGoods(Book book);
 	void addGoods(Book book);
 	Integer getIsbnDup(Long isbn);
+    void addBookAuthors(Long isbn, String author);
+    List<String> getBookAuthors(Long isbn);
 	
-	
-	List<Category> getCategoriesByParentId(String parentId);
+    List<Category> getCategoriesByParentId(String parentId);
 	String getCategoryPath(String catId);
 }

@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,6 @@ public class AdminController {
     @ResponseBody   //jsp가 아닌 json으로 받아와 정상출력 위해
     public String getCategoryPath(@RequestParam("cat_id") String catId) {
         return goodsService.getCategoryPath(catId);
-        
     }
 	@GetMapping(value = "/adminPage")
 	public ModelAndView adminPage() {
@@ -73,7 +73,7 @@ public class AdminController {
 		mav.addObject("BODY","goodsList.jsp");
 		return mav;
 	}
-	@GetMapping(value = "/manageGoods/detail")
+	@GetMapping(value = "/manageGoods/detail")   //시작
 	public ModelAndView goodsDetail(Long isbn) {
 		ModelAndView mav = new ModelAndView("admin");
 		Book goods = this.goodsService.getGoodsDetail(isbn);
@@ -102,12 +102,12 @@ public class AdminController {
 		ModelAndView mav = new ModelAndView("admin");
 		mav.addObject(new Book());
 		mav.addObject("BODY","addGoods.jsp");
-		//카테고리
 		return mav;
 	}
 	@PostMapping(value = "/manageGoods/insert")
 	public ModelAndView goodsInsert(@Valid Book book, BindingResult br, 
-			HttpSession session, @RequestParam("cat_id") String selectedCat) {
+			HttpSession session, @RequestParam("cat_id") String selectedCat, 
+			@RequestParam("authors") String authors) {
 		ModelAndView mav = new ModelAndView("admin");
 		this.coverValidator.validate(book, br);
 		if(br.hasErrors()) {
@@ -146,6 +146,9 @@ public class AdminController {
 	        mav.addObject("imageError", "앞표지를 업로드해야 합니다.");
 	        return mav;
 	    }
+		//저자,옮긴이 주입 위해서
+		book.setAuthors(authors);
+		
 		this.goodsService.addGoods(book, selectedCat);//책 객체와 cat_id 동시에 불러옴
 		System.out.println("선택된 카테고리 ID: " + selectedCat);
 		System.out.println("INSERT SQL 실행: " + book);
@@ -165,7 +168,7 @@ public class AdminController {
 		mav.addObject("ISBN",isbn);
 		return mav;
 	}
-	@PostMapping(value = "/manageGoods/update")
+	@PostMapping(value = "/manageGoods/update") //시작
 	public ModelAndView updateGoods() {
 		ModelAndView mav = new ModelAndView("admin");
 		mav.addObject("isbnChecked","");

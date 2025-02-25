@@ -44,4 +44,12 @@ public class Book {
 	private MultipartFile coverImage;
 	private List<String> categoryPath;
 	
+//	public String getAuthors() {
+//        return authors;
+//    }
+//
+//    public void setAuthors(String authors) {
+//        this.authors = authors;
+//    }
+	
 }
