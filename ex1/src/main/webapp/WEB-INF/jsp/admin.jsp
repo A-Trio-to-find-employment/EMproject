@@ -29,6 +29,7 @@
     </div>
 
     <c:choose>
+
         <c:when test="${empty BODY}">  
             <div class="container">
                 <div class="search-bar">

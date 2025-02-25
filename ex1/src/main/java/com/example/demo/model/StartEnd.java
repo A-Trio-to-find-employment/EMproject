@@ -10,4 +10,6 @@ public class StartEnd {
 	private int end;
 	private String user_id;
 	private Long isbn;
+	private String title;
+
 }

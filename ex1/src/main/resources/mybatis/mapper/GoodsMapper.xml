@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.example.demo.mapper.GoodsMapper">
+	<select id="getGoodsList" parameterType="StartEnd" resultType="Book">
+		select isbn, book_title, authors, publisher, price, stock
+		from(select rownum rn, a.*
+			from (select isbn, book_title, 
+				(SELECT LISTAGG(author, ', ') WITHIN GROUP (ORDER BY author) 
+		 		FROM book_author 
+		 		WHERE isbn = book.isbn) AS authors, publisher, price, stock
+		 		from book) a)
+				where rn > #{start} and rn <![CDATA[<]]> #{end}
+	</select>
+	<select id="getGoodsDetail" parameterType="java.lang.Long" resultType="Book">
+		select image_name, isbn, book_title, 
+		(SELECT LISTAGG(author, ', ') WITHIN GROUP (ORDER BY author) 
+ 		FROM book_author 
+ 		WHERE isbn = book.isbn) AS authors, publisher, cat_id, price, stock
+ 		from book where isbn = #{isbn, jdbcType=BIGINT}
+	</select>
+	<select id="getGoodsCount" resultType="Integer">
+		select count(*) from book
+	</select>
+	<select id="getGoodsByName" parameterType="StartEnd" resultType="Book">
+		select isbn, book_title, authors, publisher, price, stock
+		from(select rownum rn, a.*
+			from (select isbn, book_title, 
+				(SELECT LISTAGG(author, ', ') WITHIN GROUP (ORDER BY author) 
+		 		FROM book_author 
+		 		WHERE isbn = book.isbn) AS authors, publisher, price, stock
+		 		from book where book_title like '%' || #{title} || '%') a )
+				where rn > #{start} and rn <![CDATA[<]]> #{end}
+	</select>
+	<update id="updateStock" parameterType="java.lang.Long">
+		update book set stock=#{stock} where isbn = #{isbn}
+	</update>
+	<update id="updateGoods" parameterType="Book">
+		update book set image_name=#{image_name}, isbn=#{isbn}, book_title=#{book_title}, 
+    	publisher=#{publisher}, cat_id=#{cat_id}, price=#{price}
+	</update>
+	<select id="getIsbnDup" parameterType="java.lang.Long" resultType="Integer">
+		select count(*) from book where isbn=#{isbn, jdbcType=BIGINT}
+	</select>
+	<insert id="addGoods" parameterType="Book">
+        insert into book (image_name, isbn, book_title, publisher, pub_date, cat_id, price, stock, total_rating)
+        values (#{image_name}, #{isbn}, #{book_title}, #{publisher}, #{pub_date}, #{cat_id}, #{price}, #{stock}, 0)
+    </insert>
+    
+    
+    <insert id="addBookAuthors" parameterType="map">
+        insert into book_author (isbn, author)
+        values (#{isbn}, #{author})
+    </insert>
+	<select id="getBookAuthors" parameterType="Long" resultType="String">
+        select author from book_author where isbn = #{isbn}
+    </select>
+	
+	
+	<select id="getCategoriesByParentId" parameterType="String" resultType="Category">
+	    SELECT cat_id, cat_name FROM categories 
+		where (parent_id = #{parent_id} OR (#{parent_id} IS NULL AND parent_id IS NULL))
+	</select>
+	<select id="getCategoryPath" parameterType="String" resultType="String">
+	    SELECT LISTAGG(cat_name, ' > ') WITHIN GROUP (ORDER BY LEVEL DESC) 
+	    FROM categories
+	    START WITH cat_id = #{cat_id}
+	    CONNECT BY PRIOR parent_id = cat_id
+	</select>
+</mapper>
+
+	
+
+
+
+
