@@ -48,4 +48,17 @@ public class SignupController {
 			return mav;
 		}
 	}
+	
+	@GetMapping(value="/idcheck")
+	public ModelAndView idcheck(String USER_ID) {
+		ModelAndView mav = new ModelAndView("idCheck");
+		String user_id = this.signupService.checkId(USER_ID);
+		if(user_id != null) {//이미 계정이 존재하는 경우, 즉 계정 중복
+			mav.addObject("DUP","YES");
+		}else {//계정이 존재하지 않는 경우, 즉 사용 가능
+			mav.addObject("DUP","NO");
+		}
+		mav.addObject("ID", USER_ID);
+		return mav;
+	}
 }

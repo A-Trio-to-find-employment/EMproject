@@ -74,12 +74,14 @@
 </div>
 	<br/><br/>
     <div align="center">
-        <form:form action="/signupResult" method="post" modelAttribute="users" onsubmit="return validateForm()">
+        <form:form action="/signupResult" method="post" modelAttribute="users"
+        	 onsubmit="return validateForm()" name="frm">
             <table>
                 <tr><th>이름</th><td><form:input path="user_name" />
                 	<font color="red"><form:errors path="user_name"/></font></td></tr>
                 <tr><th>ID</th><td><form:input path="user_id" />
-                	<font color="red"><form:errors path="user_id"/></font></td></tr>
+                	<font color="red"><form:errors path="user_id"/></font>
+                	<input type="button" value="중복검사" onclick="idCheck()"/></td></tr>
                 <tr><th>비밀번호</th><td><form:password path="password" id="password"/>
                 	<font color="red"><form:errors path="password" /></font></td></tr>
                 <tr><th>비밀번호 재입력</th><td><input type="password" name="confirmPassword" id="confirmPassword"/></td></tr>
@@ -105,6 +107,20 @@
     </div>
     
 <script type="text/javascript">
+function idCheck(){
+	if(document.frm.user_id.value == ''){
+		alert("계정을 입력하세요."); document.frm.user_id.focus(); return false;
+	}else {
+		if(document.frm.user_id.value.length < 4 || 
+			document.frm.user_id.value.length > 21){
+			alert("계정은 5자 이상, 20자 이하로 입력하세요."); 
+			document.frm.user_id.focus(); return false;
+		}
+	}
+	var url="/idcheck?USER_ID="+document.frm.user_id.value;
+	window.open(url, "_blank_", "width=450,height=200");
+}
+
 function validateForm() {
     var password = document.getElementById("password").value;
     var confirmPassword = document.getElementById("confirmPassword").value;

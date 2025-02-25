@@ -10,7 +10,29 @@
     <insert id="getUserCoupon" parameterType="Usercoupon">
     	insert into user_coupon values(#{user_id}, #{coupon_id}, 0, NULL)
     </insert>
-   
+
+	<select id="findUserCouponByUserId" parameterType="String" resultType="Usercoupon">
+		select user_id, coupon_id, is_used, used_at from user_coupon where is_used = 0 and user_id = #{user_id}
+	</select>
+	<select id="getUserCouponDetail" parameterType="Usercoupon" resultType="Usercoupon">
+		select user_id, coupon_id, is_used, used_at from user_coupon where user_id = #{user_id} and coupon_id = #{coupon_id}
+	</select>
+	<select id="couponDetail" parameterType="Integer" resultType="Coupon">
+		select coupon_id, discount_percentage, valid_from, valid_until, coupon_code, cat_id 
+			from coupon where coupon_id = #{coupon_id}
+	</select>
+	<select id="getAppliedCoupon" parameterType="String" resultType="Usercoupon">
+		select user_id, coupon_id, is_used from user_coupon 
+			where user_id = #{user_id} and is_used = 1
+	</select>
+	<update id="applyCoupon" parameterType="Usercoupon">
+		update user_coupon
+    	set is_used = case 
+                    when is_used = 0 then 1 
+                    when is_used = 1 then 0 
+                  end
+		where user_id = #{user_id} and coupon_id = #{coupon_id}                  
+	</update>
 </mapper>
 
 	

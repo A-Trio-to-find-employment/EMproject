@@ -12,5 +12,6 @@ public class Event {
 	private Integer coupon_id;
 	private String event_start;
 	private String event_end;
+	private String coupon_code;
 }
 

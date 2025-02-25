@@ -16,5 +16,10 @@ public class SignupService{
 		this.signupMapper.insertUser(users);
         System.out.println("User Info: " + users);	
 	}
+	
+	public String checkId(String user_id) {
+		String id = this.signupMapper.checkId(user_id);
+		return id;
+	}
 
 }

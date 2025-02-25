@@ -1,6 +1,6 @@
 package com.example.demo.model;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,8 +12,8 @@ public class Orders {
 	private String user_id;
 	private String address;
 	private String address_detail;
-	private Integer zipcode;
+	private String zipcode;
 	private Integer total_price;
 	private Integer order_status;
-	private Date created_at;
+	private Timestamp created_at;
 }

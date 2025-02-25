@@ -10,4 +10,5 @@ public class Usercoupon {
 	private Integer coupon_id;
 	private Integer is_used;
 	private String used_at;
+	Coupon coupon;
 }

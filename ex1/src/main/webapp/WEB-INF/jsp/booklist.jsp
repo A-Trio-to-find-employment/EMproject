@@ -42,12 +42,14 @@
                         </div>
 
                         <!-- 버튼 (위아래 배치) -->
-                        <form action="">
-                        <div class="actions">
-                            <button class="add-to-cart">장바구니</button>
-                            <button class="buy-now">바로구매</button>
-                        </div>
-                        </form>
+                        <form method="post" action="/booklist.html">
+						<input type="hidden" name="BOOKID" value="${book.isbn}"/>
+						<input type="hidden" name="cat_id" value="${param.cat_id}"/>
+						<div class="actions">
+							<button type="submit" name="action" value="add" class="add-to-cart">장바구니</button>
+							<button type="submit" name="action" value="buy" class="buy-now">바로구매</button>
+						</div>
+						</form>
                     </div>
                 </c:forEach>
             </c:when>

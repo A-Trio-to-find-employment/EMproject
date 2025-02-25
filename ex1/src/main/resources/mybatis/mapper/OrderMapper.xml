@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.example.demo.mapper.OrderMapper">
+	<select id="getMaxOrderId" resultType="String">
+		select count(*) from orders
+	</select>
+	<select id="getMaxOrderDetailId" resultType="String">
+		select count(*) from orders_detail
+	</select>
+	<insert id="insertOrders" parameterType="Orders">
+		insert into orders values(#{order_id}, #{user_id}, #{address}, #{address_detail}, 
+			#{zipcode}, #{total_price}, 0, CURRENT_TIMESTAMP)
+	</insert>
+	<insert id="insertOrdersDetail" parameterType="Orders_detail">
+	 	insert into orders_detail values(#{order_detail_id}, #{order_id}, #{isbn},
+	 		#{quantity}, 0)
+	</insert>
+</mapper>
+
+	
+
+
+
+

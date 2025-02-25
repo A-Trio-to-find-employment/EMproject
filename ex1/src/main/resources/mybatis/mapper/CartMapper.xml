@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.example.demo.mapper.CartMapper">
+	<insert id="insertCart" parameterType="Cart">
+		insert into Cart values(#{cart_id}, #{user_id}, #{isbn}, #{quantity}, null)
+	</insert>
+   
+	<select id="selectCartList" parameterType="String" resultType="Cart">
+   		select cart_id, user_id, isbn, quantity, coupon_id from cart 
+   			where user_id = #{user_id}
+	</select>
+   
+	<select id="findEqualItem" parameterType="Cart" resultType="String">
+   		select cart_id from cart where user_id = #{user_id} and isbn = #{isbn}
+	</select>
+   
+	<update id="updateCart" parameterType="Cart">
+   		update cart set quantity = #{quantity} where cart_id = #{cart_id}
+	</update>
+   
+	<delete id="deleteCart" parameterType="String">
+   		delete from cart where cart_id = #{cart_id}
+	</delete>
+	
+	<select id="getCountCart" resultType="Integer">
+		select count(*) from cart 
+	</select>
+	
+	<select id="findCartByCartId" parameterType="String" resultType="Cart">
+		select cart_id, user_id, isbn, quantity, coupon_id from cart where cart_id = #{cart_id}
+	</select>
+	
+	<select id="getCatIdFromCartId" parameterType="String" resultType="String">
+		SELECT cat_id
+		FROM book_categories
+		WHERE isbn = (SELECT isbn FROM cart 
+			WHERE cart_id = #{cart_id})
+	</select>
+	<select id="findCouponIdFromCart" parameterType="Cart" resultType="Integer">
+		select coupon_id 
+			from user_coupon
+			where coupon_id in (
+    			select coupon_id 
+    			from coupon
+    			where cat_id = (
+        			select cat_id 
+        			from book_categories
+        			where isbn = (
+            			select isbn 
+            			from cart
+            			where cart_id = #{cart_id}
+        			)
+    			)
+		) and user_id = #{user_id} and is_used = 0
+	</select>
+	<update id="updateCartCoupon" parameterType="Cart">
+		update cart set coupon_id = #{coupon_id} where cart_id = #{cart_id}
+	</update>
+	<update id="deleteCartCoupon" parameterType="String">
+		update cart set coupon_id = null where cart_id = #{cart_id}
+	</update>
+	<delete id="deleteUserCart" parameterType="String">
+		delete from cart where user_id = #{user_id}
+	</delete>
+</mapper>
+
+	
+
+
+
+

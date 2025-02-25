@@ -8,19 +8,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.model.Book;
+import com.example.demo.model.Cart;
 import com.example.demo.model.Category;
-import com.example.demo.model.Qna;
 import com.example.demo.model.Review;
 import com.example.demo.model.StartEnd;
+import com.example.demo.service.CartService;
 import com.example.demo.service.FieldService;
 import com.example.demo.service.ReviewService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class FieldController {
 	@Autowired
 	private FieldService service;
+	
 	@Autowired
 	private ReviewService reviewservice;
+
+	@Autowired
+	private CartService cartService;
+	
 	
 	@RequestMapping(value = "/field.html")
 	public ModelAndView field(String cat_id) {
@@ -47,7 +55,38 @@ public class FieldController {
 	}
 
 	@RequestMapping(value = "/booklist.html")//마지막 하위카테고리면 그것을 클릭했을때 상품이 보여짐
-	public ModelAndView fields(String cat_id, String sort) {
+	public ModelAndView fields(String cat_id, String sort, 
+			Long BOOKID, String action, HttpSession session) {
+		String loginUser = (String)session.getAttribute("loginUser");
+		if(BOOKID != null && action != null) {
+			if(loginUser == null) {
+				ModelAndView mav = new ModelAndView("loginFail");
+				return mav;
+			}
+			Cart cart = new Cart();
+			cart.setIsbn(BOOKID); cart.setUser_id(loginUser);
+			String cart_id = this.cartService.findEqualItem(cart);
+			if(cart_id != null) {
+				Cart existCart = this.cartService.findCartByCartId(cart_id);
+				Integer quantity = existCart.getQuantity() + 1;
+				existCart.setQuantity(quantity);
+				this.cartService.updateCart(existCart);
+			} else {
+				Integer count = this.cartService.getCountCart() + 1;
+				cart_id = count.toString();
+				cart.setCart_id(cart_id); cart.setQuantity(1);
+				this.cartService.insertCart(cart);
+			}
+			if(action.equals("add")) {
+				ModelAndView mav = new ModelAndView("cartAlert");
+				mav.addObject("cat_id", cat_id);
+				mav.addObject("sort", sort);
+				return mav;
+			} else if(action.equals("buy")) {
+				ModelAndView mav = new ModelAndView("redirect:/cart");
+				return mav;
+			}
+		}
         ModelAndView mav = new ModelAndView("fieldlayout");
         List<Book> bookLists = service.getorderByBook(cat_id, sort); // 정렬된 도서 목록 가져오기        
         String categoryName = service.getCategoriesName(cat_id); // 카테고리 이름 가져오기        
