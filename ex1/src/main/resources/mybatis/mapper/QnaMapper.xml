@@ -27,7 +27,7 @@
 			     	from qna where user_id=#{user_id}
 			     	order by qna_number desc
 			     	) a)
-		where rank > #{start} and rank <![CDATA[<]]> #{end}	
+		where rank > #{start} and rank <![CDATA[<=]]> #{end}	
 	</select>
 	<select id="getqnaList" parameterType="Integer" resultType="Qna">
 		select qna_number, user_id, qna_title, qna_detail, qna_date, qna_index,qna_image
