@@ -1,11 +1,15 @@
 package com.example.demo.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.mapper.OrderMapper;
+import com.example.demo.model.MyOrders;
 import com.example.demo.model.Orders;
 import com.example.demo.model.Orders_detail;
+import com.example.demo.model.StartEnd;
 
 @Service	
 public class OrderService {
@@ -30,5 +34,11 @@ public class OrderService {
 	
 	public void insertOrdersDetail(Orders_detail detail) {
 		this.orderMapper.insertOrdersDetail(detail);
+	}
+	public List<MyOrders> getMyOrders(StartEnd se){
+		return this.orderMapper.getMyOrders(se);
+	}
+	public Integer getTotal(String user_id) {
+		return this.orderMapper.getTotal(user_id);
 	}
 }
