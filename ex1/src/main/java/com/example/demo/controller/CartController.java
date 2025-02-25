@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -212,20 +214,48 @@ public class CartController {
         Integer orderId = Integer.parseInt(count) + 1;
         String order_id = orderId.toString();
         Orders orders = new Orders();
-        Orders_detail od = new Orders_detail();
-        orders.setOrder_id(order_id); orders.setUser_id(loginUser);
-        orders.setAddress(address); orders.setAddress_detail(address_detail);
-        orders.setZipcode(zipcode); orders.setTotal_price(total);
+        orders.setOrder_id(order_id);
+        orders.setUser_id(loginUser);
+        orders.setAddress(address);
+        orders.setAddress_detail(address_detail);
+        orders.setZipcode(zipcode);
+        orders.setTotal_price(total);
         this.orderService.insertOrders(orders); // 주문번호 생성 및 추가
-        List<Cart> cartList = this.cartService.selectCartList(loginUser);
-        for(Cart cart : cartList) {
-        	Integer odid = Integer.parseInt(this.orderService.getMaxOrderDetailId()) + 1;
-        	String detail_id = odid.toString();
-        	od.setOrder_detail_id(detail_id); od.setOrder_id(order_id);
-        	od.setIsbn(cart.getIsbn()); od.setQuantity(cart.getQuantity());
-        	this.orderService.insertOrdersDetail(od);
+        
+        List<Cart> cartList = this.cartService.selectCartList(loginUser);        
+        for (Cart cart : cartList) {
+            Integer odid = Integer.parseInt(this.orderService.getMaxOrderDetailId()) + 1;
+            String detail_id = odid.toString();
+            int subtotal = 0;
+            Orders_detail od = new Orders_detail();
+            od.setOrder_detail_id(detail_id);
+            od.setOrder_id(order_id);
+            od.setIsbn(cart.getIsbn());
+            od.setQuantity(cart.getQuantity());
+            int bookPrice = cart.getBook().getPrice();
+            int quantity = cart.getQuantity();
+            System.out.println("쿠폰아이디 : " + cart.getCoupon_id());
+            if(cart.getCoupon_id() != null) {
+            	od.setCoupon_id(cart.getCoupon_id());
+            	Integer cid = cart.getCoupon_id();
+                Coupon coupon = this.couponService.couponDetail(cid);
+                int discountPercentage = coupon.getDiscount_percentage();
+                String coupon_code = coupon.getCoupon_code();
+                int discountAmount = bookPrice * discountPercentage / 100;
+                int discountedPrice = bookPrice - discountAmount;
+                int normalPrice = bookPrice * (quantity - 1);
+                subtotal = discountedPrice + normalPrice;
+            	od.setSubtotal(subtotal);
+            	this.orderService.insertOrdersDetail(od);
+            } else {
+            	od.setCoupon_id(null);
+            	subtotal = bookPrice * quantity;
+            	od.setSubtotal(subtotal);
+            	this.orderService.insertOrdersDetailTwo(od);
+            }
+            
         }
-        this.cartService.deleteUserCart(loginUser);
+        cartService.deleteUserCart(loginUser);
         ModelAndView mav = new ModelAndView("redirect:/index");
         return mav;
     }

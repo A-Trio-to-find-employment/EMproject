@@ -15,7 +15,11 @@
 	</insert>
 	<insert id="insertOrdersDetail" parameterType="Orders_detail">
 	 	insert into orders_detail values(#{order_detail_id}, #{order_id}, #{isbn},
-	 		#{quantity}, 0)
+	 		#{quantity}, 0, #{subtotal}, #{coupon_id})
+	</insert>
+	<insert id="insertOrdersDetailTwo" parameterType="Orders_detail">
+	 	insert into orders_detail values(#{order_detail_id}, #{order_id}, #{isbn},
+	 		#{quantity}, 0, #{subtotal}, NULL)
 	</insert>
 </mapper>
 

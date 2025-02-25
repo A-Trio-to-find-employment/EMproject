@@ -11,4 +11,5 @@ public interface OrderMapper {
 	String getMaxOrderDetailId();
 	void insertOrders(Orders orders);
 	void insertOrdersDetail(Orders_detail detail);
+	void insertOrdersDetailTwo(Orders_detail detail);
 }
