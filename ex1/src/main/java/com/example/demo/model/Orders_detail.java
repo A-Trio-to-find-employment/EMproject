@@ -11,4 +11,6 @@ public class Orders_detail {
 	private Long isbn;
 	private Integer quantity;
 	private Integer delivery_status;
+	private Integer subtotal;
+	private Integer coupon_id;
 }

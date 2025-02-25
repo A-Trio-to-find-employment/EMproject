@@ -35,13 +35,20 @@ public class OrderService {
 	public void insertOrdersDetail(Orders_detail detail) {
 		this.orderMapper.insertOrdersDetail(detail);
 	}
+
 	public List<MyOrders> getMyOrders(StartEnd se){
 		return this.orderMapper.getMyOrders(se);
 	}
 	public Integer getTotal(String user_id) {
 		return this.orderMapper.getTotal(user_id);
 	}
+	
 	public String getCouponName(Integer quponid) {
 		return this.orderMapper.getCouponName(quponid);
+	}
+	
+	public void insertOrdersDetailTwo(Orders_detail detail) {
+		this.orderMapper.insertOrdersDetailTwo(detail);
+
 	}
 }

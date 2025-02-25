@@ -134,6 +134,7 @@
         <br/><br/>
         <form action="/cart/checkout" method="post">
         <input type="hidden" name="total" value="${ totalPrice }"/>
+        <!-- List<Integer>를 문자열로 변환하여 하나의 hidden input에 전달 -->
         <table border="1" class="cart-table">
         	<tr><th>주소</th><td align="left"><input type="text" name="address" id="address" value="${ userInfo.address }" readonly="readonly"/></td></tr>
 		    <tr><th>주소 상세</th><td align="left"><input type="text" name="address_detail" id="address_detail" value="${ userInfo.address_detail }"/></td></tr>

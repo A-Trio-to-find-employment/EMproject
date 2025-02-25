@@ -17,6 +17,7 @@ public class Cart {
 	private Date eta;
 	private Integer coupon_id;
 	private Book book;
+	private Integer subtotal;
 	private List<Usercoupon> appliedCoupon = new ArrayList<Usercoupon>(); // 사용자 쿠폰 목록
 	private List<Coupon> userCouponApplied = new ArrayList<Coupon>();
 }
