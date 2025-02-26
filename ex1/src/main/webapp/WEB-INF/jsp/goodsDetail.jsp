@@ -28,26 +28,20 @@
 </head>
 <body>
 <div align="center">
-<script type="text/javascript">
-function isbnCheck(){
-    var url = "/manageGoods/isbnCheck?ISBN=" + document.isbnFrm.isbn.value;
-    window.open(url, "__blank__", "width=450,height=200,top=200,left=600");
-}
-</script>
-
 <h3>상품 정보</h3>
-<form:form modelAttribute="book" action="/manageGoods/insert" method="post" 
-enctype="multipart/form-data" onsubmit="return validate(this)" name="isbnFrm">
-    <form:hidden path="isbnChecked"/> 
+<form:form modelAttribute="book" action="/manageGoods/update" method="post" 
+enctype="multipart/form-data" onsubmit="return validate(this)" >
+<!-- name="isbnFrm"> -->
+<%--     <form:hidden path="isbnChecked"/>  --%>
     <table border="1">
         <tr>
             <th>앞표지</th>
-            <td>
-                <input type="file" name="coverImage" id="coverImage" onchange="previewImage(event)">
-                <font color="red"><form:errors path="coverImage"/></font>
-                <div id="imagePreview">이미지 미리보기</div>
-            	
-            </td>
+            <td colspan="2" align="center">
+			    <input type="file" name="coverImage" id="coverImage" onchange="previewImage(event)">
+			    <font color="red"><form:errors path="coverImage"/></font><br>
+			    <img id="previewImg" 
+			    src="${pageContext.request.contextPath }/upload/${GOODS.image_name}" width="500" height="400"/>
+			</td>
         </tr>
         <tr>
             <th>제목</th>
@@ -85,21 +79,15 @@ enctype="multipart/form-data" onsubmit="return validate(this)" name="isbnFrm">
         <tr>
             <th>ISBN</th>
             <td>
-                <form:input path="isbn"/><font color="red" size="3">
-                <form:errors path="isbnChecked"/></font>
-                <input type="button" value="ISBN 중복 검사" onclick="isbnCheck()">
+                <form:input path="isbn" readonly="true"/>
             </td>
         </tr>
-        
-        
         <tr>
 	    <th>카테고리</th>
 	    <td>
 	        <button type="button" onclick="openCategoryModal()">카테고리 선택</button>
-	        
-<!-- 	       선택된 카테고리 저장 -->
-	        <input type="hidden" id="cat_id" name="cat_id" value="0" />
-	    	<span id="selectedCategory">선택된 카테고리 없음</span>
+			<input type="hidden" id="cat_id" name="cat_id" value="${catId}"/>
+	    	<span id="selectedCategory"> ${categoryPath}</span>
 	    </td>
 		</tr>
 			<div id="categoryModal" 
@@ -124,7 +112,7 @@ enctype="multipart/form-data" onsubmit="return validate(this)" name="isbnFrm">
         </tr>
         <tr>
             <td colspan="2" align="center">
-                <input type="submit" value="추가">
+                <input type="submit" value="수정">
                 <input type="reset" value="취소">
             </td>
         </tr>
@@ -135,12 +123,8 @@ enctype="multipart/form-data" onsubmit="return validate(this)" name="isbnFrm">
 <script>
 function openCategoryModal() {
     document.getElementById('categoryModal').style.display = 'block';
-//     loadCategories(0, 'main');
     loadCategories("", 'main');
 }
-// function select() {
-// // 	document.getElementById('categoryModal');
-// }
 function closeCategoryModal() {
     document.getElementById('categoryModal').style.display = 'none';
 }
@@ -169,19 +153,6 @@ function loadCategories(parentId, targetDiv) {
                 div.style.marginRight = "10px"; 
                 div.style.display = "inline-block";
                 
-//                 div.onclick = function () {
-//                     if (targetDiv === 'main') {
-//                         loadCategories(category.cat_id, 'sub');
-//                         document.getElementById('last').innerHTML = ''; 
-//                     } else if (targetDiv === 'sub') {
-//                         loadCategories(category.cat_id, 'last');
-//                     } else if (targetDiv === 'last') {
-// //                         selectedCategory(category.cat_id, category.cat_name);
-// 	                    	selectedCatId = category.cat_id;
-// 	                        selectedCatName = category.cat_name;
-// 	                        console.log("임시 선택된 카테고리:", selectedCatName, "cat_id:", selectedCatId);
-//                     }
-//                 }
 					div.onclick = function () {
                     selectedCatId = category.cat_id;  // 가장 마지막으로 선택한 카테고리 ID 저장
                     selectedCatName = category.cat_name;
@@ -209,7 +180,6 @@ function selectedCategory(catId, catName) {
 	console.log("최종 선택된 카테고리:", catName, "cat_id:", catId);
     let selectedText = document.getElementById('selectedCategory');
     let selectedCategoryDisplay = document.getElementById('selectedCategoryDisplay');
-//     let categoryPath = [];
 
     fetch('/getCategoryPath?cat_id=' + catId)
         .then(response => response.text())
@@ -227,21 +197,6 @@ function confirm() {
     }
     fetch('/getCategoryPath?cat_id=' + selectedCatId)
         .then(response => response.text())
-// 		.then(path => {
-//             let selectedText = document.getElementById('selectedCategory');
-//             let displayElement = document.getElementById('selectedCategoryDisplay');
-//             if (selectedText) {
-//                 selectedText.innerText = path;
-//             } else {
-//                 console.error("selectedCategory 요소가 존재하지 않습니다!");
-//             }
-//             if (displayElement) {
-//                 displayElement.innerText = selectedCatName;
-//             }
-//             document.getElementById('cat_id').value = selectedCatId;
-//             console.log("선택 완료. 창 닫기 실행");
-//             closeCategoryModal();  // 모달 닫기 실행
-//         })
 			.then(path => {
             document.getElementById('selectedCategory').innerText = path;
             document.getElementById('cat_id').value = selectedCatId;
@@ -251,14 +206,13 @@ function confirm() {
             closeCategoryModal();
         	}).catch(error => console.error("카테고리 경로 로딩 오류:", error));
 }
-
 function previewImage(event) {
     var reader = new FileReader();
     reader.onload = function() {
-        var output = document.getElementById('imagePreview');
-        output.innerHTML = '<img src="' + reader.result + '" width="400" height="300"/>';
+        var previewImg = document.getElementById('previewImg');  // 기존 이미지 태그
+        previewImg.src = reader.result;  // 이미지 경로 변경
     }
-    reader.readAsDataURL(event.target.files[0]);
+    reader.readAsDataURL(event.target.files[0]);  // 파일 읽기
 }
 function validate(frm) {
     return confirm("정말로 추가하시겠습니까?");

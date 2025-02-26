@@ -68,5 +68,16 @@ public class GoodsService {
 	public void addInfoCategory(BookCategories bookcat) {
 		this.goodsMapper.addInfoCategory(bookcat);
 	}
-	
+	public String getCategoryByIsbn(Long isbn) {
+		return this.goodsMapper.getCategoryByIsbn(isbn);
+	}
+	void updateInfoCategory(BookCategories bookcat) {
+		this.goodsMapper.updateInfoCategory(bookcat);
+	}
+	public void updateGoods(Book book) {
+		this.goodsMapper.updateGoods(book);
+	}
+//	void updateBookAuthors(Long isbn, String author) {
+//		
+//	}
 }

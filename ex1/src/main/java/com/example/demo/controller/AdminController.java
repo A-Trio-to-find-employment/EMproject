@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,10 +37,6 @@ public class AdminController {
 	
     @GetMapping("/getCategories")
     public ResponseEntity<List<Category>> getCategories(@RequestParam("parent_id") String parentId) {
-        //jsp가 아닌 데이터로 받아와 정상출력 위해
-//    	 if (parentId == null || parentId.isEmpty()) {
-//    	        parentId = "0"; // 기본 카테고리 ID (예: 0 = 국내도서, 1 = 외국도서)
-//    	    }
     	List<Category> categories = goodsService.getCategoriesByParentId(parentId);
         System.out.println("parent_id: " + parentId + " → categories: " + categories);
         
@@ -93,12 +88,16 @@ public class AdminController {
 		mav.addObject("BODY","insertStockComplete.jsp");
 		return mav;
 	}
-	@GetMapping(value = "/manageGoods/detail")   //시작
+	@GetMapping(value = "/manageGoods/detail")   
 	public ModelAndView goodsDetail(Long isbn) {
 		ModelAndView mav = new ModelAndView("admin");
 		Book goods = this.goodsService.getGoodsDetail(isbn);
+		String catId = this.goodsService.getCategoryByIsbn(isbn);
+		String categoryPath = this.goodsService.getCategoryPath(catId);
 		mav.addObject(goods);
 		mav.addObject("GOODS", goods);
+		mav.addObject("catId", catId);
+		mav.addObject("categoryPath", categoryPath);  // 기존 카테고리 경로
 		mav.addObject("BODY","goodsDetail.jsp");
 		return mav;
 	}
@@ -158,7 +157,7 @@ public class AdminController {
 		}finally {
 			try { if(os != null) os.close(); }catch(Exception e) {}
 		}
-		book.setImage_name(fileName);//업로드 된 파일 이름을 Imagebbs에 설정
+		book.setImage_name(fileName);//업로드 된 파일 이름을 Book에 설정
 		
 		//끝
 		if (book.getCoverImage() == null || book.getCoverImage().isEmpty()) {
@@ -194,12 +193,62 @@ public class AdminController {
 		mav.addObject("ISBN",isbn);
 		return mav;
 	}
-	@PostMapping(value = "/manageGoods/update") //시작
-	public ModelAndView updateGoods() {
+	@PostMapping(value = "/manageGoods/update") 
+	public ModelAndView updateGoods(@Valid Book book,
+				BindingResult br, HttpSession session, @RequestParam("cat_id")
+				String selectedCat, @RequestParam("authors")String authors) {
 		ModelAndView mav = new ModelAndView("admin");
+		this.coverValidator.validate(book, br);
+		if(br.hasErrors()) {
+			mav.addObject("BODY","addGoods.jsp");
+			mav.addObject("","");
+			mav.getModel().putAll(br.getModel());
+			System.out.println("검증 오류 발생: " + br.getAllErrors());
+			return mav;
+		}
+		//이미지 업로드
+		MultipartFile multipart = book.getCoverImage();//선택한 파일을 불러온다.
+		if(! multipart.getOriginalFilename().equals("")) {//파일이름이 존재하는 경우,즉 이미지 변경
+		String fileName = null; String path = null; OutputStream os = null;
+		fileName = multipart.getOriginalFilename();//선택한 파일의 이름을 찾는다.
+		ServletContext ctx = session.getServletContext();//ServletContext 생성
+		path = ctx.getRealPath("/upload/"+fileName);// upload 폴더의 절대 경로를 획득
+		System.out.println("변경된 경로:"+path);
+		try {
+			os = new FileOutputStream(path);//upload폴더에 파일 재생성
+			BufferedInputStream bis = new BufferedInputStream(multipart.getInputStream());
+			//InputStream을 생성한다. 즉, 원본파일을 읽을 수 있도록 연다.
+			byte[] buffer = new byte[8156];//8K 크기로 배열을 생성한다.
+			int read = 0;//원본 파일에서 읽은 바이트 수를 저장할 변수 선언
+			while( (read = bis.read(buffer)) > 0) {//원본 파일에서 읽은 바이트 수가 0이상인 경우 반복
+				os.write(buffer, 0, read);//생성된 파일에 출력(원본 파일에서 읽은 바이트를 파일에 출력)
+			}
+		}catch(Exception e) {
+			System.out.println("변경 중 문제 발생!");
+		}finally {
+			try { if(os != null) os.close(); }catch(Exception e) {}
+		}
+		book.setImage_name(fileName);//업로드 된 파일 이름을 Book에 설정
+		if (book.getCoverImage() == null || book.getCoverImage().isEmpty()) {
+	        mav.addObject("BODY", "addGoods.jsp");
+	        mav.addObject("imageError", "앞표지를 업로드해야 합니다.");
+	        return mav;
+		}
+		this.goodsService.updateGoods(book);
+		
+		
+		
+//		this.imageService.updateImageBBS(imagebbs);
+//		mav.addObject("BODY","imageUpdateResult.jsp");
+//		return mav;
+		
 		mav.addObject("isbnChecked","");
+//		model.addAttribute("BOOK",book);
 		mav.addObject("book",new Book());
 		mav.addObject("BODY","updateComplete.jsp");
 		return mav;
+		}
+		return mav;//임시
 	}
 }
+
