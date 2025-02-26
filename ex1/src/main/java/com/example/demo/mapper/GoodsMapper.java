@@ -15,15 +15,18 @@ public interface GoodsMapper {
 	Book getGoodsDetail(Long isbn); 
 	Integer getGoodsCount();
 	List<Book> getGoodsByName(StartEnd se);
+	
 	void updateGoods(Book book);
 	void addGoods(Book book);
 	Integer getIsbnDup(Long isbn);
     void insertStock(Long isbn, int amount);
-	
 	void addBookAuthors(Long isbn, String author);
     List<String> getBookAuthors(Long isbn);
-	
     List<Category> getCategoriesByParentId(String parentId);
 	String getCategoryPath(String catId);
 	void addInfoCategory(BookCategories bookcat);
+	
+	String getCategoryByIsbn(Long isbn);
+	void updateInfoCategory(BookCategories bookcat);
+	void updateBookAuthors(Long isbn, String author);
 }
