@@ -54,6 +54,6 @@ public class OrderService {
 		this.orderMapper.cancelDelivery(detail_id);
 	}
 	public void cancelOrder(String detail_id) {
-		this.cancelOrder(detail_id);
+		this.orderMapper.cancelOrder(detail_id);
 	}
 }

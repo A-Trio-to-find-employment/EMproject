@@ -76,14 +76,6 @@
         <p><strong><a href="#">나의 1:1 문의내역</a></strong></p>
     </div>
 
-<c:if test="${not empty sessionScope.cancelMessage}">
-    <div class="alert alert-success">
-        ${sessionScope.cancelMessage}
-    </div>
-
-    <c:remove var="cancelMessage" scope="session" />
-</c:if>
-
  <div class="container">
  <h2>주문 내역/배송 조회</h2>
     <table>
@@ -127,13 +119,22 @@
                 </td>
                 
                 <td>
-                    [<a href="#">반품</a>] 
-                    [<a href="#">교환</a>]                     
+                <form action="/requestAction" method="post">    
+    			<input type="submit" name="BTN" value="반품" />     
+    			<input type="submit" name="BTN" value="교환" />        
+    			<input type="hidden" name="orderDetailId" value="${order.order_detail_id}" />
+				</form>
+
+                    <!-- 실제 취소 버튼에 confirm() 적용 -->
                     <c:choose>
-                        <c:when test="${order.order_status == 0 ||order.delivery_status == 0 }">
-                            [<a href="/cancel?orderDetailId=${order.order_detail_id}">취소</a>]
-                        </c:when>
-                    </c:choose>
+    <c:when test="${order.order_status == 0 && order.delivery_status == 0 }">
+        <!-- input 버튼을 사용하여 confirm() 적용 -->
+ 
+        <input type="button" value="취소" onclick="confirmCancel('${order.order_detail_id}')">
+   
+    </c:when>
+</c:choose>
+
                 </td>
             </tr>
         </c:forEach>
@@ -169,6 +170,7 @@
         <a href="/order/orderlist.html?PAGE_NUM=${endPage + 1}">[다음]</a>
     </c:if>
 </div>
+
  <script>
         function toggleDropdown() {
             var dropdown = document.getElementById("categoryDropdown");
@@ -184,6 +186,24 @@
                 dropdown.style.display = "none";
             }
         });
+        
+        
+
+   
+        function confirmCancel(orderDetailId) {
+            // "주문을 취소하시겠습니까?" 확인 메시지
+            var userConfirmed = confirm('주문을 취소하시겠습니까?');
+
+            if (userConfirmed) {
+                // 사용자가 '확인'을 클릭한 경우, 취소 요청
+                window.location.href = '/cancel?orderDetailId=' + orderDetailId;
+            } else {
+                // 사용자가 '취소'를 클릭한 경우
+                alert("주문 취소가 취소되었습니다.");
+            }
+        }
+   
+
     </script>
 </body>
 </html>
