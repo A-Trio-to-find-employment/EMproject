@@ -70,6 +70,16 @@
 	<select id="getCouponName" parameterType="Integer" resultType="String">
 	select coupon_code from coupon where coupon_id=#{coupon_id}
 	</select>
+	<update id="cancelDelivery" parameterType="String">
+		update orders_detail set delivery_status='2' where orders_detail_id=#{orders_detail}
+	</update>
+	<update id="cancelOrder" parameterType="String"> 
+	upadate orders set order_status = 1 where order_id = (
+    select order_id
+    from order_details
+    where order_detail_id = #{order_detail_id} 
+);	
+	</update>
 </mapper>
 
 	

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.model.MyOrders;
@@ -63,6 +64,18 @@ public class OrderController {
         mav.addObject("pageCount", totalPageCount);
         
         return mav;  // JSP로 데이터 반환
+    }
+    
+    @RequestMapping("/cancel")
+    public String cancelOrder( String orderDetailId, HttpSession session) {
+        // 주문 상태와 배송 상태를 취소로 변경
+    	this.orderservice.cancelDelivery(orderDetailId);
+        this.orderservice.cancelOrder(orderDetailId);        
+        // 취소 완료 메시지를 세션에 저장
+        session.setAttribute("cancelMessage", "주문 취소가 완료되었습니다.");
+        
+        // 취소 후 주문 내역 페이지로 리디렉션
+        return "redirect:/order/orderlist.html";
     }
 }
 

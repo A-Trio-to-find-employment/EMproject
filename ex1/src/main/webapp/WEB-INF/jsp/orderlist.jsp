@@ -76,6 +76,13 @@
         <p><strong><a href="#">나의 1:1 문의내역</a></strong></p>
     </div>
 
+<c:if test="${not empty sessionScope.cancelMessage}">
+    <div class="alert alert-success">
+        ${sessionScope.cancelMessage}
+    </div>
+
+    <c:remove var="cancelMessage" scope="session" />
+</c:if>
 
  <div class="container">
  <h2>주문 내역/배송 조회</h2>
@@ -88,7 +95,8 @@
             <th>적용 쿠폰</th>
             <th>수량</th>
             <th>배송 상태</th>
-            <th>반품 / 교환 / 환불 / 취소</th>
+            <th>주문 상태</th>
+            <th>반품 / 교환 / 취소</th>
         </tr>
         <c:forEach var="order" items="${LIST}">
             <tr>
@@ -102,14 +110,30 @@
                     <c:choose>
                         <c:when test="${order.delivery_status == 0}">배송 준비중</c:when>
                         <c:when test="${order.delivery_status == 1}">배송 중</c:when>
+                        <c:when test="${order.delivery_status == 2}">배송 취소</c:when>
                         <c:otherwise>배송 완료</c:otherwise>
                     </c:choose>
                 </td>
                 <td>
+                    <c:choose>
+                        <c:when test="${order.order_status == 0}">주문 완료</c:when>
+                        <c:when test="${order.order_status == 1}">주문 취소</c:when>
+                        <c:when test="${order.order_status == 2}">반품 신청</c:when>
+                        <c:when test="${order.order_status == 3}">반품 완료</c:when>
+                        <c:when test="${order.order_status == 4}">교환 신청</c:when>
+                        <c:when test="${order.order_status == 5}">교환 완료</c:when>
+                        <c:otherwise>배송 완료</c:otherwise>
+                    </c:choose>
+                </td>
+                
+                <td>
                     [<a href="#">반품</a>] 
-                    [<a href="#">교환</a>] 
-                    [<a href="#">환불</a>] 
-                    [<a href="#">취소</a>]
+                    [<a href="#">교환</a>]                     
+                    <c:choose>
+                        <c:when test="${order.order_status == 0 ||order.delivery_status == 0 }">
+                            [<a href="/cancel?orderDetailId=${order.order_detail_id}">취소</a>]
+                        </c:when>
+                    </c:choose>
                 </td>
             </tr>
         </c:forEach>
