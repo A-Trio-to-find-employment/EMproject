@@ -8,7 +8,7 @@
 </head>
 <body>
 <h2 align="center">${book.book_title }책의 상세 정보가 수정되었습니다.<br/>
-					<a href="/manageGoods/detail">수정된 정보 보기</a></h2>
+					<a href="/manageGoods">수정된 정보 보기</a></h2>
 
 </body>
 </html>

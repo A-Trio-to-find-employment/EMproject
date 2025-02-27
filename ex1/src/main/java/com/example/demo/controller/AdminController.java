@@ -21,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.demo.model.Book;
 import com.example.demo.model.BookCategories;
 import com.example.demo.model.Category;
+import com.example.demo.model.Review;
 import com.example.demo.service.GoodsService;
 import com.example.demo.utils.CoverValidator;
 
@@ -197,10 +198,11 @@ public class AdminController {
 	public ModelAndView updateGoods(@Valid Book book,
 				BindingResult br, HttpSession session, @RequestParam("cat_id")
 				String selectedCat, @RequestParam("authors")String authors) {
+	    System.out.println("수정 대상 도서: " + book);
 		ModelAndView mav = new ModelAndView("admin");
 		this.coverValidator.validate(book, br);
 		if(br.hasErrors()) {
-			mav.addObject("BODY","addGoods.jsp");
+			mav.addObject("BODY","goodsDetail.jsp");
 			mav.addObject("","");
 			mav.getModel().putAll(br.getModel());
 			System.out.println("검증 오류 발생: " + br.getAllErrors());
@@ -234,21 +236,32 @@ public class AdminController {
 	        mav.addObject("imageError", "앞표지를 업로드해야 합니다.");
 	        return mav;
 		}
+		book.setAuthors(authors);
 		this.goodsService.updateGoods(book);
 		
-		
-		
-//		this.imageService.updateImageBBS(imagebbs);
-//		mav.addObject("BODY","imageUpdateResult.jsp");
-//		return mav;
-		
-		mav.addObject("isbnChecked","");
-//		model.addAttribute("BOOK",book);
+		mav.addObject("isbnChecked",book.getIsbn());
 		mav.addObject("book",new Book());
 		mav.addObject("BODY","updateComplete.jsp");
-		return mav;
 		}
-		return mav;//임시
+		return mav;
+	}
+	@PostMapping(value = "/manageGoods/delete")
+	public ModelAndView deleteGoods(Book book, Review review,
+			@RequestParam("authors")String authors) {
+		int replyCount = this.goodsService.getReplyCount(review.getReview_id());
+		ModelAndView mav = new ModelAndView("admin");
+		if(replyCount > 0) {//답글이 있는 글, 즉 삭제 불가
+			mav.addObject("BODY","goodsDeleteResult.jsp?R=NO");
+		}else {//답글이 없는 글, 즉 삭제 가능
+			book.setAuthors(authors);
+			Long isbn = book.getIsbn();
+			this.goodsService.deleteBookAuthors(isbn);
+			this.goodsService.deleteCatInfo(isbn);
+			this.goodsService.deleteGoods(isbn);
+			mav.addObject("book",book);
+			mav.addObject("BODY","goodsDeleteResult.jsp");
+		}
+		return mav;
 	}
 }
 

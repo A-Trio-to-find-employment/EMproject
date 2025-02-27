@@ -75,9 +75,29 @@ public class GoodsService {
 		this.goodsMapper.updateInfoCategory(bookcat);
 	}
 	public void updateGoods(Book book) {
-		this.goodsMapper.updateGoods(book);
+	    this.goodsMapper.updateGoods(book);
+	    //기존 저자 삭제
+	    this.goodsMapper.deleteBookAuthors(book.getIsbn());
+	    //수정된 저자 정보 추가
+	    if (book.getAuthors() != null && !book.getAuthors().isEmpty()) {
+	        List<String> authorList = Arrays.asList(book.getAuthors().split(","));
+	        for (String author : authorList) {
+	            goodsMapper.addBookAuthors(book.getIsbn(), author.trim());
+	        }
+	    }
 	}
-//	void updateBookAuthors(Long isbn, String author) {
-//		
-//	}
+	public void deleteGoods(Long isbn) {
+		this.goodsMapper.deleteBookAuthors(isbn);
+		this.goodsMapper.deleteCatInfo(isbn);
+		this.goodsMapper.deleteGoods(isbn);
+	}
+	public Integer getReplyCount(Integer review_id) {
+		return this.goodsMapper.getReplyCount(review_id);
+	}
+	public void deleteBookAuthors(Long isbn) {
+		this.goodsMapper.deleteBookAuthors(isbn);
+	}
+	public void deleteCatInfo(Long isbn) {
+		this.goodsMapper.deleteCatInfo(isbn);
+	}
 }

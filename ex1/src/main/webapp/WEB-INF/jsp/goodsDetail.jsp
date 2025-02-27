@@ -32,14 +32,14 @@
 <form:form modelAttribute="book" action="/manageGoods/update" method="post" 
 enctype="multipart/form-data" onsubmit="return validate(this)" >
 <!-- name="isbnFrm"> -->
-<%--     <form:hidden path="isbnChecked"/>  --%>
+    <form:hidden path="isbnChecked"/> 
     <table border="1">
         <tr>
             <th>앞표지</th>
             <td colspan="2" align="center">
 			    <input type="file" name="coverImage" id="coverImage" onchange="previewImage(event)">
 			    <font color="red"><form:errors path="coverImage"/></font><br>
-			    <img id="previewImg" 
+			    <img  alt="" id="previewImg" 
 			    src="${pageContext.request.contextPath }/upload/${GOODS.image_name}" width="500" height="400"/>
 			</td>
         </tr>
@@ -79,7 +79,9 @@ enctype="multipart/form-data" onsubmit="return validate(this)" >
         <tr>
             <th>ISBN</th>
             <td>
-                <form:input path="isbn" readonly="true"/>
+                <form:input path="isbn" readonly="true"/><font color="red">
+                <input type="hidden" name="isbnChecked" value="${book.isbnChecked}">
+                <form:errors path="isbnChecked"/></font>
             </td>
         </tr>
         <tr>
@@ -114,10 +116,21 @@ enctype="multipart/form-data" onsubmit="return validate(this)" >
             <td colspan="2" align="center">
                 <input type="submit" value="수정">
                 <input type="reset" value="취소">
+<%--                 <form action="manageGoods/delete"> --%>
+<%--                 <input type="submit" value="삭제"></form> --%>
             </td>
         </tr>
     </table>
 </form:form>
+<form action="/manageGoods/delete" method="post">
+    <input type="hidden" name="isbn" value="${book.isbn}">
+    <table border="1">
+     <tr>
+    	<td colspan="2" align="center">
+		    <input type="submit" value="삭제">
+		    <input type="reset" value="취소">
+		</td></tr></table>
+</form>
 </div>
 
 <script>
@@ -215,7 +228,7 @@ function previewImage(event) {
     reader.readAsDataURL(event.target.files[0]);  // 파일 읽기
 }
 function validate(frm) {
-    return confirm("정말로 추가하시겠습니까?");
+    return confirm("정말로 진행하시겠습니까?");
 }
 </script>
 </body>

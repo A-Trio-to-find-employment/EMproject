@@ -84,6 +84,18 @@
 	<update id="updateBookAuthors" parameterType="map">
         update book_author set author=#{author} where isbn=#{isbn}
     </update>
+    <delete id="deleteBookAuthors" parameterType="java.lang.Long">
+    	delete from book_author where isbn=#{isbn}
+    </delete>
+    <delete id="deleteCatInfo" parameterType="java.lang.Long">
+    	delete from book_categories where isbn=#{isbn}
+    </delete>
+    <delete id="deleteGoods" parameterType="java.lang.Long">
+    	delete from book where isbn=#{isbn}
+    </delete>
+    <select id="getReplyCount" parameterType="Integer">
+    	select count(*) from review where review_id=#{review_id}
+    </select>
 </mapper>
 
 	

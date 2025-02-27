@@ -29,4 +29,8 @@ public interface GoodsMapper {
 	String getCategoryByIsbn(Long isbn);
 	void updateInfoCategory(BookCategories bookcat);
 	void updateBookAuthors(Long isbn, String author);
+	void deleteBookAuthors(Long isbn);
+	void deleteCatInfo(Long isbn);
+	void deleteGoods(Long isbn);
+	Integer getReplyCount(Integer review_id);
 }
