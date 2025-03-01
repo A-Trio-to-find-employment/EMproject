@@ -14,4 +14,6 @@ public interface ReviewMapper {
    void deleteReportedReviews();
    Integer getTotal();
    List<Review> ReviewList(StartEnd st);
+   void writeReview(Review review);
+   Integer getMaxReview();
 }

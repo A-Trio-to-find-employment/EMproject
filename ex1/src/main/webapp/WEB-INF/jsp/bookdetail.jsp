@@ -63,7 +63,8 @@
             </table>
 
             <!-- 리뷰 섹션 -->
-<h3>리뷰</h3>
+<h3>리뷰 &nbsp&nbsp&nbsp&nbsp<input type="button" 
+	onclick="location.href='/review/writeReview?ISBN=${book.isbn}';" value="리뷰 작성"/></h3>
 <div class="reviews">
     <c:choose>
         <c:when test="${empty LIST}">

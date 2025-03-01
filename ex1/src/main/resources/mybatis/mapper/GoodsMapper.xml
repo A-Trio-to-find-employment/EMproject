@@ -96,6 +96,7 @@
     <select id="getReplyCount" parameterType="Integer">
     	select count(*) from review where review_id=#{review_id}
     </select>
+
 </mapper>
 
 	
