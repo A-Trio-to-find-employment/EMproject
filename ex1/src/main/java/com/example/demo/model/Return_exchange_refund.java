@@ -13,4 +13,6 @@ public class Return_exchange_refund {
 	private Integer reason;
 	private Integer order_status;
 	private Integer status;
+	private String book_title;
+	private String user_id;
 }

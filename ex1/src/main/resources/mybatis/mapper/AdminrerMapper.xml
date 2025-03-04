@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.example.demo.mapper.AdminrerMapper">
+<select id="getrer"  resultType="Return_exchange_refund">
+SELECT o.USER_ID, b.BOOK_TITLE, r.status,r.request_id
+FROM return_exchange_refund r
+JOIN orders o ON r.order_id = o.ORDER_ID
+JOIN orders_detail od ON r.order_detail_id = od.ORDER_DETAIL_ID
+JOIN book b ON od.ISBN = b.ISBN
+where r.order_status=2
+</select>
+<select id="getexchange" resultType="Return_exchange_refund">
+SELECT o.USER_ID, b.BOOK_TITLE, r.status , r.request_id
+FROM return_exchange_refund r
+JOIN orders o ON r.order_id = o.ORDER_ID
+JOIN orders_detail od ON r.order_detail_id = od.ORDER_DETAIL_ID
+JOIN book b ON od.ISBN = b.ISBN
+where r.order_status=4
+</select>
+<select id="getRer" parameterType="String" resultType="MyOrders">
+SELECT 
+    r.REQUEST_ID,
+    o.ADDRESS,
+    o.ADDRESS_DETAIL,
+    r.REASON,
+    u.USER_NAME,
+    u.phone
+FROM 
+    return_exchange_refund r
+JOIN 
+    orders o ON r.ORDER_ID = o.ORDER_ID
+JOIN 
+    orders_detail od ON o.ORDER_ID = od.ORDER_ID
+JOIN 
+    users u ON o.USER_ID = u.USER_ID
+WHERE 
+    r.REQUEST_ID =#{request_id}
+
+</select>
+</mapper>
+
+	
+
+
+
+

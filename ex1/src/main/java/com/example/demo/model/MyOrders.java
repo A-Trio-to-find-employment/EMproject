@@ -21,4 +21,6 @@ private Integer subtotal;
 private Integer coupon_id;
 private String coupon_code;
 private String user_name;
+private Integer reason;
+private String request_id;
 } 

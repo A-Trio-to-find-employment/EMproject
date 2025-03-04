@@ -122,13 +122,12 @@
                 <form action="/requestAction" method="post">
                 <!--딜리버리 스테이트가 3일때 반품과 교환이 뜨게 할꺼에요 아직 대기중-->    
     			 <c:if test="${order.order_status != 4 && order.order_status != 5 && order.order_status != 2 && order.order_status != 3}">
-         		    <input type="button" name="BTN" value="반품" onclick="validateReturnExchange('${order.order_detail_id}', '${order.delivery_status}')" />
-        
+         		   <input type="submit" name="BTN" value="반품" />
        			 </c:if>
 
         <!-- 교환 버튼: 교환 신청 또는 교환 완료 상태가 아닐 때만 표시 -->
       			  <c:if test="${order.order_status != 4 && order.order_status != 5 && order.order_status != 2 && order.order_status != 3}">
-       			   <input type="button" name="BTN" value="교환" onclick="validateReturnExchange('${order.order_detail_id}', '${order.delivery_status}')" />
+       			   <input type="submit" name="BTN" value="교환" />
      			   </c:if> 
     			      
     			<input type="hidden" name="orderDetailId" value="${order.order_detail_id}" />
@@ -209,14 +208,7 @@
                 alert("주문 취소가 취소되었습니다.");
             }
         }
-        function validateReturnExchange(orderDetailId, deliveryStatus) {
-            if (deliveryStatus != 3) { // 배송 완료 상태가 아닐 때
-                alert("배송 완료가 되지 않았습니다.");
-                return false;
-            }
-            document.getElementById("returnExchangeForm_" + orderDetailId).submit();
-        }
-
+   
 
     </script>
 </body>

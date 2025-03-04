@@ -113,9 +113,6 @@ public class OrderController {
     }
     @PostMapping("/submitExchange")
     public ModelAndView submitExchange(String detailid, Integer reason) { 
-        System.out.println("📌 [디버깅] submitExchange 요청 들어옴");
-        System.out.println("📌 detailid: " + detailid);
-        System.out.println("📌 reason: " + reason);
 
         Return_exchange_refund rer = new Return_exchange_refund();
 
