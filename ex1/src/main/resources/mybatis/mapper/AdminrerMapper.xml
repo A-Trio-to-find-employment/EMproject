@@ -20,7 +20,8 @@ JOIN book b ON od.ISBN = b.ISBN
 where r.order_status=4
 </select>
 <select id="getRer" parameterType="String" resultType="MyOrders">
-SELECT 
+SELECT DISTINCT
+	r.order_detail_id,
     r.REQUEST_ID,
     o.ADDRESS,
     o.ADDRESS_DETAIL,
@@ -39,6 +40,27 @@ WHERE
     r.REQUEST_ID =#{request_id}
 
 </select>
+<update id="seungin" parameterType="String">
+	update return_exchange_refund set status=1 where order_detail_id=#{order_detail_id}
+</update>
+<update id="seunginreturn" parameterType="String">
+UPDATE orders o
+SET o.ORDER_STATUS = 3
+WHERE o.ORDER_ID = (
+    SELECT od.ORDER_ID
+    FROM orders_detail od
+    WHERE od.ORDER_DETAIL_ID = #{ORDER_DETAIL_ID}
+)
+</update>
+<update id="seunginexchange" parameterType="String">
+UPDATE orders o
+SET o.ORDER_STATUS = 5
+WHERE o.ORDER_ID = (
+    SELECT od.ORDER_ID
+    FROM orders_detail od
+    WHERE od.ORDER_DETAIL_ID = #{ORDER_DETAIL_ID}
+)
+</update>
 </mapper>
 
 	

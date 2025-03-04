@@ -23,4 +23,13 @@ public class AdminrerService {
 	public MyOrders getRer(String request_id) {
 		return this.mapper.getRer(request_id);
 	}
+	public void seungin(String detailid) {
+		this.mapper.seungin(detailid);
+	}
+	public void seunginreturn(String detailid) {
+		this.mapper.seunginreturn(detailid);
+	}
+	public void seunginexchange(String detailid) {
+		this.mapper.seunginexchange(detailid);
+	}
 }

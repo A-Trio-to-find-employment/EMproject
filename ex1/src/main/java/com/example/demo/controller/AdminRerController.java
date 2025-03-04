@@ -48,19 +48,21 @@ public class AdminRerController {
 	}
 	@PostMapping("/adminExchange")
 	public ModelAndView adminExchange(String detailid ) {
-		ModelAndView mav = new ModelAndView("");
-		
-		
+		ModelAndView mav = new ModelAndView();
+		this.service.seungin(detailid);
+		this.service.seunginexchange(detailid);
+		mav.setViewName("redirect:/adminexchange");
 		return mav;
 	}
+	
 	@PostMapping("/adminReturn")
 	public ModelAndView adminReturn(String detailid) {
-		ModelAndView mav = new ModelAndView("");
-		
-		
+		ModelAndView mav = new ModelAndView();
+		this.service.seungin(detailid);	
+		this.service.seunginreturn(detailid);
+		mav.setViewName("redirect:/adminrer");
 		return mav;
 	}
-	
-	
+
 	
 }

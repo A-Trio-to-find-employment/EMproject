@@ -74,47 +74,59 @@ table {
         </div>
     <h2>반품 확인</h2>
 
-    <form action="/adminReturn?detailid=" method="post" onsubmit="return confirmSubmit()">   
-        <fieldset >
-            <legend>회송 정보</legend>
-            <table border="1">
-					<tr>
-						<th>반품 사유</th>
-						<td><c:choose>
-								<c:when test="${order.reason == 1}">불량</c:when>
-								<c:when test="${order.reason == 2}">오배송</c:when>
-								<c:when test="${order.reason == 3}">변심</c:when>
-								<c:otherwise>기타</c:otherwise>
-						</c:choose></td>
-					</tr>
-					<tr>
-                    <th>이름</th>
-                    <td><input type="text" name="name" value="${order.user_name}" readonly></td>
-                </tr>
-                <tr>
-                    <th>주소</th>
-                    <td><input type="text" name="address" value="${order.address}" readonly></td>
-                </tr>
-                <tr>
-                    <th>상세 주소</th>
-                    <td><input type="text" name="address_detail" value="${order.address_detail}" readonly></td>
-                </tr>
-                <tr>
-                    <th>전화번호</th>
-                    <td><input type="text" name="phone" value="${order.phone}" readonly></td>
-                </tr>
-            </table>
-        </fieldset>
-        
-        <br>
-        <input type="hidden" name="orderDetailId" value="${order.order_detail_id}">
-        <button type="submit">승인</button>
-        
-        <button type="button" onclick="history.back();">취소</button>
-    </form>    
+    <form action="/adminReturn?detailid=${order.order_detail_id }" method="post" onsubmit="return confirmApproval()">   
+    <fieldset>
+        <legend>회송 정보</legend>
+        <table border="1">
+            <tr>
+                <th>반품 사유</th>
+                <td>
+                    <c:choose>
+                        <c:when test="${order.reason == 1}">불량</c:when>
+                        <c:when test="${order.reason == 2}">오배송</c:when>
+                        <c:when test="${order.reason == 3}">변심</c:when>
+                        <c:otherwise>기타</c:otherwise>
+                    </c:choose>
+                </td>
+            </tr>
+            <tr>
+                <th>이름</th>
+                <td><input type="text" name="name" value="${order.user_name}" readonly></td>
+            </tr>
+            <tr>
+                <th>주소</th>
+                <td><input type="text" name="address" value="${order.address}" readonly></td>
+            </tr>
+            <tr>
+                <th>상세 주소</th>
+                <td><input type="text" name="address_detail" value="${order.address_detail}" readonly></td>
+            </tr>
+            <tr>
+                <th>전화번호</th>
+                <td><input type="text" name="phone" value="${order.phone}" readonly></td>
+            </tr>
+        </table>
+    </fieldset>
+    
+    <br>
+    <input type="hidden" name="orderDetailId" value="${order.order_detail_id}">
+    <button type="submit">승인</button>
+    <button type="button" onclick="history.back();">취소</button>
+</form>    
+
 </div>
     <script>
-
+    function confirmApproval() {
+        // 확인 메시지 띄우기
+        var isConfirmed = confirm("승인 하겠습니까?");
+        if (isConfirmed) {
+            // 승인이 완료되면 알림 표시
+            alert("승인이 완료되었습니다.");
+            return true;  // 폼을 정상적으로 제출
+        } else {
+            return false; // 취소하면 폼 제출하지 않음
+        }
+    }
         function toggleDropdown() {
             var dropdown = document.getElementById("categoryDropdown");
             dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";

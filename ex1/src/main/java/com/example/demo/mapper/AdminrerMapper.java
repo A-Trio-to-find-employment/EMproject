@@ -12,4 +12,7 @@ public interface AdminrerMapper {
 	List<Return_exchange_refund> getrer();//신청내역 가져오기
 	List<Return_exchange_refund> getexchange();//신청내역 가져오기
 	MyOrders getRer(String request_id);
+	void seungin(String detailid);
+	void seunginreturn(String detailid);
+	void seunginexchange(String detailid);
 }
