@@ -10,6 +10,9 @@
     <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 <body>
+	<c:set var="body" value="${param.BODY }"/>
+	<c:choose>
+	<c:when test="${empty BODY }">
     <div class="nav">
         <a href="/index">HOME</a>     
         <div style="position: relative;">
@@ -55,7 +58,13 @@
             <p>인문학 | 자기계발 | 경제·경영 | 장르소설 | 종교/역학 | 에세이 | 역사</p>
         </div>
     </div>
-
+    </c:when>
+    <c:otherwise>
+    	<div class="content">
+    		<jsp:include page="${BODY }"></jsp:include>
+    	</div>
+    </c:otherwise>
+    </c:choose>
     <script>
         function toggleDropdown() {
             var dropdown = document.getElementById("categoryDropdown");

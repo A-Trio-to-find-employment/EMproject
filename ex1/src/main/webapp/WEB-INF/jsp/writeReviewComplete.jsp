@@ -7,6 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h2>하  이</h2>
+<h2 align="center">${book} 에 소중한 리뷰가 생겼어요~~ ^^</br>
+				 <a href="/secondfa">마이페이지로 가기</a></h2>
 </body>
 </html>

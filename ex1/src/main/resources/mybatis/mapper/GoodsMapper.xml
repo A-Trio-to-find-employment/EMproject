@@ -58,7 +58,7 @@
         values (#{isbn}, #{author})
     </insert>
 	<select id="getBookAuthors" parameterType="Long" resultType="String">
-        select author from book_author where isbn = #{isbn}
+        select author from book_author where isbn = #{isbn, jdbcType=BIGINT}
     </select>
 	
 	
@@ -96,7 +96,9 @@
     <select id="getReplyCount" parameterType="Integer">
     	select count(*) from review where review_id=#{review_id}
     </select>
-
+	<select id="getGoodsTitle" parameterType="java.lang.Long" resultType="String">
+	 select book_title from book where isbn =#{isbn, jdbcType=BIGINT}
+	</select>
 </mapper>
 
 	

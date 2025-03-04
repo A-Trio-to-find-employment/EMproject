@@ -25,6 +25,7 @@ public interface GoodsMapper {
     List<Category> getCategoriesByParentId(String parentId);
 	String getCategoryPath(String catId);
 	void addInfoCategory(BookCategories bookcat);
+	String getGoodsTitle(Long isbn);
 	
 	String getCategoryByIsbn(Long isbn);
 	void updateInfoCategory(BookCategories bookcat);
