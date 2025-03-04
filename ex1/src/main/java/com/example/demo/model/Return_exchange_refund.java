@@ -9,7 +9,8 @@ public class Return_exchange_refund {
 	private String request_id;
 	private String order_id;
 	private String order_detail_id;
-	private Integer isbn;
+	private Long isbn;
 	private Integer reason;
+	private Integer order_status;
 	private Integer status;
 }

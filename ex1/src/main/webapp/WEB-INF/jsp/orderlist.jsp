@@ -7,14 +7,14 @@
 <title>주문 내역/배송 조회</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
 <style>
-.table-containerrr {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-
+.sidebar { float: left; width: 20%; border: 1px solid #ddd; box-sizing: border-box; padding: 20px; text-align: left; }
+        .sidebar h3 { border-bottom: 1px solid #ccc; padding-bottom: 10px; }
+        .sidebar ul { list-style: none; padding: 0; }
+        .sidebar li { margin: 10px 0; }
+        .container { margin-left: 20%; padding: 15px; }
+        
     table {
-        width: 65%;
+        width: 80%;
         border-collapse: collapse;
         margin-top: 20px;
     }
@@ -27,7 +27,8 @@
         background-color: #f4f4f4;
     }
     .pagination {
-        margin-top: 20px;
+        margin-top: 60px;
+        padding: 8px;
         text-align: center;
     }
     .current {
@@ -76,7 +77,6 @@
         <p><strong><a href="#">나의 1:1 문의내역</a></strong></p>
     </div>
 
-
  <div class="container">
  <h2>주문 내역/배송 조회</h2>
     <table>
@@ -88,7 +88,8 @@
             <th>적용 쿠폰</th>
             <th>수량</th>
             <th>배송 상태</th>
-            <th>반품 / 교환 / 환불 / 취소</th>
+            <th>주문 상태</th>
+            <th>반품 / 교환 / 취소</th>
         </tr>
         <c:forEach var="order" items="${LIST}">
             <tr>
@@ -102,14 +103,45 @@
                     <c:choose>
                         <c:when test="${order.delivery_status == 0}">배송 준비중</c:when>
                         <c:when test="${order.delivery_status == 1}">배송 중</c:when>
+                        <c:when test="${order.delivery_status == 2}">배송 취소</c:when>                        
                         <c:otherwise>배송 완료</c:otherwise>
                     </c:choose>
                 </td>
                 <td>
-                    [<a href="#">반품</a>] 
-                    [<a href="#">교환</a>] 
-                    [<a href="#">환불</a>] 
-                    [<a href="#">취소</a>]
+                    <c:choose>
+                        <c:when test="${order.order_status == 0}">주문 완료</c:when>
+                        <c:when test="${order.order_status == 1}">주문 취소</c:when>
+                        <c:when test="${order.order_status == 2}">반품 신청</c:when>
+                        <c:when test="${order.order_status == 3}">반품 완료</c:when>
+                        <c:when test="${order.order_status == 4}">교환 신청</c:when>
+                        <c:otherwise>교환 완료</c:otherwise>
+                    </c:choose>
+                </td>
+                
+                <td>
+                <form action="/requestAction" method="post">
+                <!--딜리버리 스테이트가 3일때 반품과 교환이 뜨게 할꺼에요 아직 대기중-->    
+    			 <c:if test="${order.order_status != 4 && order.order_status != 5 && order.order_status != 2 && order.order_status != 3}">
+         		    <input type="button" name="BTN" value="반품" onclick="validateReturnExchange('${order.order_detail_id}', '${order.delivery_status}')" />
+        
+       			 </c:if>
+
+        <!-- 교환 버튼: 교환 신청 또는 교환 완료 상태가 아닐 때만 표시 -->
+      			  <c:if test="${order.order_status != 4 && order.order_status != 5 && order.order_status != 2 && order.order_status != 3}">
+       			   <input type="button" name="BTN" value="교환" onclick="validateReturnExchange('${order.order_detail_id}', '${order.delivery_status}')" />
+     			   </c:if> 
+    			      
+    			<input type="hidden" name="orderDetailId" value="${order.order_detail_id}" />
+    			<c:choose>
+   				 <c:when test="${order.order_status == 0 && order.delivery_status == 0 }">       
+       			 <input type="button" value="취소" onclick="confirmCancel('${order.order_detail_id}')">   
+			    </c:when>
+				</c:choose>
+				</form>
+
+                    <!-- 실제 취소 버튼에 confirm() 적용 -->
+
+
                 </td>
             </tr>
         </c:forEach>
@@ -145,6 +177,7 @@
         <a href="/order/orderlist.html?PAGE_NUM=${endPage + 1}">[다음]</a>
     </c:if>
 </div>
+
  <script>
         function toggleDropdown() {
             var dropdown = document.getElementById("categoryDropdown");
@@ -160,6 +193,31 @@
                 dropdown.style.display = "none";
             }
         });
+        
+        
+
+   
+        function confirmCancel(orderDetailId) {
+            // "주문을 취소하시겠습니까?" 확인 메시지
+            var userConfirmed = confirm('주문을 취소하시겠습니까?');
+
+            if (userConfirmed) {
+                // 사용자가 '확인'을 클릭한 경우, 취소 요청
+                window.location.href = '/cancel?orderDetailId=' + orderDetailId;
+            } else {
+                // 사용자가 '취소'를 클릭한 경우
+                alert("주문 취소가 취소되었습니다.");
+            }
+        }
+        function validateReturnExchange(orderDetailId, deliveryStatus) {
+            if (deliveryStatus != 3) { // 배송 완료 상태가 아닐 때
+                alert("배송 완료가 되지 않았습니다.");
+                return false;
+            }
+            document.getElementById("returnExchangeForm_" + orderDetailId).submit();
+        }
+
+
     </script>
 </body>
 </html>
