@@ -194,6 +194,11 @@ public class AdminController {
 		mav.addObject("ISBN",isbn);
 		return mav;
 	}
+	@GetMapping(value = "/manageGoods/passwordCheck")
+	public ModelAndView passwordCheck(){
+		ModelAndView mav = new ModelAndView("passwordCheck");
+		return mav;
+	}
 	@PostMapping(value = "/manageGoods/update") 
 	public ModelAndView updateGoods(@Valid Book book,
 				BindingResult br, HttpSession session, @RequestParam("cat_id")
@@ -245,7 +250,7 @@ public class AdminController {
 		}
 		return mav;
 	}
-	@PostMapping(value = "/manageGoods/delete")
+	@PostMapping(value = "/manageGoods/delete")//구현중
 	public ModelAndView deleteGoods(Book book, Review review,
 			@RequestParam("authors")String authors) {
 		int replyCount = this.goodsService.getReplyCount(review.getReview_id());
