@@ -42,8 +42,30 @@
         </div>
         
         <div class="book-section">
-            <h3>맞춤 도서</h3>
-            <p>로그인 후 선호 도서 설문에 참여하시면 맞춤형 도서 안내 서비스를 제공합니다.</p>
+        	<c:if test="${ sessionScope.loginUser == null }">
+            	<h3>맞춤 도서</h3>
+            </c:if>
+            <c:if test="${ sessionScope.loginUser != null }">
+            	<h3><a href="/myPrefBookList">맞춤 도서</a></h3>
+            </c:if>
+            <c:choose>
+            	<c:when test="${ catList == null }">
+            		<p>로그인 후 선호 도서 설문에 참여하시면 맞춤형 도서 안내 서비스를 제공합니다.</p>
+            	</c:when>
+            	<c:otherwise>
+            	<table border="1">
+            		<tr><c:forEach var="bookImage" items="${ recommendedBooks }">
+            			<td><a href="/bookdetail.html?isbn=${ bookImage.isbn }">
+            				<img src="${pageContext.request.contextPath}/upload/${bookImage.image_name}" width="250" height="200"/>
+            				</a>
+            			</td></c:forEach></tr>
+            		<tr><c:forEach var="bookName" items="${ recommendedBooks }">
+            			<td>
+            			<a href="/bookdetail.html?isbn=${ bookName.isbn }">제목:${bookName.book_title}</a></td>
+            			</c:forEach></tr>
+            	</table>
+            	</c:otherwise>
+            </c:choose>
         </div>
         
         <div class="book-section">

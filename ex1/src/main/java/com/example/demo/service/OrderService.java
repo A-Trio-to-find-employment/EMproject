@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.mapper.OrderMapper;
+import com.example.demo.model.DeliveryModel;
 import com.example.demo.model.MyOrders;
 import com.example.demo.model.Orders;
 import com.example.demo.model.Orders_detail;
 import com.example.demo.model.StartEnd;
+import com.example.demo.model.StartEndKey;
 
 @Service	
 public class OrderService {
@@ -50,5 +52,27 @@ public class OrderService {
 	public void insertOrdersDetailTwo(Orders_detail detail) {
 		this.orderMapper.insertOrdersDetailTwo(detail);
 
+	}
+	public List<DeliveryModel> getDeliveryListWithStatus(StartEndKey sek){
+		List<DeliveryModel> orderList = this.orderMapper.getDeliveryListWithStatus(sek);
+		return orderList;
+	}
+	public List<DeliveryModel> getDeliveryListWithoutStatus(StartEndKey sek){
+		List<DeliveryModel> orderList = this.orderMapper.getDeliveryListWithoutStatus(sek);
+		return orderList;
+	}
+	public Integer getOrderDetailCountDeliv(Integer count) {
+		Integer delivCount = this.orderMapper.getOrderDetailCountDeliv(count);
+		if(delivCount == null) return 0;
+		else return delivCount;
+	}
+	public Integer getOrderDetailCount() {
+		Integer delivCount = this.orderMapper.getOrderDetailCount();
+		if(delivCount == null) return 0;
+		else return delivCount;
+	}
+	
+	public void updateDeliveryCount(DeliveryModel dm) {
+		this.orderMapper.updateDeliveryCount(dm);
 	}
 }

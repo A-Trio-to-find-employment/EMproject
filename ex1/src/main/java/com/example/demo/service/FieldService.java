@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.mapper.FieldMapper;
 import com.example.demo.model.Book;
+import com.example.demo.model.BookStatistics;
 import com.example.demo.model.Category;
+import com.example.demo.model.StartEndKey;
 
 @Service
 public class FieldService {
@@ -41,4 +43,49 @@ public class FieldService {
 	 public List<Book> getorderByBook(String cat_id, String sort) { // 반환 타입 확인!
 	        return mapper.getorderByBook(cat_id, sort);
 	    }
+	 public void buyBook(Book book) {
+		 this.mapper.buyBook(book);
+	 }
+	 public List<BookStatistics> getBookSalesReport(StartEndKey sek){
+		 List<BookStatistics> statisList = this.mapper.getBookSalesReport(sek);
+		 return statisList;
+	 }
+	 public List<BookStatistics> getBookSalesReportDT(StartEndKey sek){
+		 List<BookStatistics> statisList = this.mapper.getBookSalesReportDT(sek);
+		 return statisList;
+	 }
+	 public List<BookStatistics> getBookSalesReportTR(StartEndKey sek){
+		 List<BookStatistics> statisList = this.mapper.getBookSalesReportTR(sek);
+		 return statisList;
+	 }
+	 public List<BookStatistics> getBookSalesReportDR(StartEndKey sek){
+		 List<BookStatistics> statisList = this.mapper.getBookSalesReportDR(sek);
+		 return statisList;
+	 }
+	 public List<BookStatistics> getBookSalesSearch(StartEndKey sek){
+		 List<BookStatistics> statisList = this.mapper.getBookSalesSearch(sek);
+		 return statisList;
+	 }
+	 public List<BookStatistics> getBookSalesSearchDT(StartEndKey sek){
+		 List<BookStatistics> statisList = this.mapper.getBookSalesSearchDT(sek);
+		 return statisList;
+	 }
+	 public List<BookStatistics> getBookSalesSearchTR(StartEndKey sek){
+		 List<BookStatistics> statisList = this.mapper.getBookSalesSearchTR(sek);
+		 return statisList;
+	 }
+	 public List<BookStatistics> getBookSalesSearchDR(StartEndKey sek){
+		 List<BookStatistics> statisList = this.mapper.getBookSalesSearchDR(sek);
+		 return statisList;
+	 }
+	 public Integer getBookCount() {
+		 Integer count = this.mapper.getBookCount();
+		 if(count == null) return 0;
+		 else return count;
+	 }
+	 public Integer getBookCountSearch(String SEARCH) {
+		 Integer count = this.mapper.getBookCountSearch(SEARCH);
+		 if(count == null) return 0;
+		 else return count;
+	 }
 }

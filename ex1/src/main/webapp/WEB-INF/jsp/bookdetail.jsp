@@ -34,10 +34,15 @@
                         <span>구매 가격:</span>
                         <span class="price">${book.price} 원</span>
                     </div>
-                    <div class="purchase-buttons">
-                        <button class="buy-btn">구매하기</button>
-                        <button class="cart-btn">장바구니</button>
-                    </div>
+                    <!-- 버튼 (위아래 배치) -->
+					<form method="post" action="/bookdetail.html">
+					<input type="hidden" name="isbn" value="${book.isbn}"/>
+					<input type="hidden" name="cat_id" value="${param.cat_id}"/>
+					<div class="purchase-buttons">
+						<button type="submit" name="action" value="add" class="cart-btn">장바구니</button>
+						<button type="submit" name="action" value="buy" class="buy-btn">바로구매</button>
+					</div>
+					</form>
                 </div>
             </div>
         </div>

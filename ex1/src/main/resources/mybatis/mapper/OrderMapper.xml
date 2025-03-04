@@ -52,7 +52,7 @@
             FROM orders o
             JOIN orders_detail d ON o.order_id = d.order_id
             JOIN book b ON d.isbn = b.isbn
-            LEFT JOIN coupon c ON d.coupon_id = c.coupon_id -- 쿠폰 테이블 조인
+            LEFT JOIN coupon c ON d.coupon_id = c.coupon_id
             WHERE o.user_id = #{user_id, jdbcType=VARCHAR}
             ORDER BY o.created_at DESC
         ) a
@@ -70,6 +70,61 @@
 	<select id="getCouponName" parameterType="Integer" resultType="String">
 	select coupon_code from coupon where coupon_id=#{coupon_id}
 	</select>
+	<select id="getDeliveryListWithStatus" parameterType="StartEndKey" resultType="DeliveryModel">
+    SELECT * 
+    FROM (
+        SELECT ROWNUM rn, a.* 
+        FROM (
+            SELECT 
+                od.ORDER_DETAIL_ID,
+                od.ORDER_ID,
+                od.ISBN,
+                od.QUANTITY,
+                od.DELIVERY_STATUS,
+                o.USER_ID,
+                o.CREATED_AT
+            FROM orders_detail od
+            JOIN orders o ON od.ORDER_ID = o.ORDER_ID
+            WHERE od.DELIVERY_STATUS = #{ans}
+            ORDER BY o.CREATED_AT DESC
+        ) a
+        WHERE rownum <![CDATA[<=]]> #{end}
+    )
+    WHERE rn > #{start}
+    ORDER BY rn
+</select>
+<select id="getDeliveryListWithoutStatus" parameterType="StartEndKey" resultType="DeliveryModel">
+    SELECT * 
+    FROM (
+        SELECT ROWNUM rn, a.* 
+        FROM (
+            SELECT 
+                od.ORDER_DETAIL_ID,
+                od.ORDER_ID,
+                od.ISBN,
+                od.QUANTITY,
+                od.DELIVERY_STATUS,
+                o.USER_ID,
+                o.CREATED_AT
+            FROM orders_detail od
+            JOIN orders o ON od.ORDER_ID = o.ORDER_ID
+            ORDER BY o.CREATED_AT DESC
+        ) a
+        WHERE rownum <![CDATA[<=]]> #{end}
+    )
+    WHERE rn > #{start}
+    ORDER BY rn
+</select>
+<select id="getOrderDetailCountDeliv" parameterType="Integer" resultType="Integer">
+	select count(order_detail_id) from orders_detail where delivery_status = #{count}
+</select>
+<select id="getOrderDetailCount" resultType="Integer">
+	select count(order_detail_id) from orders_detail
+</select>
+<select id="updateDeliveryCount" parameterType="DeliveryModel">
+	update orders_detail set delivery_status = #{delivery_status} 
+		where order_detail_id = #{order_detail_id} and order_id = #{order_id}
+</select>
 </mapper>
 
 	

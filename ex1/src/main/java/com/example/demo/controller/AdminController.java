@@ -3,7 +3,7 @@ package com.example.demo.controller;
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +21,15 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.model.Book;
 import com.example.demo.model.BookCategories;
+import com.example.demo.model.BookStatistics;
 import com.example.demo.model.Category;
+import com.example.demo.model.DeliveryModel;
+import com.example.demo.model.StartEndKey;
+import com.example.demo.model.Users;
+import com.example.demo.service.FieldService;
 import com.example.demo.service.GoodsService;
+import com.example.demo.service.LoginService;
+import com.example.demo.service.OrderService;
 import com.example.demo.utils.CoverValidator;
 
 import jakarta.servlet.ServletContext;
@@ -35,6 +42,12 @@ public class AdminController {
 	private GoodsService goodsService;
 	@Autowired
 	private CoverValidator coverValidator;
+	@Autowired
+	private FieldService fieldService;
+	@Autowired
+	private LoginService loginService;
+	@Autowired
+	private OrderService orderService;
 	
     @GetMapping("/getCategories")
     public ResponseEntity<List<Category>> getCategories(@RequestParam("parent_id") String parentId) {
@@ -200,6 +213,159 @@ public class AdminController {
 		mav.addObject("isbnChecked","");
 		mav.addObject("book",new Book());
 		mav.addObject("BODY","updateComplete.jsp");
+		return mav;
+	}
+	@GetMapping(value = "/goStatistics")
+	public ModelAndView goStatistics(@RequestParam(value = "SELECT", required = false) String SELECT,
+	                                 @RequestParam(value = "SEARCH", required = false) String SEARCH,
+	                                 Integer PAGE, String KEY) {
+	    ModelAndView mav = new ModelAndView("statisticsList");
+	    List<BookStatistics> bsList = new ArrayList<BookStatistics>();
+	    int currentPage = 1;
+		if(PAGE != null) currentPage = PAGE;
+		int start = (currentPage - 1) * 9;
+		int end = ((currentPage - 1) * 9) + 10;	
+		StartEndKey sek = new StartEndKey();
+		sek.setStart(start); sek.setEnd(end);
+		
+	    if (SEARCH != null) {
+	        if (SELECT == null || SELECT.isEmpty()) {  // NULL 체크 후 처리
+	        	sek.setKey(SEARCH);
+	            bsList = this.fieldService.getBookSalesSearch(sek);
+	        } else if("전체 판매량".equals(SELECT)) {
+	        	sek.setKey(SEARCH);
+	            bsList = this.fieldService.getBookSalesSearch(sek);
+	        } else if ("일일 판매량".equals(SELECT)) {
+	        	sek.setKey(SEARCH);
+	            bsList = this.fieldService.getBookSalesSearchDT(sek);
+	        } else if ("전체 판매액".equals(SELECT)) {
+	        	sek.setKey(SEARCH);
+	            bsList = this.fieldService.getBookSalesSearchTR(sek);
+	        } else if ("일일 판매액".equals(SELECT)) {
+	        	sek.setKey(SEARCH);
+	            bsList = this.fieldService.getBookSalesSearchDR(sek);
+	        }
+	        int totalCount = this.fieldService.getBookCountSearch(SEARCH);
+			int pageCount = totalCount / 10;
+			if(totalCount % 10 != 0) pageCount++;
+			mav.addObject("PAGES", pageCount);
+	    } else {
+	        if (SELECT == null || SELECT.isEmpty()) {  // NULL 체크 후 처리
+	            bsList = this.fieldService.getBookSalesReport(sek);
+	        } else if("전체 판매량".equals(SELECT)) {
+	            bsList = this.fieldService.getBookSalesReport(sek);
+	        } else if ("일일 판매량".equals(SELECT)) {
+	            bsList = this.fieldService.getBookSalesReportDT(sek);
+	        } else if ("전체 판매액".equals(SELECT)) {
+	            bsList = this.fieldService.getBookSalesReportTR(sek);
+	        } else if ("일일 판매액".equals(SELECT)) {
+	            bsList = this.fieldService.getBookSalesReportDR(sek);
+	        }
+	        int totalCount = this.fieldService.getBookCount();
+			int pageCount = totalCount / 10;
+			if(totalCount % 10 != 0) pageCount++;
+			mav.addObject("PAGES", pageCount);
+	    }
+		mav.addObject("currentPage",currentPage);
+	    mav.addObject("SELECT", SELECT);
+	    mav.addObject("SEARCH", SEARCH);
+	    mav.addObject("bsList", bsList);
+	    return mav;
+	}
+	@GetMapping(value="/userStatistics")
+	public ModelAndView goUserStatistics(Integer PAGE, String KEY) {
+		ModelAndView mav = new ModelAndView("userStatisList");
+		int currentPage = 1;
+		if(PAGE != null) currentPage = PAGE;
+		int start = (currentPage - 1) * 9;
+		int end = ((currentPage - 1) * 9) + 10;	
+		StartEndKey sek = new StartEndKey();
+		sek.setStart(start); sek.setEnd(end);
+		List<Users> userList = new ArrayList<Users>();
+		if(KEY != null) {
+			sek.setKey(KEY);
+			userList = this.loginService.getUserListSearch(sek);
+			int totalCount = this.loginService.getUserCountSearch(KEY);
+			int pageCount = totalCount / 10;
+			if(totalCount % 10 != 0) pageCount++;
+			mav.addObject("PAGES", pageCount);
+		}else {
+			userList = this.loginService.getUserList(sek);
+			int totalCount = this.loginService.getUserCount();
+			int pageCount = totalCount / 10;
+			if(totalCount % 10 != 0) pageCount++;
+			mav.addObject("PAGES", pageCount);
+		}
+		
+		mav.addObject("currentPage",currentPage);
+	    mav.addObject("userList", userList);
+		return mav;
+	}
+	@GetMapping(value="/goUserDetailAdmin")
+	public ModelAndView goUserDetailAdmin(String ID) {
+		ModelAndView mav = new ModelAndView("userDetailAdmin");
+		Users user = this.loginService.getUserByIdAdmin(ID);
+		mav.addObject("userDetail", user);
+		return mav;
+	}
+	@GetMapping(value="/orderStatistics")
+	public ModelAndView goOrderStatistics(Integer PAGE, String SELECT) {
+		ModelAndView mav = new ModelAndView("delivStatistics");
+		int currentPage = 1;
+		if(PAGE != null) currentPage = PAGE;
+		int start = (currentPage - 1) * 9;
+		int end = ((currentPage - 1) * 9) + 10;	
+		StartEndKey sek = new StartEndKey();
+		sek.setStart(start); sek.setEnd(end);
+		List<DeliveryModel> orderList = new ArrayList<DeliveryModel>();
+		if(SELECT == null || SELECT.isEmpty()) {
+			orderList = this.orderService.getDeliveryListWithoutStatus(sek);
+			int totalCount = this.orderService.getOrderDetailCount();
+			int pageCount = totalCount / 10;
+			if(totalCount % 10 != 0) pageCount++;
+			mav.addObject("PAGES", pageCount);
+		}else if(SELECT.equals("배송 준비중")) {
+			sek.setAns(0);
+			orderList = this.orderService.getDeliveryListWithStatus(sek);
+			int totalCount = this.orderService.getOrderDetailCountDeliv(sek.getAns());
+			int pageCount = totalCount / 10;
+			if(totalCount % 10 != 0) pageCount++;
+			mav.addObject("PAGES", pageCount);
+		}else if(SELECT.equals("배송 중")) {
+			sek.setAns(1);
+			orderList = this.orderService.getDeliveryListWithStatus(sek);
+			int totalCount = this.orderService.getOrderDetailCountDeliv(sek.getAns());
+			int pageCount = totalCount / 10;
+			if(totalCount % 10 != 0) pageCount++;
+			mav.addObject("PAGES", pageCount);
+		}else if(SELECT.equals("배송 취소")) {
+			sek.setAns(2);
+			orderList = this.orderService.getDeliveryListWithStatus(sek);
+			int totalCount = this.orderService.getOrderDetailCountDeliv(sek.getAns());
+			int pageCount = totalCount / 10;
+			if(totalCount % 10 != 0) pageCount++;
+			mav.addObject("PAGES", pageCount);
+		}else if(SELECT.equals("배송 완료")) {
+			sek.setAns(3);
+			orderList = this.orderService.getDeliveryListWithStatus(sek);
+			int totalCount = this.orderService.getOrderDetailCountDeliv(sek.getAns());
+			int pageCount = totalCount / 10;
+			if(totalCount % 10 != 0) pageCount++;
+			mav.addObject("PAGES", pageCount);
+		}
+		mav.addObject("SELECT", SELECT);
+		mav.addObject("currentPage",currentPage);
+	    mav.addObject("orderList", orderList);
+		return mav;
+	}
+	@GetMapping(value="updateDeliveryStatus")
+	public ModelAndView updateDeliveryStatus(String o_id, String od_id, Integer deliveryStatus) {
+		ModelAndView mav = new ModelAndView("redirect:/orderStatistics");
+		DeliveryModel dm = new DeliveryModel();
+		dm.setOrder_id(o_id);
+		dm.setOrder_detail_id(od_id);
+		dm.setDelivery_status(deliveryStatus);
+		this.orderService.updateDeliveryCount(dm);
 		return mav;
 	}
 }
