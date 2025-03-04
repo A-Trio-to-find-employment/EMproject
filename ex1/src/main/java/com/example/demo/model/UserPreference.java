@@ -3,7 +3,7 @@ package com.example.demo.model;
 public class UserPreference {
 	private Long pref_id;
     private String cat_id;
-    private int pref_score;
+    private double pref_score;
 	public Long getPref_id() {
 		return pref_id;
 	}
@@ -16,10 +16,10 @@ public class UserPreference {
 	public void setCat_id(String cat_id) {
 		this.cat_id = cat_id;
 	}
-	public int getPref_score() {
+	public double getPref_score() {
 		return pref_score;
 	}
-	public void setPref_score(int pref_score) {
+	public void setPref_score(double pref_score) {
 		this.pref_score = pref_score;
 	}
 
