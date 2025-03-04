@@ -2,6 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mapper.ReviewMapper">
+	<insert id="writeReview" parameterType="Review">
+		insert into review
+		values (#{review_id},#{isbn},#{user_id},#{rating},#{content},sysdate,0)
+	</insert>
 	<select id="getReview" parameterType="java.lang.Long"
 		resultType="Review">
 		select review_id,isbn,user_id,rating,content,reg_date from
@@ -32,6 +36,9 @@
 	</select>
 	<select id="getTotal" resultType="Integer">
 		select count(*) from review 
+	</select>
+	<select id="getMaxReview" resultType="Integer">
+		select max(review_id) from review
 	</select>
 </mapper>
 

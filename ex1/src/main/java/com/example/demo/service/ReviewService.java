@@ -27,4 +27,16 @@ public class ReviewService {
 	 public List<Review> ReviewList(StartEnd st){
 		 return this.mapper.ReviewList(st);
 	 }
+	 public void writeReview(Review review) {
+		 review.setReview_id(getMaxReview()+1);
+		 
+		 System.out.println("review id : "+review.getReview_id());
+		 
+		 this.mapper.writeReview(review);
+	 }
+	 public Integer getMaxReview() {
+		 Integer max = this.mapper.getMaxReview();
+		 if(max == null) return 0;
+		 else return max;
+	 }
 }
