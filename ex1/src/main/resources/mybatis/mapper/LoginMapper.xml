@@ -21,7 +21,53 @@
 		email = #{email}, birth =  to_date(#{birth},'YYYY/MM/DD'), phone = #{phone}
 		where user_id = #{user_id}
 	</update>
-
+	<select id="getUserList" parameterType="StartEndKey" resultType="Users">
+		SELECT * 
+    	FROM (
+        	SELECT ROWNUM rn, a.* 
+        	FROM (
+           		SELECT 
+                	user_id, 
+                	user_name, 
+                	to_char(birth,'YYYY.MM.DD') "birth", 
+                	phone 
+            	FROM users
+        	) a 
+        	WHERE rownum <![CDATA[<=]]> #{end}
+    	)
+    	WHERE rn > #{start}
+    	ORDER BY rn
+	</select>
+	<select id="getUserListSearch" parameterType="StartEndKey" resultType="Users">
+		SELECT * 
+    	FROM (
+        	SELECT ROWNUM rn, a.* 
+        	FROM (
+           		SELECT 
+                	user_id, 
+                	user_name, 
+                	to_char(birth,'YYYY.MM.DD') "birth", 
+                	phone 
+            	FROM users
+            	WHERE user_name LIKE '%' || #{key} || '%'
+        	) a 
+        	WHERE rownum <![CDATA[<=]]> #{end}
+    	)
+    	WHERE rn > #{start}
+    	ORDER BY rn
+	</select>
+	<select id="getUserCount" resultType="Integer">
+		select count(user_id) from users
+	</select>
+	<select id="getUserCountSearch" parameterType="String" resultType="Integer">
+		select count(user_id) from users where user_id like '%' || #{SEARCH} || '%'
+	</select>
+	<select id="getUserByIdAdmin" parameterType="String" 
+							resultType="Users">
+		select user_id, password, user_name, address, address_detail, zipcode, email,
+		to_char(birth,'YYYY.MM.DD') "birth", phone, grade from users
+		where user_id=#{user_id}
+	</select>
 </mapper>
 
 	

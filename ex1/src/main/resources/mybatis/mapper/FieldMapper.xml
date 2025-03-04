@@ -66,9 +66,203 @@ WHERE b.isbn = #{isbn, jdbcType=BIGINT}
         </otherwise>
     </choose>
 </select>
-
-
-
+<update id="buyBook" parameterType="Book">
+	update book set stock = #{stock} where isbn = #{isbn}
+</update>
+<select id="getBookSalesReport" parameterType="StartEndKey" resultType="BookStatistics">
+    SELECT * 
+	FROM (
+    	SELECT rownum rn, a.* 
+    	FROM (
+        	SELECT 
+            	b.isbn, 
+            	b.book_title, 
+            	COALESCE(SUM(od.quantity), 0) AS total_sales, 
+            	COALESCE(SUM(CASE WHEN o.created_at >= TRUNC(SYSDATE) THEN od.quantity ELSE 0 END), 0) AS daily_sales, 
+            	COALESCE(SUM(od.subtotal), 0) AS total_revenue, 
+            	COALESCE(SUM(CASE WHEN o.created_at >= TRUNC(SYSDATE) THEN od.subtotal ELSE 0 END), 0) AS daily_revenue
+        	FROM book b
+        	LEFT JOIN orders_detail od ON b.isbn = od.isbn
+        	LEFT JOIN orders o ON od.order_id = o.order_id
+        	GROUP BY b.isbn, b.book_title
+        	ORDER BY total_sales DESC
+    	) a 
+    	WHERE rownum <![CDATA[<=]]> #{end}  
+	) 
+	WHERE rn > #{start}  
+	ORDER BY rn
+</select>
+<select id="getBookSalesReportDT" parameterType="StartEndKey" resultType="BookStatistics">
+    SELECT * 
+	FROM (
+    	SELECT rownum rn, a.* 
+    	FROM (
+        	SELECT 
+            	b.isbn, 
+            	b.book_title, 
+            	COALESCE(SUM(od.quantity), 0) AS total_sales, 
+            	COALESCE(SUM(CASE WHEN o.created_at >= TRUNC(SYSDATE) THEN od.quantity ELSE 0 END), 0) AS daily_sales, 
+            	COALESCE(SUM(od.subtotal), 0) AS total_revenue, 
+            	COALESCE(SUM(CASE WHEN o.created_at >= TRUNC(SYSDATE) THEN od.subtotal ELSE 0 END), 0) AS daily_revenue
+        	FROM book b
+        	LEFT JOIN orders_detail od ON b.isbn = od.isbn
+        	LEFT JOIN orders o ON od.order_id = o.order_id
+        	GROUP BY b.isbn, b.book_title
+        	ORDER BY daily_sales DESC
+    	) a 
+    	WHERE rownum <![CDATA[<=]]> #{end}  
+	) 
+	WHERE rn > #{start}  
+	ORDER BY rn
+</select>
+<select id="getBookSalesReportTR" parameterType="StartEndKey" resultType="BookStatistics">
+    SELECT * 
+	FROM (
+    	SELECT rownum rn, a.* 
+    	FROM (
+        	SELECT 
+            	b.isbn, 
+            	b.book_title, 
+            	COALESCE(SUM(od.quantity), 0) AS total_sales, 
+            	COALESCE(SUM(CASE WHEN o.created_at >= TRUNC(SYSDATE) THEN od.quantity ELSE 0 END), 0) AS daily_sales, 
+            	COALESCE(SUM(od.subtotal), 0) AS total_revenue, 
+            	COALESCE(SUM(CASE WHEN o.created_at >= TRUNC(SYSDATE) THEN od.subtotal ELSE 0 END), 0) AS daily_revenue
+        	FROM book b
+        	LEFT JOIN orders_detail od ON b.isbn = od.isbn
+        	LEFT JOIN orders o ON od.order_id = o.order_id
+        	GROUP BY b.isbn, b.book_title
+        	ORDER BY total_revenue DESC
+    	) a 
+    	WHERE rownum <![CDATA[<=]]> #{end}  
+	) 
+	WHERE rn > #{start}  
+	ORDER BY rn
+</select>
+<select id="getBookSalesReportDR" parameterType="StartEndKey" resultType="BookStatistics">
+    SELECT * 
+	FROM (
+    	SELECT rownum rn, a.* 
+    	FROM (
+        	SELECT 
+            	b.isbn, 
+            	b.book_title, 
+            	COALESCE(SUM(od.quantity), 0) AS total_sales, 
+            	COALESCE(SUM(CASE WHEN o.created_at >= TRUNC(SYSDATE) THEN od.quantity ELSE 0 END), 0) AS daily_sales, 
+            	COALESCE(SUM(od.subtotal), 0) AS total_revenue, 
+            	COALESCE(SUM(CASE WHEN o.created_at >= TRUNC(SYSDATE) THEN od.subtotal ELSE 0 END), 0) AS daily_revenue
+        	FROM book b
+        	LEFT JOIN orders_detail od ON b.isbn = od.isbn
+        	LEFT JOIN orders o ON od.order_id = o.order_id
+        	GROUP BY b.isbn, b.book_title
+        	ORDER BY daily_revenue DESC
+    	) a 
+    	WHERE rownum <![CDATA[<=]]> #{end}  
+	) 
+	WHERE rn > #{start}  
+	ORDER BY rn
+</select>
+<select id="getBookSalesSearch" parameterType="StartEndKey" resultType="BookStatistics">
+    SELECT * 
+    FROM (
+        SELECT rownum rn, a.* 
+        FROM (
+            SELECT 
+                b.isbn, 
+                b.book_title, 
+                COALESCE(SUM(od.quantity), 0) AS total_sales, 
+                COALESCE(SUM(CASE WHEN o.created_at >= TRUNC(SYSDATE) THEN od.quantity ELSE 0 END), 0) AS daily_sales, 
+                COALESCE(SUM(od.subtotal), 0) AS total_revenue, 
+                COALESCE(SUM(CASE WHEN o.created_at >= TRUNC(SYSDATE) THEN od.subtotal ELSE 0 END), 0) AS daily_revenue
+            FROM book b
+            LEFT JOIN orders_detail od ON b.isbn = od.isbn
+            LEFT JOIN orders o ON od.order_id = o.order_id
+            WHERE b.book_title LIKE '%' || #{key} || '%'  
+            GROUP BY b.isbn, b.book_title
+            ORDER BY total_sales DESC  
+        ) a 
+        WHERE rownum <![CDATA[<=]]> #{end}  
+    ) 
+    WHERE rn > #{start}  
+    ORDER BY rn
+</select>
+<select id="getBookSalesSearchDT" parameterType="StartEndKey" resultType="BookStatistics">
+    SELECT * 
+    FROM (
+        SELECT rownum rn, a.* 
+        FROM (
+            SELECT 
+                b.isbn, 
+                b.book_title, 
+                COALESCE(SUM(od.quantity), 0) AS total_sales, 
+                COALESCE(SUM(CASE WHEN o.created_at >= TRUNC(SYSDATE) THEN od.quantity ELSE 0 END), 0) AS daily_sales, 
+                COALESCE(SUM(od.subtotal), 0) AS total_revenue, 
+                COALESCE(SUM(CASE WHEN o.created_at >= TRUNC(SYSDATE) THEN od.subtotal ELSE 0 END), 0) AS daily_revenue
+            FROM book b
+            LEFT JOIN orders_detail od ON b.isbn = od.isbn
+            LEFT JOIN orders o ON od.order_id = o.order_id
+            WHERE b.book_title LIKE '%' || #{key} || '%'  
+            GROUP BY b.isbn, b.book_title
+            ORDER BY daily_sales DESC  
+        ) a 
+        WHERE rownum <![CDATA[<=]]> #{end}  
+    ) 
+    WHERE rn > #{start}  
+    ORDER BY rn
+</select>
+<select id="getBookSalesSearchTR" parameterType="StartEndKey" resultType="BookStatistics">
+    SELECT * 
+    FROM (
+        SELECT rownum rn, a.* 
+        FROM (
+            SELECT 
+                b.isbn, 
+                b.book_title, 
+                COALESCE(SUM(od.quantity), 0) AS total_sales, 
+                COALESCE(SUM(CASE WHEN o.created_at >= TRUNC(SYSDATE) THEN od.quantity ELSE 0 END), 0) AS daily_sales, 
+                COALESCE(SUM(od.subtotal), 0) AS total_revenue, 
+                COALESCE(SUM(CASE WHEN o.created_at >= TRUNC(SYSDATE) THEN od.subtotal ELSE 0 END), 0) AS daily_revenue
+            FROM book b
+            LEFT JOIN orders_detail od ON b.isbn = od.isbn
+            LEFT JOIN orders o ON od.order_id = o.order_id
+            WHERE b.book_title LIKE '%' || #{key} || '%'  
+            GROUP BY b.isbn, b.book_title
+            ORDER BY total_revenue DESC  
+        ) a 
+        WHERE rownum <![CDATA[<=]]> #{end}  
+    ) 
+    WHERE rn > #{start}  
+    ORDER BY rn
+</select>
+<select id="getBookSalesSearchDR" parameterType="StartEndKey" resultType="BookStatistics">
+    SELECT * 
+    FROM (
+        SELECT rownum rn, a.* 
+        FROM (
+            SELECT 
+                b.isbn, 
+                b.book_title, 
+                COALESCE(SUM(od.quantity), 0) AS total_sales, 
+                COALESCE(SUM(CASE WHEN o.created_at >= TRUNC(SYSDATE) THEN od.quantity ELSE 0 END), 0) AS daily_sales, 
+                COALESCE(SUM(od.subtotal), 0) AS total_revenue, 
+                COALESCE(SUM(CASE WHEN o.created_at >= TRUNC(SYSDATE) THEN od.subtotal ELSE 0 END), 0) AS daily_revenue
+            FROM book b
+            LEFT JOIN orders_detail od ON b.isbn = od.isbn
+            LEFT JOIN orders o ON od.order_id = o.order_id
+            WHERE b.book_title LIKE '%' || #{key} || '%'  
+            GROUP BY b.isbn, b.book_title
+            ORDER BY daily_revenue DESC  
+        ) a 
+        WHERE rownum <![CDATA[<=]]> #{end}  
+    ) 
+    WHERE rn > #{start}  
+    ORDER BY rn
+</select>
+<select id="getBookCount" resultType="Integer">
+	select count(isbn) from book
+</select>
+<select id="getBookCountSearch" parameterType="String" resultType="Integer">
+	select count(isbn) from book where book_title like '%' || #{SEARCH} || '%'
+</select>
 </mapper>
 
 	

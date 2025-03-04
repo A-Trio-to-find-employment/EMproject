@@ -43,7 +43,8 @@
 
                         <!-- 버튼 (위아래 배치) -->
                         <form method="post" action="/booklist.html">
-						<input type="hidden" name="BOOKID" value="${book.isbn}"/>
+                        <input type="hidden" name="sort" value="${ sort }">
+						<input type="hidden" name="isbn" value="${book.isbn}"/>
 						<input type="hidden" name="cat_id" value="${param.cat_id}"/>
 						<div class="actions">
 							<button type="submit" name="action" value="add" class="add-to-cart">장바구니</button>

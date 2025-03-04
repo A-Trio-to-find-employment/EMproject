@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.model.Book;
+import com.example.demo.model.BookCategories;
 import com.example.demo.model.Cart;
 import com.example.demo.model.Category;
 import com.example.demo.model.Review;
@@ -97,10 +98,40 @@ public class FieldController {
         return mav;
 	}
 	@RequestMapping(value = "bookdetail.html")
-	public ModelAndView bookdetail(Long isbn,Integer PAGE_NUM) {
-		ModelAndView mav = new ModelAndView("fieldlayout");
+	public ModelAndView bookdetail(Long isbn, String action, Integer PAGE_NUM, 
+			HttpSession session) {
+		String loginUser = (String)session.getAttribute("loginUser");
 	    // 1. 책 정보 가져오기
-		 Book book = service.getBookDetail(isbn);
+		Book book = service.getBookDetail(isbn);
+		if(isbn != null && action != null) {
+			if(loginUser == null) {
+				ModelAndView mav = new ModelAndView("loginFail");
+				return mav;
+			}
+			Cart cart = new Cart();
+			cart.setIsbn(isbn); cart.setUser_id(loginUser);
+			String cart_id = this.cartService.findEqualItem(cart);
+			if(cart_id != null) {
+				Cart existCart = this.cartService.findCartByCartId(cart_id);
+				Integer quantity = existCart.getQuantity() + 1;
+				existCart.setQuantity(quantity);
+				this.cartService.updateCart(existCart);
+			} else {
+				Integer count = this.cartService.getCountCart() + 1;
+				cart_id = count.toString();
+				cart.setCart_id(cart_id); cart.setQuantity(1);
+				this.cartService.insertCart(cart);
+			}
+			if(action.equals("add")) {
+				ModelAndView mav = new ModelAndView("cartAlertDetail");
+				mav.addObject("isbn", isbn);
+				return mav;
+			} else if(action.equals("buy")) {
+				ModelAndView mav = new ModelAndView("redirect:/cart");
+				return mav;
+			}
+		}
+		ModelAndView mav = new ModelAndView("fieldlayout");
 		List<String> bookcategory = book.getCategoryPath();		
 		
 		int currentPage = 1;

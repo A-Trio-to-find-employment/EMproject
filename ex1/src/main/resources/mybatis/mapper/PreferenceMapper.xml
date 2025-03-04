@@ -13,7 +13,7 @@
     </insert>
 	
 	<insert id="insertUserPref" parameterType="UserPreference">
-		insert into user_preference values(#{pref_id}, #{cat_id}, 1)
+		insert into user_preference values(#{pref_id}, #{cat_id}, 1.0)
 	</insert>
 	
 	<select id="getPrefIdByUser" parameterType="String" resultType="java.lang.Long">
@@ -29,15 +29,63 @@
         JOIN user_preference up ON pt.PREF_ID = up.PREF_ID
         WHERE pt.USER_ID = #{userId} AND up.CAT_ID = #{catId}
     </select>
-	<select id="findScoreByPref" parameterType="java.lang.Long" resultType="Integer">
+	<select id="findScoreByPref" parameterType="java.lang.Long" resultType="Double">
 		select pref_score from user_preference where pref_id = #{pref_id}
 	</select>
 	<update id="updateScore" parameterType="UserPreference">
 		update user_preference set pref_score = #{pref_score} where pref_id = #{pref_id}
 	</update>
 	<delete id="DeleteUserPreference">
-	delete from user_preference where cat_id=#{cat_id}
+		delete from user_preference where cat_id=#{cat_id}
 	</delete>
+	<select id="getUserTopCat" parameterType="String" resultType="UserPreference">
+    	SELECT pref_id, cat_id, pref_score 
+		FROM (
+    		SELECT pref_id, cat_id, pref_score 
+    		FROM user_preference 
+    		WHERE pref_id IN (SELECT pref_id 
+    			FROM preference_test WHERE user_id = #{user_id}) 
+    		ORDER BY pref_score DESC
+		) 
+		WHERE ROWNUM <![CDATA[<=]]> 3
+	</select>
+	<select id="getRecommendedBooks" parameterType="map" resultType="java.lang.Long">
+    SELECT isbn
+    FROM (
+        SELECT bc.isbn
+        FROM book_categories bc
+        WHERE bc.cat_id IN 
+		<foreach item="catId" collection="catIds" open="(" separator="," close=")">
+        	#{catId}
+		</foreach>
+        AND bc.isbn NOT IN (
+            SELECT od.isbn
+            FROM orders o
+            JOIN orders_detail od ON o.order_id = od.order_id
+            WHERE o.user_id = #{userId}
+        )
+    )
+    WHERE ROWNUM <![CDATA[<=]]> 4
+	</select>
+	<select id="getRecommendedBookList" parameterType="map" resultType="java.lang.Long">
+    SELECT isbn
+    FROM (
+        SELECT bc.isbn
+        FROM book_categories bc
+        WHERE bc.cat_id IN 
+		<foreach item="catId" collection="catIds" open="(" separator="," close=")">
+        	#{catId}
+		</foreach>
+        AND bc.isbn NOT IN (
+            SELECT od.isbn
+            FROM orders o
+            JOIN orders_detail od ON o.order_id = od.order_id
+            WHERE o.user_id = #{userId}
+        )
+    )
+    WHERE ROWNUM <![CDATA[<=]]> 20
+	</select>
+	
 </mapper>
 
 	

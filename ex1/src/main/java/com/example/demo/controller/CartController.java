@@ -13,16 +13,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.demo.mapper.FieldMapper;
+import com.example.demo.model.Book;
 import com.example.demo.model.Cart;
 import com.example.demo.model.Coupon;
 import com.example.demo.model.Orders;
 import com.example.demo.model.Orders_detail;
+import com.example.demo.model.PreferenceTest;
+import com.example.demo.model.UserPreference;
 import com.example.demo.model.Usercoupon;
 import com.example.demo.model.Users;
 import com.example.demo.service.CartService;
 import com.example.demo.service.CouponService;
 import com.example.demo.service.LoginService;
 import com.example.demo.service.OrderService;
+import com.example.demo.service.PreferenceService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -41,6 +46,12 @@ public class CartController {
     
     @Autowired
     private OrderService orderService;
+    
+    @Autowired
+    private PreferenceService preferenceService;
+    
+    @Autowired 
+    private FieldMapper fieldMapper;
     
     // 장바구니 조회
     @GetMapping
@@ -245,13 +256,40 @@ public class CartController {
                 subtotal = discountedPrice + normalPrice;
             	od.setSubtotal(subtotal);
             	this.orderService.insertOrdersDetail(od);
+            	Integer minusStock = cart.getBook().getStock() - quantity;
+            	Book newBook = new Book();
+            	newBook.setIsbn(cart.getIsbn()); newBook.setStock(minusStock);
+            	this.fieldMapper.buyBook(newBook);
             } else {
             	od.setCoupon_id(null);
             	subtotal = bookPrice * quantity;
             	od.setSubtotal(subtotal);
             	this.orderService.insertOrdersDetailTwo(od);
+            } 
+            List<String> catList= this.fieldMapper.getCategoryById(cart.getIsbn());
+            for (String cat_id : catList) {
+                // 사용자의 선호도(pref_id) 리스트 가져오기
+                List<Long> prefIds = this.preferenceService.getPrefIdByUser(loginUser);
+                
+                for (Long prefId : prefIds) {
+                    // 해당하는 cat_id가 이미 존재하는지 확인
+                    UserPreference up = this.preferenceService.getUserPref(prefId);
+                    if (! up.getCat_id().equals(cat_id)) {
+                        // 선호도가 존재하면 1.2배 증가
+                    	Double updatePScore = Math.min(9.9, Math.round(up.getPref_score() * 1.2 * 10.0) / 10.0);
+                    	up.setPref_score(updatePScore);
+                        this.preferenceService.updateScore(up);
+                    } else {
+                        // 없으면 새로운 선호도 추가
+                        Long newPrefId = this.preferenceService.getMaxPrefId() + 1;
+                        PreferenceTest pt = new PreferenceTest();
+                        pt.setPref_id(newPrefId); pt.setUser_id(loginUser);
+                        this.preferenceService.insertPref(pt);
+                        up.setPref_id(newPrefId); up.setCat_id(cat_id); up.setPref_score(1.0);
+                        this.preferenceService.insertUserPref(up);
+                    }
+                }
             }
-            
         }
         cartService.deleteUserCart(loginUser);
         ModelAndView mav = new ModelAndView("redirect:/index");

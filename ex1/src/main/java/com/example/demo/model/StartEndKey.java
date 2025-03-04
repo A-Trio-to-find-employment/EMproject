@@ -9,4 +9,5 @@ public class StartEndKey {
 	private Integer start;
 	private Integer end;
 	private String key;
+	private Integer ans;
 }
