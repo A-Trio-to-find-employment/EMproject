@@ -56,4 +56,7 @@ public class OrderService {
 	public void cancelOrder(String detail_id) {
 		this.orderMapper.cancelOrder(detail_id);
 	}
+	public MyOrders getUsers(String detial_id) {
+		return this.orderMapper.getUsers(detial_id);
+	}
 }

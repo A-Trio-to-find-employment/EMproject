@@ -22,5 +22,5 @@ public interface OrderMapper {
 	void cancelDelivery(String detail_id);
 	void cancelOrder(String detail_id);
 	void insertOrdersDetailTwo(Orders_detail detail);
-
+	MyOrders getUsers(String detial_id);
 }

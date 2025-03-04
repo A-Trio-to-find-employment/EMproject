@@ -59,7 +59,7 @@
     )
     WHERE rank > #{start} AND rank <![CDATA[<=]]> #{end}
 </select>
-
+	
 	<select id="getTotal" parameterType="String" resultType="Integer">
 	SELECT COUNT(*)
 	FROM orders_detail od
@@ -81,6 +81,14 @@
     where order_detail_id = #{order_detail_id} 
 )	
 	</update>
+	<select id="getUsers" parameterType="String" resultType="MyOrders">
+	select u.user_name, u.phone, o.address, o.address_detail,od.order_detail_id, o.zipcode
+from orders_detail od
+join orders o ON od.order_id = o.order_id
+join users u ON o.user_id = u.user_id
+where od.order_detail_id =#{order_detail_id}	
+	</select>
+	
 </mapper>
 
 	

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.example.demo.mapper.ReturnExchangeMapper">
+    <select id="getTotal" resultType="Integer">
+		select count(*)+1 from return_exchange_refund
+	</select>	
+	<update id="UpdateReturnExchange" parameterType="String">
+		update orders_detail set delivery_status=2 where order_detail_id=#{orders_detail}
+	</update>
+	<update id="UpdateReturnExchangeRefund" parameterType="String"> 
+	update orders set order_status = 
+	2 where order_id = (
+    select order_id
+    from orders_detail
+    where order_detail_id = #{order_detail_id} 
+)	
+	</update>
+	<insert id="InsertReturnExchange" parameterType="Return_exchange_refund">
+		insert into return_exchange_refund values(#{request_id},#{order_id},#{order_detail_id},#{order_status},#{isbn},#{reason},0)
+	</insert>
+	<select id="getOrders" parameterType="String" resultType="MyOrders">
+    SELECT 
+        o.order_id, 
+        o.order_status, 
+        TO_CHAR(o.created_at, 'YYYY-MM-DD') AS created_at, 
+        d.order_detail_id, 
+        d.isbn, 
+        d.quantity, 
+        d.delivery_status,
+        b.book_title,
+        d.subtotal,
+        d.coupon_id,
+        c.coupon_code
+    FROM orders o
+    JOIN orders_detail d ON o.order_id = d.order_id
+    JOIN book b ON d.isbn = b.isbn
+    LEFT JOIN coupon c ON d.coupon_id = c.coupon_id -- 쿠폰 테이블 조인
+    WHERE d.order_detail_id = #{order_detail_id, jdbcType=VARCHAR}
+</select>
+<update id="UpdateReturnExchangeRefunds" parameterType="String"> 
+	update orders set order_status = 
+	4 where order_id = (
+    select order_id
+    from orders_detail
+    where order_detail_id = #{order_detail_id} 
+)	
+	</update>
+</mapper>
+
+	
+
+
+
+
