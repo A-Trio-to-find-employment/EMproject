@@ -28,6 +28,18 @@
     		to_char(event_end, 'YYYY-MM-DD') as event_end
     		from event where event_code = #{event_code}
     </select>
+    <update id="updateevent" parameterType="Event">
+    update event 
+	set event_title = #{event_title}, 
+    event_content = #{event_content}, 
+    coupon_id = #{coupon_id}, 
+    event_start = #{event_start}, 
+    event_end = #{event_end} 
+	where event_code = #{event_code} 
+    </update>
+    <delete id="deleteevent" parameterType="java.lang.Long">
+    delete from event where event_code=#{event_code}
+    </delete>
 </mapper>
 
 	

@@ -32,7 +32,7 @@ public class EventController {
 		StartEndKey sek = new StartEndKey();
 		sek.setStart(start); sek.setEnd(end); 
 		if(KEY != null) { sek.setKey(KEY); }
-		ArrayList<Event> eventList = this.eventService.getEventList(sek);
+		ArrayList<Event> eventList = this.eventService.getEventList(sek);		
 		int totalCount = this.eventService.getTotalCount();
 		int pageCount = totalCount / 5;
 		if(totalCount % 5 != 0) pageCount++;
