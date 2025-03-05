@@ -8,13 +8,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.model.Book;
-import com.example.demo.model.BookCategories;
 import com.example.demo.model.Cart;
 import com.example.demo.model.Category;
 import com.example.demo.model.Review;
 import com.example.demo.model.StartEnd;
+import com.example.demo.model.User_pref;
 import com.example.demo.service.CartService;
+import com.example.demo.service.CategoryService;
 import com.example.demo.service.FieldService;
+import com.example.demo.service.PrefService;
 import com.example.demo.service.ReviewService;
 
 import jakarta.servlet.http.HttpSession;
@@ -29,7 +31,10 @@ public class FieldController {
 
 	@Autowired
 	private CartService cartService;
-	
+	@Autowired
+	private PrefService prefService;
+	@Autowired
+	private CategoryService categoryService;
 	
 	@RequestMapping(value = "/field.html")
 	public ModelAndView field(String cat_id) {
@@ -82,9 +87,48 @@ public class FieldController {
 				ModelAndView mav = new ModelAndView("cartAlert");
 				mav.addObject("cat_id", cat_id);
 				mav.addObject("sort", sort);
+				List<String> catList = this.categoryService.getCatIdFromIsbn(BOOKID);
+				for(String catId : catList) {
+					User_pref up = new User_pref();
+					up.setUser_id(loginUser); up.setCat_id(catId);
+					System.out.println(catId);
+					User_pref testUp = this.prefService.getUserCatIdByCat(up);
+					if(testUp == null) { // 사용자가 기존에 선호하지 않았던 카테고리
+						up.setPref_score(1);
+						this.prefService.insertPref(up); // 이 장르에 1점을 부여한 후 선호 장르에 추가
+					}else {
+						Integer score = 0;
+						if(testUp.getPref_score() >= 999) {
+							score = testUp.getPref_score();
+						}else {
+							score = testUp.getPref_score() + 1;
+						}
+						up.setPref_score(score);
+						this.prefService.updateScore(up);
+					}
+				}
 				return mav;
 			} else if(action.equals("buy")) {
 				ModelAndView mav = new ModelAndView("/cart");
+				List<String> catList = this.categoryService.getCatIdFromIsbn(BOOKID);
+				for(String catId : catList) {
+					User_pref up = new User_pref();
+					up.setUser_id(loginUser); up.setCat_id(catId);
+					User_pref testUp = this.prefService.getUserCatIdByCat(up);
+					if(testUp == null) { // 사용자가 기존에 선호하지 않았던 카테고리
+						up.setPref_score(1);
+						this.prefService.insertPref(up); // 이 장르에 1점을 부여한 후 선호 장르에 추가
+					}else {
+						Integer score = 0;
+						if(testUp.getPref_score() >= 999) {
+							score = testUp.getPref_score();
+						}else {
+							score = testUp.getPref_score() + 1;
+						}
+						up.setPref_score(score);
+						this.prefService.updateScore(up);
+					}
+				}
 				return mav;
 			}
 		}
@@ -125,9 +169,47 @@ public class FieldController {
 			if(action.equals("add")) {
 				ModelAndView mav = new ModelAndView("cartAlertDetail");
 				mav.addObject("isbn", isbn);
+				List<String> catList = this.categoryService.getCatIdFromIsbn(isbn);
+				for(String catId : catList) {
+					User_pref up = new User_pref();
+					up.setUser_id(loginUser); up.setCat_id(catId);
+					User_pref testUp = this.prefService.getUserCatIdByCat(up);
+					if(testUp == null) { // 사용자가 기존에 선호하지 않았던 카테고리
+						up.setPref_score(1);
+						this.prefService.insertPref(up); // 이 장르에 1점을 부여한 후 선호 장르에 추가
+					}else {
+						Integer score = 0;
+						if(testUp.getPref_score() >= 999) {
+							score = testUp.getPref_score();
+						}else {
+							score = testUp.getPref_score() + 1;
+						}
+						up.setPref_score(score);
+						this.prefService.updateScore(up);
+					}
+				}
 				return mav;
 			} else if(action.equals("buy")) {
 				ModelAndView mav = new ModelAndView("redirect:/cart");
+				List<String> catList = this.categoryService.getCatIdFromIsbn(isbn);
+				for(String catId : catList) {
+					User_pref up = new User_pref();
+					up.setUser_id(loginUser); up.setCat_id(catId);
+					User_pref testUp = this.prefService.getUserCatIdByCat(up);
+					if(testUp == null) { // 사용자가 기존에 선호하지 않았던 카테고리
+						up.setPref_score(1);
+						this.prefService.insertPref(up); // 이 장르에 1점을 부여한 후 선호 장르에 추가
+					}else {
+						Integer score = 0;
+						if(testUp.getPref_score() >= 999) {
+							score = testUp.getPref_score();
+						}else {
+							score = testUp.getPref_score() + 1;
+						}
+						up.setPref_score(score);
+						this.prefService.updateScore(up);
+					}
+				}
 				return mav;
 			}
 		}

@@ -41,7 +41,9 @@
         from categories
         where parent_id = #{catId}
     </select>
-	
+	<select id="getCatIdFromIsbn" parameterType="java.lang.Long" resultType="String">
+		select cat_id from book_categories where isbn=#{isbn}
+	</select>
 </mapper>
 
 	

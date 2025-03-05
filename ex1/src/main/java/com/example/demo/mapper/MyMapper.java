@@ -16,7 +16,7 @@ public interface MyMapper {
 	void deleteCategory(String cat_id);
 	Integer getMaxHaWeuiCategoryId();	
 	Integer checkSubCategories(String cat_id); 
-	        
+	List<String> getCatIdFromIsbn(Long isbn);
 	    
 	
 	
