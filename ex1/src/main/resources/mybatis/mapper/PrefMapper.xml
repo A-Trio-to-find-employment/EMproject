@@ -32,7 +32,7 @@
 	<select id="getUserTopCat" parameterType="String" resultType="String">
     	select cat_id from (
     		select cat_id, pref_score 
-    		from user_preference 
+    		from user_pref 
     		where user_id = #{user_id}
     		order by pref_score desc)
     	where rownum <![CDATA[<=]]> 3
