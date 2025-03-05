@@ -68,8 +68,9 @@
             </table>
 
             <!-- 리뷰 섹션 -->
-<h3>리뷰 &nbsp&nbsp&nbsp&nbsp<input type="button" 
-	onclick="location.href='/review/writeReview?ISBN=${book.isbn}';" value="리뷰 작성"/></h3>
+<h3>리뷰 &nbsp&nbsp&nbsp&nbsp<input type="button" onclick="checkPurchaseBeforeReview(${book.isbn});"
+<%-- 	onclick="location.href='/review/writeReview?ISBN=${book.isbn}';" --%>
+	 value="리뷰 작성"/></h3>
 <div class="reviews">
     <c:choose>
         <c:when test="${empty LIST}">
@@ -124,6 +125,24 @@
 </div>
     
 <script>
+function checkPurchaseBeforeReview(isbn) {
+    fetch('/review/checkPurchase?isbn=' + isbn)
+        .then(response => response.json())
+        .then(data => {
+            if (data.purchased) {
+                location.href = '/review/writeReview?ISBN=' + isbn;
+            } else {
+                alert(data.message);
+                if (data.message === "로그인이 필요합니다.") {
+                    location.href = '/login';
+                }
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("오류가 발생했습니다.");
+        });
+}
 function reportReview(review_id) {
     if (confirm("이 리뷰를 신고하시겠습니까?")) {
         fetch('/reportReview', {
