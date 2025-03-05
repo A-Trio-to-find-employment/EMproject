@@ -40,5 +40,9 @@ public class CategoryService {
 		    Integer count = mymapper.checkSubCategories(cat_id);
 		    return count != null && count > 0;
 	}
+	public List<String> getCatIdFromIsbn(Long isbn){
+		List<String> catList = this.mymapper.getCatIdFromIsbn(isbn);
+		return catList;
+	}
 		
 }
