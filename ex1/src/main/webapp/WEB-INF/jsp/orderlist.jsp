@@ -121,14 +121,14 @@
                 <td>
                 <form action="/requestAction" method="post">
                 <!--딜리버리 스테이트가 3일때 반품과 교환이 뜨게 할꺼에요 아직 대기중-->    
-    			 
+    			 <c:if test="${order.order_status != 1}">
          		   <input type="submit" name="BTN" value="반품" />
-       			 
+       			 </c:if>
 
         <!-- 교환 버튼: 교환 신청 또는 교환 완료 상태가 아닐 때만 표시 -->
-      			  
+      			  <c:if test="${order.order_status != 1}">
        			   <input type="submit" name="BTN" value="교환" />
-     			   
+     			   </c:if>
     			      
     			<input type="hidden" name="orderDetailId" value="${order.order_detail_id}" />
     			<c:choose>
