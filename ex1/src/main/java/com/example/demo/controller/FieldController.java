@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.model.Book;
-import com.example.demo.model.BookCategories;
 import com.example.demo.model.Cart;
 import com.example.demo.model.Category;
 import com.example.demo.model.Review;
