@@ -84,7 +84,7 @@ public class FieldController {
 				mav.addObject("sort", sort);
 				return mav;
 			} else if(action.equals("buy")) {
-				ModelAndView mav = new ModelAndView("redirect:/cart");
+				ModelAndView mav = new ModelAndView("/cart");
 				return mav;
 			}
 		}
