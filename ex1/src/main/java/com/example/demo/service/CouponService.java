@@ -41,5 +41,8 @@ public class CouponService {
 		Usercoupon userCoupon = this.couponMapper.getUserCouponDetail(uc);
 		return userCoupon;
 	}
+	public List<Coupon> admingetcoupon() {
+		return this.couponMapper.admingetcoupon();
+	}
 	
 }

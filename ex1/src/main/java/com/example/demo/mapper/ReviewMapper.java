@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.example.demo.model.MyReview;
 import com.example.demo.model.Review;
 import com.example.demo.model.StartEnd;
 
@@ -16,4 +17,7 @@ public interface ReviewMapper {
    List<Review> ReviewList(StartEnd st);
    void writeReview(Review review);
    Integer getMaxReview();
+   Integer checkOrder(String user_id,Long isbn);
+   List<MyReview> listReview(StartEnd se);
+   Integer getTotalMine(String user_id);
 }

@@ -70,15 +70,14 @@ table {
         <h3>나의 등급 <span style="float: right;">일반 회원</span></h3>
         <p>주문금액이 10만원 이상일 경우 우수 회원이 됩니다.</p>
         <ul>
-            <li><a href="/order/orderlist.html">주문내역</a></li>
-            <li><a href="#">주문내역/배송조회</a></li>
+            <li><a href="/order/orderlist.html">주문내역/배송조회</a></li>            
             <li><a href="#">반품/교환/취소 신청 및 조회</a></li>
             <li><a href="#">쿠폰조회</a></li>
-            <li><a href="#">리뷰 관리</a></li>
-            <li><a href="#">회원 정보</a></li>
-            <li><a href="#">선호도 조사</a></li>
-            <li><a href="#">선호도 조사 결과</a></li>
-            <li><a href="#">장바구니</a></li>
+            <li><a href="/listReview">리뷰 관리</a></li>
+            <li><a href="/myInfo">회원 정보</a></li>
+            <li><a href="/gogenretest">선호도 조사</a></li>
+            <li><a href="/showprefresult">선호도 조사 결과</a></li>
+            <li><a href="/cart">장바구니</a></li>
         </ul>
         <p><strong><a href="#">나의 1:1 문의내역</a></strong></p>
     </div>
