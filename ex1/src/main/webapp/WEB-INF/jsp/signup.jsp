@@ -60,7 +60,7 @@
                 <a href="/field.html?cat_id=1">외국도서</a>
             </div>
         </div>
-        <a href="#">이벤트</a>
+        <a href="/eventlist">이벤트</a>
         <c:if test="${sessionScope.loginUser != null}">
         	<p>사용자 : ${ sessionScope.loginUser }</p>
    			<a href="/logout">로그아웃</a>
@@ -69,8 +69,8 @@
    			<a href="/signup">회원가입</a>
     		<a href="/login">로그인</a>
 		</c:if>
-        <a href="/mypage">마이페이지</a>
-        <a href="#">고객센터</a>
+        <a href="/secondfa">마이페이지</a>
+        <a href="/qna">고객센터</a>
 </div>
 	<br/><br/>
     <div align="center">

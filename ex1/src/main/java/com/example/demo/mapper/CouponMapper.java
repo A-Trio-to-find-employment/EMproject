@@ -15,4 +15,6 @@ public interface CouponMapper {
 	Coupon couponDetail(Integer coupon_id);
 	void applyCoupon(Usercoupon uc);
 	Usercoupon getUserCouponDetail(Usercoupon uc);
+	List<Coupon> admingetcoupon();
+	
 }

@@ -29,4 +29,10 @@ public class EventService {
 		Event event = this.eventMapper.getEventDetail(event_code);
 		return event;
 	}
+	public void updateevent(Event event) {
+		this.eventMapper.updateevent(event);
+	}
+	public void deleteevent(Long code) {
+		this.eventMapper.deleteevent(code);
+	}
 }

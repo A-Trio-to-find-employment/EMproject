@@ -26,43 +26,23 @@
 <!--         관리자 grade==9만들동안 이용 -->
 <%--         <c:if test="${sessionScope.loginUser != null}"> --%>
 <%--         	<p>사용자 : ${ sessionScope.loginUser }</p> --%>
-   			<a href="/logout">로그아웃</a>
+   			<a href="/logout">로그아웃</a>   		
 <%-- 		</c:if> --%>
+ </div>
+	<div class="sidebar">
+        <h3>이벤트 관리</h3>        
+        <ul>
+            <li><a href="/adminevent">이벤트 목록</a></li>
+            <li><a href="/eventregister">이벤트 등록</a></li>
+            <li><a href="#">쿠폰 목록</a></li>
+       		<li><a href="#">쿠폰 등록</a></li>
+        </ul>        
     </div>
-
-    <c:choose>
-
-        <c:when test="${empty BODY}">  
-            <div class="container">
-                <div class="search-bar">
-                    <label for="filter">필터</label>
-                    <input type="text" id="filter" name="filter">
-                    <button type="submit">검색</button>
-                    <a href="#">상세검색</a>
-                </div>
-                
-                <div class="book-section">
-                    <h3>맞춤 도서</h3>
-                    <p>관리자는 맞춤도서 시스템이 적용되지 않습니다.</p>
-                </div>
-                
-                <div class="book-section">
-                    <h3>화제의 베스트셀러 ></h3>
-                </div>
-                
-                <div class="book-section">
-                    <h3>장르별</h3>
-                    <p>인문학 | 자기계발 | 경제·경영 | 장르소설 | 종교/역학 | 에세이 | 역사</p>
-                </div>
-            </div>
-        </c:when>
-        <c:otherwise>
+    
+   
             <div class="content">
                 <jsp:include page="${BODY}"></jsp:include>
             </div>
-        </c:otherwise>
-    </c:choose>
-	
     <script>
         function toggleDropdown() {
             var dropdown = document.getElementById("categoryDropdown");

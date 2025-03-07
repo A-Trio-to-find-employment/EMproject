@@ -141,7 +141,7 @@ public class FieldController {
         
         return mav;
 	}
-	@RequestMapping(value = "bookdetail.html")
+	@RequestMapping(value = "/bookdetail.html")
 	public ModelAndView bookdetail(Long isbn, String action, Integer PAGE_NUM, 
 			HttpSession session) {
 		String loginUser = (String)session.getAttribute("loginUser");
