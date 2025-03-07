@@ -12,6 +12,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.model.Coupon;
 import com.example.demo.model.Event;
+import com.example.demo.model.Review;
+import com.example.demo.model.StartEnd;
 import com.example.demo.model.StartEndKey;
 import com.example.demo.service.CouponService;
 import com.example.demo.service.EventService;
@@ -109,6 +111,33 @@ public class AdminEvent {
 	    this.eventService.insertevent(eventt);
 	    return new ModelAndView("redirect:/adminevent"); // 리다이렉트 URL을 설정
 	}
-
+	@GetMapping(value="/admincouponlist")
+	public ModelAndView admincouponlist(Integer PAGE_NUM) {
+		ModelAndView mav = new ModelAndView("admineventmenu");
+		mav.addObject("BODY","admincouponlist.jsp");
+		
+		int currentPage = 1;
+		if(PAGE_NUM != null) currentPage = PAGE_NUM;
+		int count = this.couponService.getTotalcoupon();
+		int startRow = 0; int endRow = 0; int totalPageCount = 0;
+		if(count > 0) {
+			totalPageCount = count / 5;
+			if(count % 5 != 0) totalPageCount++;
+			startRow = (currentPage - 1) * 5;
+			endRow = ((currentPage - 1) * 5) + 6;
+			if(endRow > count) endRow = count;
+		}
+		StartEnd se = new StartEnd(); se.setStart(startRow); se.setEnd(endRow);
+		List<Coupon> coupon = this.couponService.CouponList(se);		
+		mav.addObject("START",startRow); 
+		mav.addObject("END", endRow);
+		mav.addObject("TOTAL", count);	
+		mav.addObject("currentPage",currentPage);
+		mav.addObject("LIST",coupon); 
+		mav.addObject("pageCount",totalPageCount);		
+	        	  
+		return mav;		
+	}
+	
 
 }

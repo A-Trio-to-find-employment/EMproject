@@ -34,7 +34,7 @@
         <ul>
             <li><a href="/adminevent">이벤트 목록</a></li>
             <li><a href="/eventregister">이벤트 등록</a></li>
-            <li><a href="#">쿠폰 목록</a></li>
+            <li><a href="/admincouponlist">쿠폰 목록</a></li>
        		<li><a href="#">쿠폰 등록</a></li>
         </ul>        
     </div>

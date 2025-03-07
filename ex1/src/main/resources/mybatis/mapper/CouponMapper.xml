@@ -38,6 +38,22 @@
 			from coupon 
 			WHERE valid_until >= CURRENT_DATE
 	</select>
+	
+	<select id="CouponList" parameterType="StartEnd" resultType="Coupon">
+		select coupon_id,discount_percentage, valid_from, valid_until, coupon_code, cat_id 
+		from (select rownum rank, a.*
+		        from(
+		        	select coupon_id, discount_percentage, valid_from, valid_until,coupon_code,
+			     	cat_id
+			     	from coupon 
+			     	order by coupon_id desc 
+			     	) a)
+		where rank > #{start} and rank <![CDATA[<]]> #{end}	
+	</select>
+	
+	<select id="getTotalcoupon" resultType="Integer">
+		select count(*) from coupon
+	</select>
 </mapper>
 
 	

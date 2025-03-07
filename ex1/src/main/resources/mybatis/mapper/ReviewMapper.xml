@@ -34,8 +34,8 @@
 		        from(
 		        	select review_id, isbn, user_id, rating,content,
 			     	to_char(reg_date,'YYYY/MM/DD') as "REG_DATE"
-			     	from review where isbn=#{isbn}
-			     	order by rating desc
+			     	from review where isbn=#{isbn} 
+			     	order by rating desc 
 			     	) a)
 		where rank > #{start} and rank <![CDATA[<]]> #{end}	
 	</select>
@@ -51,7 +51,7 @@
 	</select>
 	<select id="getMaxReview" resultType="Integer">
 		select max(review_id) from review
-	</select>
+	</select> 
 	<select id="listReview" parameterType="StartEnd" resultType="MyReview">
 		select order_id, to_char(created_at, 'YYYY-MM-DD') as created_at, book_title, content, to_char(reg_date, 'YYYY-MM-DD') as reg_date
 			from (select rownum as rank, a.*

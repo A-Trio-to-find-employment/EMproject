@@ -56,16 +56,23 @@
             	</c:when>
             	<c:otherwise>
             	<table border="1">
-            		<tr><c:forEach var="bookImage" items="${ recommendedBooks }">
-            			<td><a href="/bookdetail.html?isbn=${ bookImage.isbn }">
-            				<img src="${pageContext.request.contextPath}/upload/${bookImage.image_name}" width="250" height="200"/>
-            				</a>
-            			</td></c:forEach></tr>
-            		<tr><c:forEach var="bookName" items="${ recommendedBooks }">
-            			<td>
-            			<a href="/bookdetail.html?isbn=${ bookName.isbn }">제목:${bookName.book_title}</a></td>
-            			</c:forEach></tr>
-            	</table>
+    <tr>
+        <c:forEach var="bookImage" items="${ recommendedBooks }">
+            <td>
+                <a href="/bookdetail.html?isbn=${ bookImage.isbn }">
+                    <img src="${pageContext.request.contextPath}/upload/${bookImage.image_name}" width="200" height="200"/>
+                </a>
+            </td>
+        </c:forEach>
+    </tr>
+    <tr>
+        <c:forEach var="bookName" items="${ recommendedBooks }">
+            <td>
+                <a href="/bookdetail.html?isbn=${ bookName.isbn }">제목:${bookName.book_title}</a>
+            </td>
+        </c:forEach>
+    </tr>
+</table>
             	</c:otherwise>
             </c:choose>
         </div>
