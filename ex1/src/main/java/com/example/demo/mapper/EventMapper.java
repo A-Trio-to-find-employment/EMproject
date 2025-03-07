@@ -12,4 +12,6 @@ public interface EventMapper {
 	ArrayList<Event> getEventList(StartEndKey sek);
 	Integer getTotalCount();
 	Event getEventDetail(Long event_code);
+	void updateevent(Event event);
+	void deleteevent(Long code);
 }

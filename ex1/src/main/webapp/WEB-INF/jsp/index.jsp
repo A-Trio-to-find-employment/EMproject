@@ -35,7 +35,7 @@
         <a href="/qna">고객센터</a>
     </div>
 	<c:choose>
-	<c:when test="${empty BODY }">
+	<c:when test="${empty BODY }"> 
     <div class="container">
         <div class="search-bar">
             <label for="filter">필터</label>
