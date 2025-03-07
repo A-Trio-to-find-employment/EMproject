@@ -41,10 +41,14 @@ public class LoginController {
 			//로그인 성공 후 정보 가져오기
 			Users loginUser = this.loginService.getUser(users);
 			if(loginUser != null) {
-				mav.setViewName("index");
+				mav.setViewName("redirect:/index");
 				session.setAttribute("loginUser", loginUser.getUser_id());//
 //				mav.setViewName("loginSuccess");
 //				mav.addObject("loginUser",loginUser);
+				if(loginUser.getGrade() == 9) {
+					ModelAndView newMav = new ModelAndView("admin");
+					return newMav;
+				}
 				return mav;
 			}else {
 				br.reject("error.login.users");

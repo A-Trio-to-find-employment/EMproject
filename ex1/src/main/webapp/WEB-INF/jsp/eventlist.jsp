@@ -41,10 +41,9 @@
 	</form>
 	<h3>이벤트 목록</h3>
 	<table border="1">
-		<tr><th>이벤트 번호</th><th>이벤트 제목</th><th>등록일</th><th>만료일</th></tr>
+		<tr><th>이벤트 제목</th><th>등록일</th><th>만료일</th></tr>
 		<c:forEach var="event" items="${ eventList }">
-		<tr><td>${ event.event_code }</td>
-			<td><a href="/eventdetail?CODE=${ event.event_code }">${ event.event_title }</a></td>
+		<tr><td><a href="/eventdetail?CODE=${ event.event_code }">${ event.event_title }</a></td>
 			<td>${ event.event_start }</td><td>${ event.event_end }</td></tr>
 		</c:forEach>
 	</table>
