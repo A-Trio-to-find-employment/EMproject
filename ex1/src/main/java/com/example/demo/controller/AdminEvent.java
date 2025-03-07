@@ -75,10 +75,12 @@ public class AdminEvent {
 		return mav;
 	}
 	@GetMapping(value="/eventregister")
-	public ModelAndView eventregister() {
-		ModelAndView mav = new ModelAndView();
-		
-		
+	public ModelAndView eventregister() {		
+		ModelAndView mav = new ModelAndView("admineventmenu");
+		mav.addObject("BODY","eventregister.jsp");	
+		List<Coupon> coupon = this.couponService.admingetcoupon();
+		mav.addObject(new Event()); 
+		mav.addObject("coupon",coupon);
 		return mav;
 	}
 	
