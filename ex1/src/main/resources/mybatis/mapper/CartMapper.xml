@@ -25,7 +25,7 @@
 	</delete>
 	
 	<select id="getCountCart" resultType="Integer">
-		select count(*) from cart 
+		SELECT NVL(MAX(TO_NUMBER(CART_ID)), 0) FROM CART 
 	</select>
 	
 	<select id="findCartByCartId" parameterType="String" resultType="Cart">

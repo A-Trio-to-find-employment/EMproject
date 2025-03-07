@@ -23,7 +23,6 @@
             </div>
         </div>
         <a href="/eventlist">이벤트</a>
-        <a href="/adminPage">잠시동안 관리자용</a>
         <c:if test="${sessionScope.loginUser != null}">
         	<p>사용자 : ${ sessionScope.loginUser }</p>
    			<a href="/logout">로그아웃</a>
