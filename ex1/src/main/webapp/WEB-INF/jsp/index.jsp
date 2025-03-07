@@ -11,8 +11,7 @@
 </head>
 <body>
 	<c:set var="body" value="${param.BODY }"/>
-	<c:choose>
-	<c:when test="${empty BODY }">
+	
     <div class="nav">
         <a href="/index">HOME</a>     
         <div style="position: relative;">
@@ -35,7 +34,8 @@
         <a href="/secondfa">마이페이지</a>
         <a href="/qna">고객센터</a>
     </div>
-
+	<c:choose>
+	<c:when test="${empty BODY }"> 
     <div class="container">
         <div class="search-bar">
             <label for="filter">필터</label>
