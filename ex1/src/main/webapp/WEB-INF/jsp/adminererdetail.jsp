@@ -52,13 +52,14 @@ table {
 <c:set var="id" value="${sessionScope.user_id }"/>
 
     <div class="nav">
-          <a href="/adminPage">HOME</a>     
-        <a href="/manageGoods">상품 관리</a>
-        <a href="/anslist">고객 문의</a>
-        <a href="#">이벤트 관리</a>        
-        <a href="/adminrer">교환 및 반품 현황</a>
-        <a href="/goStatistics">통계 내역</a>
-        <a href="/categories">필터 관리</a>
+        <a href="/adminPage">HOME</a>
+    <a href="/manageGoods">상품 관리</a>
+    <a href="/anslist">고객 문의</a>
+    <a href="/adminevent">이벤트 관리</a>
+    <a href="/adminrer">교환 및 반품 현황</a>
+    <a href="/goStatistics">통계 내역</a>
+    <a href="/categories">필터 관리</a>
+    <a href="/logout">로그아웃</a>
 <!--         관리자 grade==9만들동안 이용 -->
 <%--         <c:if test="${sessionScope.loginUser != null}"> --%>
 <%--         	<p>사용자 : ${ sessionScope.loginUser }</p> --%>
