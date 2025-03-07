@@ -54,6 +54,9 @@
 	<select id="getTotalcoupon" resultType="Integer">
 		select count(*) from coupon
 	</select>
+	<delete id="deleteCoupon" parameterType="Integer">
+		delete from coupon where coupon_id=#{coupon_id}
+	</delete>
 </mapper>
 
 	

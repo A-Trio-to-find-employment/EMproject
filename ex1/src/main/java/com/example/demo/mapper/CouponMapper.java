@@ -19,4 +19,5 @@ public interface CouponMapper {
 	List<Coupon> admingetcoupon();
 	List<Coupon>CouponList(StartEnd se);
 	Integer getTotalcoupon();
+	void deleteCoupon(Integer coupon_id);
 }

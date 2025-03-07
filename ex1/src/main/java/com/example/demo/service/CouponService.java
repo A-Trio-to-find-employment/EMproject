@@ -51,4 +51,7 @@ public class CouponService {
 	public Integer getTotalcoupon() {
 		return this.couponMapper.getTotalcoupon();
 	}
+	public void deleteCoupon(Integer coupon_id) {
+		this.couponMapper.deleteCoupon(coupon_id);
+	}
 }

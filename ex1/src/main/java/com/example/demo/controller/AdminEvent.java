@@ -134,10 +134,17 @@ public class AdminEvent {
 		mav.addObject("TOTAL", count);	
 		mav.addObject("currentPage",currentPage);
 		mav.addObject("LIST",coupon); 
-		mav.addObject("pageCount",totalPageCount);		
-	        	  
+		mav.addObject("pageCount",totalPageCount);			        	  
 		return mav;		
 	}
+	@PostMapping("/deleteCoupon")
+	public ModelAndView deleteCoupon(Integer coupon_id) {
+		ModelAndView mav = new ModelAndView();
+		this.couponService.deleteCoupon(coupon_id);
+		mav.setViewName("redirect:/admincouponlist"); // 리다이렉트 URL을 설정
+		return mav;
+	}
+	
 	
 
 }

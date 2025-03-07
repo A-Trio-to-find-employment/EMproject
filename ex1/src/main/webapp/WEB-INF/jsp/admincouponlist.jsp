@@ -86,7 +86,7 @@
                     <strong>유효 기간:</strong> ${coupon.valid_from} ~ ${coupon.valid_until}
                 </div>
                 <!-- 삭제 버튼 -->
-                <form action="/deleteCoupon" method="post" style="display:inline;">
+                <form action="/deleteCoupon" method="post" style="display:inline;" onsubmit="return confirmDelete();">
                     <input type="hidden" name="coupon_id" value="${coupon.coupon_id}" />
                     <button type="submit">삭제</button>
                 </form>
@@ -122,6 +122,10 @@
             </c:if>
         </div>
     </div>
-
+<script>
+        function confirmDelete() {
+            return confirm("정말 삭제하시겠습니까?");
+        }
+    </script>
 </body>
 </html>
