@@ -8,8 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Event {
-	@NotEmpty(message = "이벤트 번호는 필수입니다.")
-	private Long event_code;
+	 
+	private Long event_code; 
 
 	@NotEmpty(message = "이벤트 이름은 필수입니다.")
 	@Size(max = 100, message = "이벤트 이름은 100자 이내로 입력하세요.")

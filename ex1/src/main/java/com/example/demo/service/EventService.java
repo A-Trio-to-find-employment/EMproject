@@ -18,6 +18,10 @@ public class EventService {
 		ArrayList<Event> eventList = this.eventMapper.getEventList(sek);
 		return eventList;
 	}
+	public ArrayList<Event> AdminGetEventList(StartEndKey sek){
+		ArrayList<Event> eventList = this.eventMapper.AdminGetEventList(sek);
+		return eventList;
+	}
 	
 	public Integer getTotalCount() {
 		Integer count = this.eventMapper.getTotalCount();
@@ -34,5 +38,16 @@ public class EventService {
 	}
 	public void deleteevent(Long code) {
 		this.eventMapper.deleteevent(code);
+	}
+	public Long maxcount() {
+		Long maxEventCode = eventMapper.maxcount();  // 현재 최대 event_code 값을 가져옴
+        if (maxEventCode == null) {
+            return 20000000001L;  // 최대 값이 없으면, 20000000001부터 시작
+        } else {
+            return maxEventCode + 1;  // 최대 값에 1을 더한 값을 반환
+        }
+	}
+	public void insertevent(Event event) {
+		this.eventMapper.insertevent(event);
 	}
 }
