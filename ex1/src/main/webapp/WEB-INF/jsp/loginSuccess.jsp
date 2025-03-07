@@ -20,7 +20,7 @@
                 <a href="/field.html?cat_id=1">외국도서</a>
             </div>
         </div>
-        <a href="#">이벤트</a>        
+        <a href="/eventlist">이벤트</a>        
         <a href="/signup">회원가입</a>
         <a href="/login">로그인</a>
         <a href="/secondfa">마이페이지</a>
