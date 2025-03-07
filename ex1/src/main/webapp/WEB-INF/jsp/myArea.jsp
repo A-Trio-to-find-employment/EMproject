@@ -1,26 +1,31 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>    
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>2차 인증 완료</title>
-	<link rel="stylesheet" type="text/css" href="/css/style.css">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="/css/style.css">
 	<style>
 		.sidebar { float: left; width: 20%; border: 1px solid #ddd; box-sizing: border-box; padding: 20px; text-align: left; }
         .sidebar h3 { border-bottom: 1px solid #ccc; padding-bottom: 10px; }
         .sidebar ul { list-style: none; padding: 0; }
         .sidebar li { margin: 10px 0; }
         .container { margin-left: 7%; padding: 20px; }
-        .secondfaSuccess { margin-top: 0px; }
-        .secondfaSuccess input { display: block; margin: 3px auto; padding: 10px; width: 300px; }
-        .secondfaSuccess button { padding: 10px 20px; margin-top: 20px; cursor: pointer; }
+        .myInfo { margin-top: 0px; }
+        .myInfo input { display: block; margin: 3px auto; padding: 10px; width: 300px; }
+        .myInfo button { padding: 10px 20px; margin-top: 20px; cursor: pointer; }
+        .btn {padding: 5px 10px;font-size: 14px;width: auto;display: inline-block;
+    				margin: 10px 5px;cursor: pointer;}
+        
 	</style>
 </head>
 <body>
+
+	<c:set var="body" value="${param.BODY }"/>
+	<c:choose>
+	<c:when test="${empty BODY }">
+
     <div class="nav">
         <a href="/index">HOME</a>     
         <div style="position: relative;">
@@ -30,7 +35,7 @@
                 <a href="/field.html?cat_id=1">외국도서</a>
             </div>
         </div>
-        <a href="#">이벤트</a>
+        <a href="/eventlist">이벤트</a>
         <c:if test="${sessionScope.loginUser != null}">
         	<p>사용자 : ${sessionScope.loginUser}</p>
    			<a href="/logout">로그아웃</a>
@@ -40,7 +45,7 @@
     		<a href="/login">로그인</a>
 		</c:if>
         <a href="/secondfa">마이페이지</a>
-        <a href="#">고객센터</a>
+        <a href="/qna">고객센터</a>
     </div>
 
     <div class="sidebar">
@@ -58,15 +63,15 @@
         </ul>
         <p><strong><a href="/qnalist">나의 1:1 문의내역</a></strong></p>
     </div>
+    </c:when>
+    <c:otherwise>
+    	<div class="content">
+    		<jsp:include page="${BODY }"></jsp:include>
+    	</div>
+    </c:otherwise>
+    </c:choose>
 
-	 <div class="container">
-	        
-	        <h2>2차 인증을 완료했습니다. <br/><br/><br/>
-	        옆의 항목들을 눌러 원하는 정보를 확인할 수 있습니다.</h2>
-	        <div class="secondfaSuccess">
-	        <div align="center">
-</div>
-<script type="text/javascript">
+<script>
 function toggleDropdown() {
     var dropdown = document.getElementById("categoryDropdown");
     dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";

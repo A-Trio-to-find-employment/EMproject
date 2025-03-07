@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.example.demo.mapper.PrefMapper">
+	
+	<select id="getUserPref" parameterType="String" resultType="User_pref">
+		select * from user_pref where user_id=#{user_id}
+	</select>
+
+    <insert id="insertPref" parameterType="User_pref">
+        insert into user_pref values(#{user_id}, #{cat_id}, #{pref_score})
+    </insert>
+	
+	<select id="getUserCatIdByCat" parameterType="User_pref" resultType="User_pref">
+		select * from user_pref where user_id=#{user_id} and cat_id=#{cat_id}
+	</select>
+	
+	<update id="updateScore" parameterType="User_pref">
+		update user_pref set pref_score=#{pref_score} 
+			where user_id=#{user_id} and cat_id=#{cat_id}
+	</update>
+	
+	<delete id="DeleteUserPref" parameterType="User_pref">
+		delete from user_pref where user_id=#{user_id} and cat_id=#{cat_id}
+	</delete>
+	
+	<delete id="InitializationPref" parameterType="String">
+		delete from user_pref where user_id=#{user_id}
+	</delete>
+	
+	<select id="getUserTopCat" parameterType="String" resultType="String">
+    	select cat_id from (
+    		select cat_id, pref_score 
+    		from user_pref 
+    		where user_id = #{user_id}
+    		order by pref_score desc)
+    	where rownum <![CDATA[<=]]> 3
+	</select>
+	<select id="getRecommendedBooks" parameterType="map" resultType="java.lang.Long">
+    SELECT isbn
+    FROM (
+        SELECT bc.isbn
+        FROM book_categories bc
+        WHERE bc.cat_id IN 
+		<foreach item="catId" collection="catIds" open="(" separator="," close=")">
+        	#{catId}
+		</foreach>
+        AND bc.isbn NOT IN (
+            SELECT od.isbn
+            FROM orders o
+            JOIN orders_detail od ON o.order_id = od.order_id
+            WHERE o.user_id = #{userId}
+        )
+    )
+    WHERE ROWNUM <![CDATA[<=]]> 4
+	</select>
+	<select id="getRecommendedBookList" parameterType="map" resultType="java.lang.Long">
+    SELECT isbn
+    FROM (
+        SELECT bc.isbn
+        FROM book_categories bc
+        WHERE bc.cat_id IN 
+		<foreach item="catId" collection="catIds" open="(" separator="," close=")">
+        	#{catId}
+		</foreach>
+        AND bc.isbn NOT IN (
+            SELECT od.isbn
+            FROM orders o
+            JOIN orders_detail od ON o.order_id = od.order_id
+            WHERE o.user_id = #{userId}
+        )
+    )
+    WHERE ROWNUM <![CDATA[<=]]> 20
+	</select>
+	
+</mapper>
+
+	
+
+
+
+

@@ -46,8 +46,7 @@
     <div class="sidebar">
         <h3>나의 등급 <span style="float: right;">일반 회원</span></h3>
         <p>주문금액이 10만원 이상일 경우 우수 회원이 됩니다.</p>
-        <ul>
-            <li><a href="/order/orderlist.html">주문내역</a></li>
+        <ul>            
             <li><a href="#">주문내역/배송조회</a></li>
             <li><a href="#">반품/교환/취소 신청 및 조회</a></li>
             <li><a href="#">쿠폰조회</a></li>
