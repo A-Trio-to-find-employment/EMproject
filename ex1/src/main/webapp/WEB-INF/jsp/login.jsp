@@ -29,7 +29,7 @@
         <a href="/eventlist">이벤트</a>        
         <a href="/signup">회원가입</a>
         <a href="/login">로그인</a>
-        <a href="/mypage">마이페이지</a>
+        <a href="/secondfa">마이페이지</a>
         <a href="/qna">고객센터</a>
     </div><br/>
     <h2 align="center">~~책들의 세계로</h2>

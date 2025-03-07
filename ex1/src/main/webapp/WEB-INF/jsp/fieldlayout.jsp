@@ -29,7 +29,7 @@
    			<a href="/signup">회원가입</a>
     		<a href="/login">로그인</a>
 		</c:if>
-        <a href="/mypage">마이페이지</a>
+        <a href="/secondfa">마이페이지</a>
         <a href="/qna">고객센터</a>
     </div>
 </div>
