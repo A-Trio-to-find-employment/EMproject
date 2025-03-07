@@ -26,10 +26,15 @@
 </c:choose>
 <script type="text/javascript">
 function idOk(userId){
-	opener.document.frm.user_id.value = userId;
-	opener.document.frm.user_id.readOnly = true;//편집이 안되게 속성을 readOnly로 바꾼다.
-	opener.document.frm.idChecked.value = "yes";//ID중복검사용 파라미터(idChecked)에 값을 넣는다.
+	if(opener && !opener.closed) {
+        opener.document.frm.user_id.value = userId;
+        opener.document.frm.user_id.readOnly = true;   // 편집 불가 설정
+        opener.document.frm.idChecked.value = "yes";     // 중복검사 완료 표시
+    }
+	window.opener = window;
+    window.open('', '_self');
 	self.close();
+	
 }
 </script>
 </body>

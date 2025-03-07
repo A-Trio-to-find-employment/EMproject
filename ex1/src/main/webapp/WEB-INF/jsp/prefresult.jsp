@@ -22,7 +22,7 @@
                 <a href="/field.html?cat_id=1">외국도서</a>
             </div>
         </div>
-        <a href="#">이벤트</a>
+        <a href="/eventlist">이벤트</a>
         <c:if test="${sessionScope.loginUser != null}">
         	<p>사용자 : ${ sessionScope.loginUser }</p>
    			<a href="/logout">로그아웃</a>
