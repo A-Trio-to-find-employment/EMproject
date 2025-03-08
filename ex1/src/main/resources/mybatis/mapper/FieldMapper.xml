@@ -42,27 +42,39 @@ WHERE b.isbn = #{isbn, jdbcType=BIGINT}
 </select>
 <!-- 책을 필터적용해서 정렬해서 보여주는 쿼리 -->
 <select id="getorderByBook" parameterType="String" resultType="Book">
-    select isbn, book_title,
-           (select listagg(author, ', ') within group (order by author)
-            from book_author
-            where isbn = book.isbn) as authors,
-           price,
-           publisher,
-           pub_date  <!-- 출판 날짜 추가 -->
-    from book
-    where isbn IN (select isbn from book_categories where cat_id = #{cat_id})
+    SELECT b.isbn,
+           b.book_title,
+           (SELECT LISTAGG(ba.author, ', ') WITHIN GROUP (ORDER BY ba.author)
+            FROM book_author ba
+            WHERE ba.isbn = b.isbn) AS authors,
+           b.price,
+           b.publisher,
+           b.pub_date,
+           NVL(s.sales_count, 0) AS sales_count,
+           NVL(r.review_count, 0) AS review_count,
+           NVL(b.total_rating, 0) AS total_rating
+    FROM book b
+    LEFT JOIN (SELECT od.isbn, SUM(od.quantity) AS sales_count
+               FROM orders_detail od
+               GROUP BY od.isbn) s
+        ON b.isbn = s.isbn
+    LEFT JOIN (SELECT r.isbn, COUNT(r.review_id) AS review_count
+               FROM review r
+               GROUP BY r.isbn) r
+        ON b.isbn = r.isbn
+    WHERE b.isbn IN (SELECT bc.isbn FROM book_categories bc WHERE bc.cat_id = #{cat_id})
     <choose>
         <when test="sort == 'sales'">
-            ORDER BY SALES DESC
+            ORDER BY sales_count DESC
         </when>
         <when test="sort == 'review'">
-            ORDER BY REVIEW_COUNT DESC
+            ORDER BY review_count DESC
         </when>
         <when test="sort == 'rating'">
-            ORDER BY TOTAL_RATING DESC
+            ORDER BY total_rating DESC
         </when>
         <otherwise>
-            ORDER BY PUB_DATE DESC  <!-- 기본값: 최신순 -->
+            ORDER BY pub_date DESC
         </otherwise>
     </choose>
 </select>
