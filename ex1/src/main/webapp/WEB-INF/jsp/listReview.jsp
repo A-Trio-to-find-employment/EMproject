@@ -41,6 +41,7 @@
 <body>
 <div class="container">
     <div class="review">리뷰 관리</div>
+    
     <table class="table">
 		<tr>
 			<th>주문 번호</th><th>주문 일자</th><th>주문 상품</th><th>해당 리뷰</th><th>기재 일자</th><th>상태</th></tr>
@@ -52,8 +53,12 @@
 				<td>${mineReview.content}</td>
 				<td>${mineReview.reg_date}</td>
 				<td>
-				<input type="hidden" name="review_id" value="${mineReview.review_id}"/>
-				<input type="button" onclick="/listReview/delete" value="삭 제"/></td>
+				<form action="/listReview/delete" method="post">
+    			<input type="hidden" name="review_id" value="${mineReview.review_id}">
+				<input type="submit" value="삭 제" 
+				onclick="return confirm('당신의 소중한 리뷰를 정말 삭제하시겠습니까?');">
+				</form>
+				</td>
 			</tr>
 		</c:forEach>
 </table>
@@ -78,7 +83,6 @@
 <c:if test="${endPage < pageCount }">
 	<a href="/listReview?pageNo=${endPage + 1 }">[다음]</a>
 </c:if>
-
 </div>
 </body>
 </html>
