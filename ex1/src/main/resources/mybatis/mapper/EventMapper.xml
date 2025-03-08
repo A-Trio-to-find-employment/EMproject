@@ -40,6 +40,33 @@
     <delete id="deleteevent" parameterType="java.lang.Long">
     delete from event where event_code=#{event_code}
     </delete>
+    <select id="maxcount" resultType="java.lang.Long">
+    	select MAX(event_code) from event
+    </select>
+    <insert id="insertevent" parameterType="Event">
+    	insert into event values(#{event_code},#{event_title},#{event_content},#{coupon_id},#{event_start},#{event_end})
+    </insert>
+    <select id="AdminGetEventList" parameterType="StartEndKey" resultType="Event">
+  select event_code, event_title, event_start, event_end
+from (
+    select rownum rn, a.*
+    from (
+        select event_code, event_title, 
+               to_char(event_start, 'YYYY-MM-DD') as event_start, 
+               to_char(event_end, 'YYYY-MM-DD') as event_end
+        from event
+        <where>
+            <if test="key != null and key != ''">
+                and (event_title LIKE '%' || #{key} || '%' 
+                     or event_content LIKE '%' || #{key} || '%')
+            </if>
+        </where>
+        order by event_start ASC
+    ) a
+    where rownum <![CDATA[<=]]> #{end}
+) where rn > #{start}
+
+    </select>
 </mapper>
 
 	

@@ -76,6 +76,7 @@
     <div align="center">
         <form:form action="/signupResult" method="post" modelAttribute="users"
         	 onsubmit="return validateForm()" name="frm">
+        	<input type="hidden" name="idChecked" value="no" />	 
             <table>
                 <tr><th>이름</th><td><form:input path="user_name" />
                 	<font color="red"><form:errors path="user_name"/></font></td></tr>
@@ -109,16 +110,19 @@
 <script type="text/javascript">
 function idCheck(){
 	if(document.frm.user_id.value == ''){
-		alert("계정을 입력하세요."); document.frm.user_id.focus(); return false;
-	}else {
-		if(document.frm.user_id.value.length < 4 || 
-			document.frm.user_id.value.length > 21){
-			alert("계정은 5자 이상, 20자 이하로 입력하세요."); 
-			document.frm.user_id.focus(); return false;
-		}
-	}
-	var url="/idcheck?USER_ID="+document.frm.user_id.value;
-	window.open(url, "_blank_", "width=450,height=200");
+        alert("계정을 입력하세요."); 
+        document.frm.user_id.focus(); 
+        return false;
+    } else {
+        if(document.frm.user_id.value.length < 4 || document.frm.user_id.value.length > 21){
+            alert("계정은 5자 이상, 20자 이하로 입력하세요."); 
+            document.frm.user_id.focus(); 
+            return false;
+        }
+    }
+    var url = "/idcheck?USER_ID=" + document.frm.user_id.value;
+    // 고유한 팝업 이름 사용
+    window.open(url, "idcheckPopup", "width=450,height=200");
 }
 
 function validateForm() {
@@ -137,8 +141,11 @@ function validateForm() {
         alert("약관에 동의해 주세요.");
         return false; // 폼 제출을 막음
     }
-    
-
+    if (document.frm.idChecked.value === 'no') {
+        alert("ID 중복검사를 해주세요");
+        return false;
+    }
+	
     // 모든 조건을 만족하면 폼 제출
     return true;
 }

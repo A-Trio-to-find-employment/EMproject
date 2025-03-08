@@ -39,7 +39,6 @@
 	<form action="/getcoupon">
 	<input type="hidden" name="CP" value="${ event.coupon_id }">
 	<table border="1">
-		<tr><th>이벤트 번호</th><td>${ event.event_code }</td></tr>
 		<tr><th>이벤트 이름</th><td>${ event.event_title }</td></tr>
 		<tr><th>이벤트 내용</th><td>${ event.event_content }</td></tr>
 		<tr><th>이벤트 기간</th><td>${ event.event_start } ~ ${ event.event_end }</td></tr>

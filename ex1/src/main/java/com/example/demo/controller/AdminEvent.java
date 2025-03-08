@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -14,6 +15,8 @@ import com.example.demo.model.Event;
 import com.example.demo.model.StartEndKey;
 import com.example.demo.service.CouponService;
 import com.example.demo.service.EventService;
+
+import jakarta.validation.Valid;
 
 @Controller
 public class AdminEvent {
@@ -34,7 +37,7 @@ public class AdminEvent {
 		StartEndKey sek = new StartEndKey();
 		sek.setStart(start); sek.setEnd(end); 
 		if(KEY != null) { sek.setKey(KEY); }
-		ArrayList<Event> eventList = this.eventService.getEventList(sek);		
+		ArrayList<Event> eventList = this.eventService.AdminGetEventList(sek);		
 		int totalCount = this.eventService.getTotalCount();
 		int pageCount = totalCount / 5;
 		if(totalCount % 5 != 0) pageCount++;
@@ -75,7 +78,7 @@ public class AdminEvent {
 		return mav;
 	}
 	@GetMapping(value="/eventregister")
-	public ModelAndView eventregister() {		
+	public ModelAndView eventregister() {					
 		ModelAndView mav = new ModelAndView("admineventmenu");
 		mav.addObject("BODY","eventregister.jsp");	
 		List<Coupon> coupon = this.couponService.admingetcoupon();
@@ -84,5 +87,28 @@ public class AdminEvent {
 		return mav;
 	}
 	
-	
+	@PostMapping(value="/eventregisterform")
+	public ModelAndView eventregisterform(@Valid Event event, BindingResult br, Integer coupon_id) {
+	    if (br.hasErrors()) {
+	        System.out.println("Form has errors: " + br.getAllErrors());  // 오류 출력
+	        ModelAndView mav = new ModelAndView("admineventmenu");
+	        List<Coupon> coupon = this.couponService.admingetcoupon();
+	        mav.addObject("coupon", coupon);
+	        mav.getModel().putAll(br.getModel());
+	        mav.addObject("BODY", "eventregister.jsp");
+	        return mav;
+	    }
+	    Long count = this.eventService.maxcount();
+	    Event eventt = new Event();
+	    eventt.setCoupon_id(coupon_id);
+	    eventt.setEvent_code(count);
+	    eventt.setEvent_content(event.getEvent_content());
+	    eventt.setEvent_title(event.getEvent_title());
+	    eventt.setEvent_end(event.getEvent_end());
+	    eventt.setEvent_start(event.getEvent_start());
+	    this.eventService.insertevent(eventt);
+	    return new ModelAndView("redirect:/adminevent"); // 리다이렉트 URL을 설정
+	}
+
+
 }
