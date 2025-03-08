@@ -17,4 +17,6 @@ public interface EventMapper {
 	void deleteevent(Long code);
 	Long maxcount();
 	void insertevent(Event event);
+	void deleteCouponEvent(Integer coupon_id);
+	void deleteUserCoupon(Integer coupon_id);
 }

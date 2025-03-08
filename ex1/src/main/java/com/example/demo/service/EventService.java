@@ -50,4 +50,10 @@ public class EventService {
 	public void insertevent(Event event) {
 		this.eventMapper.insertevent(event);
 	}
+	public void deleteCouponEvent(Integer coupon_id) {
+		this.eventMapper.deleteCouponEvent(coupon_id);
+	}
+	public void deleteUserCoupon(Integer coupon_id) {
+		this.eventMapper.deleteUserCoupon(coupon_id);
+	}
 }

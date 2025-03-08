@@ -141,6 +141,8 @@ public class AdminEvent {
 	public ModelAndView deleteCoupon(Integer coupon_id) {
 		ModelAndView mav = new ModelAndView();
 		this.couponService.deleteCoupon(coupon_id);
+		this.eventService.deleteCouponEvent(coupon_id);
+		this.eventService.deleteUserCoupon(coupon_id);
 		mav.setViewName("redirect:/admincouponlist"); // 리다이렉트 URL을 설정
 		return mav;
 	}

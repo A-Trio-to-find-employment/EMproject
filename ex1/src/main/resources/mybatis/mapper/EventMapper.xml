@@ -67,6 +67,12 @@ from (
 ) where rn > #{start}
 
     </select>
+    <delete id="deleteCouponEvent">
+    	delete from event where coupon_id=#{coupon_id} 
+    </delete>
+    <delete id="deleteUserCoupon">
+    	delete from user_coupon where coupon_id=#{coupon_id}
+    </delete>
 </mapper>
 
 	
