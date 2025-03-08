@@ -145,7 +145,9 @@ where od.order_detail_id =#{order_detail_id}
 	update orders_detail set delivery_status = #{delivery_status} 
 		where order_detail_id = #{order_detail_id} and order_id = #{order_id}
 </select>
-
+<select id="findOdByOdId" parameterType="String" resultType="Orders_detail">
+	select * from orders_detail where order_detail_id=#{order_detail_id}
+</select>
 </mapper>
 
 	
