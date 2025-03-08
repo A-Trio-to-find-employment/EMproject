@@ -58,7 +58,7 @@
             	<table border="1">
             		<tr><c:forEach var="bookImage" items="${ recommendedBooks }">
             			<td><a href="/bookdetail.html?isbn=${ bookImage.isbn }">
-            				<img src="${pageContext.request.contextPath}/upload/${bookImage.image_name}" width="250" height="200"/>
+            				<img src="${pageContext.request.contextPath}/upload/${bookImage.image_name}" width="230" height="200"/>
             				</a>
             			</td></c:forEach></tr>
             		<tr><c:forEach var="bookName" items="${ recommendedBooks }">

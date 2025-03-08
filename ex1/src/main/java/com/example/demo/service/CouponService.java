@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.mapper.CouponMapper;
 import com.example.demo.model.Book;
 import com.example.demo.model.Coupon;
+import com.example.demo.model.UserCouponModel;
 import com.example.demo.model.Usercoupon;
 
 @Service
@@ -44,5 +45,12 @@ public class CouponService {
 	public List<Coupon> admingetcoupon() {
 		return this.couponMapper.admingetcoupon();
 	}
-	
+	public List<UserCouponModel> getAvailableCoupons(String user_id){
+		List<UserCouponModel> ucmList = this.couponMapper.getAvailableCoupons(user_id);
+		return ucmList;
+	}
+	public List<UserCouponModel> getUnavailableCoupons(String user_id){
+		List<UserCouponModel> ucmList = this.couponMapper.getUnavailableCoupons(user_id);
+		return ucmList;
+	}
 }

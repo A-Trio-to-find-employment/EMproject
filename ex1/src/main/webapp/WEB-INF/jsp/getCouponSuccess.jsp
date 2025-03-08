@@ -10,7 +10,7 @@
 <script type="text/javascript">
 setTimeout(function(){
 	alert("쿠폰을 획득하였습니다. 내 쿠폰함으로 이동합니다.");
-	location.href="../index";
+	location.href="../myCoupon";
 },100);
 </script>
 </body>

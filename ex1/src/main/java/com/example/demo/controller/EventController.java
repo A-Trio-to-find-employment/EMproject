@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,9 +10,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.model.Event;
 import com.example.demo.model.StartEndKey;
+import com.example.demo.model.UserCouponModel;
 import com.example.demo.model.Usercoupon;
 import com.example.demo.service.CouponService;
 import com.example.demo.service.EventService;
+import com.example.demo.service.FieldService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -21,7 +24,8 @@ public class EventController {
 	private EventService eventService;
 	@Autowired
 	private CouponService couponService;
-	
+	@Autowired
+	private FieldService fieldService;
 	@GetMapping(value="/eventlist")
 	public ModelAndView eventList(Integer PAGE, String KEY) {
 		ModelAndView mav = new ModelAndView("eventlist");
@@ -66,6 +70,39 @@ public class EventController {
 		}
 		this.couponService.getUserCoupon(uc);
 		ModelAndView mav = new ModelAndView("getCouponSuccess");
+		return mav;
+	}
+	
+	@GetMapping(value="/myCoupon")
+	public ModelAndView myCoupon(HttpSession session) {
+		String loginUser = (String)session.getAttribute("loginUser");
+		ModelAndView mav = new ModelAndView("myCouponList");
+		List<UserCouponModel> availList = this.couponService.getAvailableCoupons(loginUser);
+		if(availList == null) {
+			mav.addObject("canUseList", null);
+		} else {
+			List<UserCouponModel> canUseList = new ArrayList<UserCouponModel>();
+			for(UserCouponModel ucm : availList) {
+				String catPath = this.fieldService.getCategoriesName(ucm.getCat_id());
+				ucm.setCat_id(catPath);
+				canUseList.add(ucm);
+				mav.addObject("canUseList", canUseList);
+			}
+			
+		}
+		List<UserCouponModel> unAvailList = this.couponService.getUnavailableCoupons(loginUser);
+		if(unAvailList == null) {
+			mav.addObject("notUseList", null);
+		} else {
+			List<UserCouponModel> notUseList = new ArrayList<UserCouponModel>();
+			for(UserCouponModel ucm : unAvailList) {
+				String catPath = this.fieldService.getCategoriesName(ucm.getCat_id());
+				ucm.setCat_id(catPath);
+				notUseList.add(ucm);
+				mav.addObject("notUseList", notUseList);
+			}
+			
+		}
 		return mav;
 	}
 	
