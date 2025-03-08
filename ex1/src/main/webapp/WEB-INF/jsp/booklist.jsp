@@ -5,12 +5,27 @@
 <head>
     <meta charset="UTF-8">
     <title>도서 목록</title>
+    <style>
+        .heart-button {
+            font-size: 24px;
+            cursor: pointer;
+            color: gray;
+        }
+        .heart-button.liked {
+            color: red; 
+        }
+        .like-count {
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
     <link rel="stylesheet" type="text/css" href="/css/bookstyle.css">
 </head>
 <body>
 
 <div class="containers">
     <h2 class="category-title">${cat_name} 도서 목록</h2>
+    
 
     <!-- 정렬 옵션 -->
     <div class="sorting">
@@ -27,10 +42,10 @@
                 <c:forEach var="book" items="${bookList}">
                     <div class="book-item">
                         <!-- 책 이미지 -->
-                        <div class="book-image-box">
-                            <img alt="" src="..img/${book.image_name}" class="book-image">
-                        </div>
-
+                        <div class="book-image">                
+                <img src="${pageContext.request.contextPath}/upload/${book.image_name}" width="100" height="120"/>
+            </div>
+					    
                         <!-- 책 정보 (더 넓게 배치) -->
                         <div class="book-info">
                             <h3 class="book-title">
@@ -39,8 +54,7 @@
                             <p align="left" class="book-author">저자:${book.authors}</p>
                             <p align="left" class="book-price">가격:${book.price}원</p>
                             <p align="left" class="book-publisher">출판사:${book.publisher}</p>
-                        </div>
-
+                        </div>                        						
                         <!-- 버튼 (위아래 배치) -->
                         <form method="post" action="/booklist.html">
                         <input type="hidden" name="sort" value="${ sort }">
@@ -49,8 +63,9 @@
 						<div class="actions">
 							<button type="submit" name="action" value="add" class="add-to-cart">장바구니</button>
 							<button type="submit" name="action" value="buy" class="buy-now">바로구매</button>
-						</div>
+						</div>						
 						</form>
+						
                     </div>
                 </c:forEach>
             </c:when>

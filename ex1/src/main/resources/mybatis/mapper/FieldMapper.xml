@@ -50,6 +50,7 @@ WHERE b.isbn = #{isbn, jdbcType=BIGINT}
            b.price,
            b.publisher,
            b.pub_date,
+           b.image_name,
            NVL(s.sales_count, 0) AS sales_count,
            NVL(r.review_count, 0) AS review_count,
            NVL(b.total_rating, 0) AS total_rating
