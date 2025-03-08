@@ -47,13 +47,13 @@
         <h3>나의 등급 <span style="float: right;">일반 회원</span></h3>
         <p>주문금액이 10만원 이상일 경우 우수 회원이 됩니다.</p>
         <ul>            
-            <li><a href="#">주문내역/배송조회</a></li>            
-            <li><a href="#">쿠폰조회</a></li>
-            <li><a href="#">리뷰 관리</a></li>
-            <li><a href="#">회원 정보</a></li>
-            <li><a href="#">선호도 조사</a></li>
-            <li><a href="#">선호도 조사 결과</a></li>
-            <li><a href="#">장바구니</a></li>
+           <li><a href="#" onclick="requireSecondFactor(event)">주문내역/배송조회</a></li>
+            <li><a href="#" onclick="requireSecondFactor(event)">쿠폰조회</a></li>
+            <li><a href="#" onclick="requireSecondFactor(event)">리뷰 관리</a></li>
+            <li><a href="#" onclick="requireSecondFactor(event)">회원 정보</a></li>
+            <li><a href="#" onclick="requireSecondFactor(event)">선호도 조사</a></li>
+            <li><a href="#" onclick="requireSecondFactor(event)">선호도 조사 결과</a></li>
+            <li><a href="#" onclick="requireSecondFactor(event)">장바구니</a></li>
         </ul>
         <p><strong><a href="#">나의 1:1 문의내역</a></strong></p>
     </div>
@@ -98,6 +98,18 @@
                 dropdown.style.display = "none";
             }
         });
+        function requireSecondFactor(event) {
+            // 로그인된 상태에서 2차 인증이 완료되지 않았다면
+            var isAuthenticated = ${sessionScope.loginUser != null};
+            if (isAuthenticated) {
+                var secondFactor = confirm("2차 인증이 필요합니다. 인증을 완료한 후 계속 진행할 수 있습니다.");
+                if (!secondFactor) {
+                    event.preventDefault(); // 인증을 하지 않으면 링크 이동을 막음
+                }
+            } else {
+                alert("로그인 후 이용할 수 있습니다.");
+            }
+        }
     </script>
 </body>
 </html>
