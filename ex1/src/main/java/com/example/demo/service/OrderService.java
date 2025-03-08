@@ -83,4 +83,9 @@ public class OrderService {
 	public void updateDeliveryCount(DeliveryModel dm) {
 		this.orderMapper.updateDeliveryCount(dm);
 	}
+	
+	public Orders_detail findOdByOdId(String order_detail_id) {
+		Orders_detail od = this.orderMapper.findOdByOdId(order_detail_id);
+		return od;
+	}
 }

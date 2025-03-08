@@ -109,7 +109,7 @@ public class FieldController {
 				}
 				return mav;
 			} else if(action.equals("buy")) {
-				ModelAndView mav = new ModelAndView("/cart");
+				ModelAndView mav = new ModelAndView("redirect:/cart");
 				List<String> catList = this.categoryService.getCatIdFromIsbn(BOOKID);
 				for(String catId : catList) {
 					User_pref up = new User_pref();

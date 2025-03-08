@@ -10,9 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.model.MyOrders;
+import com.example.demo.model.Orders_detail;
 import com.example.demo.model.Return_exchange_refund;
 import com.example.demo.model.StartEnd;
+import com.example.demo.model.User_pref;
+import com.example.demo.service.CategoryService;
 import com.example.demo.service.OrderService;
+import com.example.demo.service.PrefService;
 import com.example.demo.service.ReturnExchangeService;
 
 import jakarta.servlet.http.HttpSession;
@@ -24,6 +28,11 @@ public class OrderController {
     private OrderService orderservice;
     @Autowired
     private ReturnExchangeService returnExchangeService;
+    @Autowired
+    private PrefService prefService;
+    @Autowired
+    private CategoryService categoryService;
+    
     
     @GetMapping(value="/order/orderlist.html")
     public ModelAndView orderList(Integer PAGE_NUM, HttpSession session) {
@@ -72,11 +81,27 @@ public class OrderController {
     }
     
     @RequestMapping("/cancel")
-    public String cancelOrder( String orderDetailId) {
+    public String cancelOrder(String orderDetailId, HttpSession session) {
+    	String loginUser = (String)session.getAttribute("loginUser");
         // 주문 상태와 배송 상태를 취소로 변경
     	this.orderservice.cancelDelivery(orderDetailId);
         this.orderservice.cancelOrder(orderDetailId);        
-         
+        // 주문 취소 시 선호도를 감점시킨다.
+        Orders_detail od = this.orderservice.findOdByOdId(orderDetailId);
+        // 주문 상세 번호를 통해 상품의 isbn을 찾고 이를 활용해 책의 카테고리들을 list형태로 가져온다.
+        List<String> catList = this.categoryService.getCatIdFromIsbn(od.getIsbn());
+        for(String catId : catList) {
+        	User_pref up = new User_pref();
+        	up.setUser_id(loginUser); up.setCat_id(catId);
+        	up = this.prefService.getUserCatIdByCat(up);
+        	int score = up.getPref_score() - 5;
+        	if(score < 1) {
+        		this.prefService.DeleteUserPref(up);
+        	} else {
+        		up.setPref_score(score);
+        		this.prefService.updateScore(up);
+        	}
+        }
         // 취소 후 주문 내역 페이지로 리디렉션
         return "redirect:/order/orderlist.html";
     }
@@ -95,7 +120,9 @@ public class OrderController {
         return mav;
     }
     @PostMapping("/submitReturn")
-    public ModelAndView submitReturn(String detailid, Integer reason) {    	
+    public ModelAndView submitReturn(String detailid, Integer reason,
+    		HttpSession session) {
+    	String loginUser = (String)session.getAttribute("loginUser");
     	Return_exchange_refund rer = new Return_exchange_refund();
     	this.returnExchangeService.UpdateReturnExchangeRefund(detailid);
     	MyOrders myorders = new MyOrders();
@@ -108,6 +135,22 @@ public class OrderController {
     	rer.setRequest_id(total.toString());  
     	rer.setOrder_status(myorders.getOrder_status());
     	this.returnExchangeService.InsertReturnExchange(rer);
+    	// 주문 취소 시 선호도를 감점시킨다.
+        Orders_detail od = this.orderservice.findOdByOdId(detailid);
+        // 주문 상세 번호를 통해 상품의 isbn을 찾고 이를 활용해 책의 카테고리들을 list형태로 가져온다.
+        List<String> catList = this.categoryService.getCatIdFromIsbn(od.getIsbn());
+        for(String catId : catList) {
+        	User_pref up = new User_pref();
+        	up.setUser_id(loginUser); up.setCat_id(catId);
+        	up = this.prefService.getUserCatIdByCat(up);
+        	int score = up.getPref_score() - 5;
+        	if(score < 1) {
+        		this.prefService.DeleteUserPref(up);
+        	} else {
+        		up.setPref_score(score);
+        		this.prefService.updateScore(up);
+        	}
+        }
     	ModelAndView mav = new ModelAndView("redirect:/order/orderlist.html");
         return mav;
     }
