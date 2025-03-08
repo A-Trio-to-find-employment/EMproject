@@ -30,7 +30,7 @@
                 <a href="/field.html?cat_id=1">외국도서</a>
             </div>
         </div>
-        <a href="#">이벤트</a>
+        <a href="/eventlist">이벤트</a>
         <c:if test="${sessionScope.loginUser != null}">
         	<p>사용자 : ${sessionScope.loginUser}</p>
    			<a href="/logout">로그아웃</a>
@@ -40,7 +40,7 @@
     		<a href="/login">로그인</a>
 		</c:if>
         <a href="/secondfa">마이페이지</a>
-        <a href="#">고객센터</a>
+        <a href="/qna">고객센터</a>
     </div>
 
     <div class="sidebar">
@@ -49,7 +49,7 @@
         <ul>
             <li><a href="/order/orderlist.html">주문내역/배송조회</a></li>            
             <li><a href="#">반품/교환/취소 신청 및 조회</a></li>
-            <li><a href="#">쿠폰조회</a></li>
+            <li><a href="/myCoupon">쿠폰조회</a></li>
             <li><a href="/listReview">리뷰 관리</a></li>
             <li><a href="/myInfo">회원 정보</a></li>
             <li><a href="/gogenretest">선호도 조사</a></li>

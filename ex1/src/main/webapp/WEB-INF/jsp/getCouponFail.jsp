@@ -10,7 +10,7 @@
 <script type="text/javascript">
 setTimeout(function(){
 	alert("이미 존재하는 쿠폰입니다. 쿠폰 목록으로 돌아갑니다.");
-	location.href="../eventlist";
+	location.href="../myCoupon";
 },100);
 </script>
 </body>

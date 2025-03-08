@@ -5,7 +5,9 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.example.demo.model.Coupon;
+
 import com.example.demo.model.StartEnd;
+import com.example.demo.model.UserCouponModel;
 import com.example.demo.model.Usercoupon;
 
 @Mapper
@@ -23,4 +25,6 @@ public interface CouponMapper {
 	Integer MaxCouponid();
 	String checkCouponCode(String couponcode);
 	void InsertCoupon(Coupon coupon);
+	List<UserCouponModel> getAvailableCoupons(String user_id);
+	List<UserCouponModel> getUnavailableCoupons(String user_id);
 }

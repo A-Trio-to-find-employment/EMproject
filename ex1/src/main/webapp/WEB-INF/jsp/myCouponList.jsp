@@ -1,31 +1,27 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>    
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<link rel="stylesheet" type="text/css" href="/css/style.css">
+    <meta charset="UTF-8">
+    <title>2차 인증 완료</title>
+	<link rel="stylesheet" type="text/css" href="/css/style.css">
+	<link rel="stylesheet" type="text/css" href="/css/prefstylee.css">
 	<style>
 		.sidebar { float: left; width: 20%; border: 1px solid #ddd; box-sizing: border-box; padding: 20px; text-align: left; }
         .sidebar h3 { border-bottom: 1px solid #ccc; padding-bottom: 10px; }
         .sidebar ul { list-style: none; padding: 0; }
         .sidebar li { margin: 10px 0; }
         .container { margin-left: 7%; padding: 20px; }
-        .myInfo { margin-top: 0px; }
-        .myInfo input { display: block; margin: 3px auto; padding: 10px; width: 300px; }
-        .myInfo button { padding: 10px 20px; margin-top: 20px; cursor: pointer; }
-        .btn {padding: 5px 10px;font-size: 14px;width: auto;display: inline-block;
-    				margin: 10px 5px;cursor: pointer;}
-        
+        .secondfaSuccess { margin-top: 0px; }
+        .secondfaSuccess input { display: block; margin: 3px auto; padding: 10px; width: 300px; }
+        .secondfaSuccess button { padding: 10px 20px; margin-top: 20px; cursor: pointer; }
 	</style>
 </head>
 <body>
-
-	<c:set var="body" value="${param.BODY }"/>
-	<c:choose>
-	<c:when test="${empty BODY }">
-
     <div class="nav">
         <a href="/index">HOME</a>     
         <div style="position: relative;">
@@ -63,15 +59,48 @@
         </ul>
         <p><strong><a href="/qnalist">나의 1:1 문의내역</a></strong></p>
     </div>
-    </c:when>
-    <c:otherwise>
-    	<div class="content">
-    		<jsp:include page="${BODY }"></jsp:include>
-    	</div>
-    </c:otherwise>
-    </c:choose>
+	
+	<div align="center">
+		<br/><br/>
+		<h2>사용 가능 쿠폰</h2><br/>
+		<c:choose>
+			<c:when test="${canUseList != null}">
+				<table border="1">
+					<tr><th>쿠폰 이름</th><th>할인율</th><th>사용가능품목</th><th>쿠폰 기한</th></tr>
+					<c:forEach var="cul" items="${canUseList}">
+					<tr><td>${ cul.coupon_code }</td><td>${ cul.discount_percentage }%</td>
+						<td>${ cul.cat_id }</td>
+						<td>${ cul.valid_from }~${ cul.valid_until }</td></tr>
+					</c:forEach>	
+				</table>
+			</c:when>
+			<c:otherwise>
+				<h3>사용 가능한 쿠폰이 존재하지 않습니다.</h3>
+			</c:otherwise>
+		</c:choose>
+		
+		<br/><br/>
+		<h2>사용이 불가능한 쿠폰</h2><br/>
+		<c:choose>
+			<c:when test="${ notUseList != null }">
+				<table border="1">
+					<tr><th>쿠폰 이름</th><th>할인율</th><th>사용가능품목</th>
+						<th>쿠폰 기한</th></tr>
+					<c:forEach var="nul" items="${notUseList}">
+					<tr><td>${ nul.coupon_code }</td><td>${ nul.discount_percentage }%</td>
+						<td>${ nul.cat_id }</td>
+						<td>${ nul.valid_from }~${ nul.valid_until }</td></tr>
+					</c:forEach>	
+				</table>
+			</c:when>
+			<c:otherwise>
+				<h3>사용 불가능한 쿠폰이 존재하지 않습니다.</h3>
+			</c:otherwise>
+		</c:choose>
+	</div>
+	 
 
-<script>
+<script type="text/javascript">
 function toggleDropdown() {
     var dropdown = document.getElementById("categoryDropdown");
     dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";

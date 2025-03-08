@@ -73,6 +73,7 @@
         </c:forEach>
     </tr>
 </table>
+
             	</c:otherwise>
             </c:choose>
         </div>

@@ -56,7 +56,7 @@
         <ul>
             <li><a href="/order/orderlist.html">주문내역/배송조회</a></li>            
             <li><a href="#">반품/교환/취소 신청 및 조회</a></li>
-            <li><a href="#">쿠폰조회</a></li>
+            <li><a href="/myCoupon">쿠폰조회</a></li>
             <li><a href="/listReview">리뷰 관리</a></li>
             <li><a href="/myInfo">회원 정보</a></li>
             <li><a href="/gogenretest">선호도 조사</a></li>

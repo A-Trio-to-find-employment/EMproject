@@ -9,6 +9,7 @@ import com.example.demo.mapper.CouponMapper;
 import com.example.demo.model.Book;
 import com.example.demo.model.Coupon;
 import com.example.demo.model.StartEnd;
+import com.example.demo.model.UserCouponModel;
 import com.example.demo.model.Usercoupon;
 
 @Service
@@ -67,5 +68,13 @@ public class CouponService {
 	}
 	public void InsertCoupon(Coupon coupon) {
 		this.couponMapper.InsertCoupon(coupon);
+	}
+	public List<UserCouponModel> getAvailableCoupons(String user_id){
+		List<UserCouponModel> ucmList = this.couponMapper.getAvailableCoupons(user_id);
+		return ucmList;
+	}
+	public List<UserCouponModel> getUnavailableCoupons(String user_id){
+		List<UserCouponModel> ucmList = this.couponMapper.getUnavailableCoupons(user_id);
+		return ucmList;
 	}
 }

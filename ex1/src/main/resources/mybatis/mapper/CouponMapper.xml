@@ -67,6 +67,31 @@
 	<insert id="InsertCoupon" parameterType="Coupon">
 		insert into coupon values(#{coupon_id},#{discount_percentage},#{valid_from},#{valid_until},#{coupon_code},#{cat_id})
 	</insert>
+	<select id="getAvailableCoupons" parameterType="String" resultType="UserCouponModel">
+    	select uc.coupon_id, uc.is_used, c.coupon_code, c.cat_id, 
+			c.discount_percentage,
+			to_char(c.valid_from, 'YYYY-MM-DD') as valid_from,
+			to_char(c.valid_until, 'YYYY-MM-DD') as valid_until
+    		from user_coupon uc
+    			join coupon c on uc.coupon_id = c.coupon_id
+			where uc.user_id = #{userId}
+      		and uc.is_used = 0  
+			and c.valid_until >= sysdate  
+			order by c.valid_until asc  
+	</select>
+	<select id="getUnavailableCoupons" parameterType="String" resultType="UserCouponModel">
+		select uc.coupon_id, uc.is_used, c.coupon_code, c.cat_id, 
+			c.discount_percentage,
+			to_char(c.valid_from, 'YYYY-MM-DD') as valid_from,
+			to_char(c.valid_until, 'YYYY-MM-DD') as valid_until
+			from user_coupon uc
+				join coupon c on uc.coupon_id = c.coupon_id
+			where uc.user_id = #{userId}
+			and uc.is_used = 0  
+    		and c.valid_from >= sysdate  
+    		order by c.valid_until asc
+	</select>
+
 </mapper>
 
 	
