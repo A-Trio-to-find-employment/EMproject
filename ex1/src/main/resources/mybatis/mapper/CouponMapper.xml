@@ -57,6 +57,16 @@
 	<delete id="deleteCoupon" parameterType="Integer">
 		delete from coupon where coupon_id=#{coupon_id}
 	</delete>
+	<select id="MaxCouponid" resultType="Integer">
+		select Max(coupon_id) from coupon
+	</select>
+	
+<select id="checkCouponCode" parameterType="String" resultType="String">
+    SELECT coupon_code FROM coupon WHERE coupon_code = #{coupon_code}
+</select>
+	<insert id="InsertCoupon" parameterType="Coupon">
+		insert into coupon values(#{coupon_id},#{discount_percentage},#{valid_from},#{valid_until},#{coupon_code},#{cat_id})
+	</insert>
 </mapper>
 
 	

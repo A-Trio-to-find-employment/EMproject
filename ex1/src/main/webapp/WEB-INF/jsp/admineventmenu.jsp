@@ -35,7 +35,7 @@
             <li><a href="/adminevent">이벤트 목록</a></li>
             <li><a href="/eventregister">이벤트 등록</a></li>
             <li><a href="/admincouponlist">쿠폰 목록</a></li>
-       		<li><a href="#">쿠폰 등록</a></li>
+       		<li><a href="/admincoupon">쿠폰 등록</a></li>
         </ul>        
     </div>
     
@@ -44,6 +44,18 @@
                 <jsp:include page="${BODY}"></jsp:include>
             </div>
     <script>
+
+    window.onload = function() {
+        // 세션에서 메시지를 가져옴
+        var message = "${sessionScope.couponMessage}";
+        if (message) {
+            // 메시지가 존재하면 alert 창을 띄움
+            alert(message);
+            // 메시지를 출력한 후 세션에서 제거
+            <c:remove var="couponMessage" scope="session" />
+        }
+    }
+
         function toggleDropdown() {
             var dropdown = document.getElementById("categoryDropdown");
             dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";

@@ -44,6 +44,15 @@
 	<select id="getCatIdFromIsbn" parameterType="java.lang.Long" resultType="String">
 		select cat_id from book_categories where isbn=#{isbn}
 	</select>
+	<select id="getsubcategory" resultType="Category">
+	SELECT *
+	FROM categories c
+	WHERE NOT EXISTS (
+	SELECT 1
+	FROM categories c2
+	WHERE c2.PARENT_ID = c.CAT_ID
+	)	
+	</select>
 </mapper>
 
 	

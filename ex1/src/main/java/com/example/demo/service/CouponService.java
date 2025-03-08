@@ -54,4 +54,18 @@ public class CouponService {
 	public void deleteCoupon(Integer coupon_id) {
 		this.couponMapper.deleteCoupon(coupon_id);
 	}
+	public Integer MaxCouponid() {
+		Integer maxCouponid = couponMapper.MaxCouponid();  // 현재 최대 event_code 값을 가져옴
+        if (maxCouponid == null) {
+            return 10001;  
+        } else {
+            return maxCouponid + 1;  // 최대 값에 1을 더한 값을 반환
+        }
+	}
+	public String checkCouponCode(String couponcode) {
+		return this.couponMapper.checkCouponCode(couponcode);
+	}
+	public void InsertCoupon(Coupon coupon) {
+		this.couponMapper.InsertCoupon(coupon);
+	}
 }

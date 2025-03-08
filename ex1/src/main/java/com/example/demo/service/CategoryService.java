@@ -44,5 +44,7 @@ public class CategoryService {
 		List<String> catList = this.mymapper.getCatIdFromIsbn(isbn);
 		return catList;
 	}
-		
+	public List<Category> getsubcategory(){
+		return this.mymapper.getsubcategory();
+	}
 }

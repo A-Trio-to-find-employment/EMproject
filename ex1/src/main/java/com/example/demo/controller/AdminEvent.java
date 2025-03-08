@@ -8,16 +8,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.demo.model.Category;
 import com.example.demo.model.Coupon;
 import com.example.demo.model.Event;
-import com.example.demo.model.Review;
 import com.example.demo.model.StartEnd;
 import com.example.demo.model.StartEndKey;
+import com.example.demo.service.CategoryService;
 import com.example.demo.service.CouponService;
 import com.example.demo.service.EventService;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
@@ -27,6 +31,8 @@ public class AdminEvent {
 	private EventService eventService;
 	@Autowired
 	private CouponService couponService;
+	@Autowired
+	private CategoryService categryservice;
 	
 	@GetMapping(value="/adminevent")
 	public ModelAndView event(Integer PAGE, String KEY) {
@@ -137,6 +143,7 @@ public class AdminEvent {
 		mav.addObject("pageCount",totalPageCount);			        	  
 		return mav;		
 	}
+	
 	@PostMapping("/deleteCoupon")
 	public ModelAndView deleteCoupon(Integer coupon_id) {
 		ModelAndView mav = new ModelAndView();
@@ -146,7 +153,53 @@ public class AdminEvent {
 		mav.setViewName("redirect:/admincouponlist"); // 리다이렉트 URL을 설정
 		return mav;
 	}
-	
-	
+	@GetMapping("/admincoupon")
+	public ModelAndView admincoupon() {
+		ModelAndView mav = new ModelAndView("admineventmenu");
+		mav.addObject("BODY","admincoupon.jsp");
+		List<Category> cat = this.categryservice.getsubcategory();
+		mav.addObject("cat",cat);
+		mav.addObject(new Coupon());
+		return mav;
+	}
+	// 쿠폰 코드 중복 검사
+	@GetMapping(value = "/checkCouponCode")
+	@ResponseBody  // AJAX 요청에 대한 JSON 응답을 반환
+	public String couponCodeCheck(@RequestParam("couponCode") String couponCode) {
+	    System.out.println("Received coupon code: " + couponCode);  // 쿠폰 코드 로그 출력
+
+	    String existingCouponCode = this.couponService.checkCouponCode(couponCode);  // 쿠폰 코드 중복 확인
+
+	    if (existingCouponCode != null) {  // 쿠폰 코드가 중복된 경우
+	        return "{\"DUP\":\"YES\"}";  // JSON 형식으로 중복 응답
+	    } else {  // 쿠폰 코드가 중복되지 않는 경우
+	        return "{\"DUP\":\"NO\"}";  // JSON 형식으로 사용 가능 응답
+	    }
+	}
+	@PostMapping("/admincouponsubmit")
+	public ModelAndView admincouponsubmit(@Valid Coupon coupon,BindingResult br, HttpSession session) {
+	    ModelAndView mav = new ModelAndView("admineventmenu");	    	   
+		if(br.hasErrors()) {
+			 List<Category> cat = this.categryservice.getsubcategory();
+			    mav.addObject("cat",cat);
+			mav.getModel().putAll(br.getModel());
+			mav.addObject("BODY","admincoupon.jsp");
+			return mav;
+		}
+		else {					
+	    Integer count = this.couponService.MaxCouponid();	    	   
+	    Coupon couponinsert = new Coupon();
+	    couponinsert.setCat_id(coupon.getCat_id());
+	    couponinsert.setCoupon_code(coupon.getCoupon_code());
+	    couponinsert.setCoupon_id(count);
+	    couponinsert.setDiscount_percentage(coupon.getDiscount_percentage());
+	    couponinsert.setValid_from(coupon.getValid_from());
+	    couponinsert.setValid_until(coupon.getValid_until());
+	    this.couponService.InsertCoupon(couponinsert); 	    
+	    session.setAttribute("couponMessage", "등록이 완료되었습니다.");
+	    mav.setViewName("redirect:/admincouponlist"); // 리다이렉트 URL을 설정
+	    return mav;
+		}
+	}
 
 }

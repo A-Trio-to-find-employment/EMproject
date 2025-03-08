@@ -17,7 +17,7 @@ public interface MyMapper {
 	Integer getMaxHaWeuiCategoryId();	
 	Integer checkSubCategories(String cat_id); 
 	List<String> getCatIdFromIsbn(Long isbn);
-	    
+	List<Category> getsubcategory();//제일 하위카테고리들만 조회    
 	
 	
 	

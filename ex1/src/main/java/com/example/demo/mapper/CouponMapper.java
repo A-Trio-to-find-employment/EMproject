@@ -20,4 +20,7 @@ public interface CouponMapper {
 	List<Coupon>CouponList(StartEnd se);
 	Integer getTotalcoupon();
 	void deleteCoupon(Integer coupon_id);
+	Integer MaxCouponid();
+	String checkCouponCode(String couponcode);
+	void InsertCoupon(Coupon coupon);
 }
