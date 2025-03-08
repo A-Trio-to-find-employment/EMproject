@@ -48,7 +48,7 @@
 			     	from coupon 
 			     	order by coupon_id desc 
 			     	) a)
-		where rank > #{start} and rank <![CDATA[<]]> #{end}	
+		where rank > #{start} and rank <![CDATA[<=]]> #{end}	
 	</select>
 	
 	<select id="getTotalcoupon" resultType="Integer">

@@ -18,11 +18,7 @@
     <form:form id="editEventForm" action="/eventregisterform" method="post" modelAttribute="event">
         <form:hidden path="event_code" value="${event.event_code}" />
 
-        <table border="1">
-            <tr>
-                <th>이벤트 번호</th>
-                <td><form:input path="event_code" /></td>
-            </tr>
+        <table border="1">            
             <tr>
                 <th>이벤트 이름</th>
                 <td><form:input path="event_title" /></td>
