@@ -65,7 +65,7 @@
         <p>주문금액이 10만원 이상일 경우 우수 회원이 됩니다.</p>
         <ul>
             <li><a href="/order/orderlist.html">주문내역/배송조회</a></li>            
-            <li><a href="#">반품/교환/취소 신청 및 조회</a></li>
+            
             <li><a href="/myCoupon">쿠폰조회</a></li>
             <li><a href="/listReview">리뷰 관리</a></li>
             <li><a href="/myInfo">회원 정보</a></li>
