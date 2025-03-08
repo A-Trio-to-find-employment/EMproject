@@ -2,6 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mapper.ReviewMapper">
+	
+	<delete id="deleteReview" parameterType="Integer">
+		delete from review where review_id=#{review_id}
+	</delete>
 	<insert id="writeReview" parameterType="Review">
 		insert into review
 		values (#{review_id},#{isbn},#{user_id},#{rating},#{content},sysdate,0)

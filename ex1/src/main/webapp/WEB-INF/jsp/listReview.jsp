@@ -51,7 +51,9 @@
 				<td>${mineReview.book_title}</td>
 				<td>${mineReview.content}</td>
 				<td>${mineReview.reg_date}</td>
-				<td><input type="button" onclick="" value="삭 제"></td>
+				<td>
+				<input type="hidden" name="review_id" value="${mineReview.review_id}"/>
+				<input type="button" onclick="/listReview/delete" value="삭 제"/></td>
 			</tr>
 		</c:forEach>
 </table>

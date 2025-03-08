@@ -112,8 +112,9 @@ public class ReviewController {
 		return mav;
 	}
 	@PostMapping(value = "/listReview/delete")
-	public ModelAndView deleteReview() {
+	public ModelAndView deleteReview(@RequestParam("review_id") Integer review_id) {
 		ModelAndView mav = new ModelAndView("myArea");
+		this.service.deleteReview(review_id);
 		return mav;
 	}
 }
