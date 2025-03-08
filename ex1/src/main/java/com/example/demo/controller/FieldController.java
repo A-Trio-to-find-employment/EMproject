@@ -62,8 +62,15 @@ public class FieldController {
 
 	@RequestMapping(value = "/booklist.html")//마지막 하위카테고리면 그것을 클릭했을때 상품이 보여짐
 	public ModelAndView fields(String cat_id, String sort, 
-			Long BOOKID, String action, HttpSession session) {
+			Long BOOKID, String action, String action1, HttpSession session) {
 		String loginUser = (String)session.getAttribute("loginUser");
+		
+		if(action1 != null) {
+			if(loginUser == null) {
+				ModelAndView mav = new ModelAndView("loginFail");
+				return mav;
+			}
+	     }
 		if(BOOKID != null && action != null) {
 			if(loginUser == null) {
 				ModelAndView mav = new ModelAndView("loginFail");
@@ -137,6 +144,7 @@ public class FieldController {
         String categoryName = service.getCategoriesName(cat_id); // 카테고리 이름 가져오기        
         mav.addObject("bookList", bookLists); // 도서 목록 전달        
         mav.addObject("cat_name", categoryName); // 카테고리 이름 전달
+        mav.addObject("loginUser",loginUser);
         mav.addObject("BODY", "booklist.jsp"); // booklist.jsp를 BODY로 설정
         
         return mav;

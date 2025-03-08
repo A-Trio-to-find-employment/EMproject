@@ -11,9 +11,11 @@
             cursor: pointer;
             color: gray;
         }
+
         .heart-button.liked {
-            color: red; 
+            color: pink;  /* 찜한 상태일 때 하트를 분홍색으로 변경 */
         }
+
         .like-count {
             font-size: 14px;
             color: #555;
@@ -62,8 +64,13 @@
 						<input type="hidden" name="cat_id" value="${param.cat_id}"/>
 						<div class="actions">
 							<button type="submit" name="action" value="add" class="add-to-cart">장바구니</button>
-							<button type="submit" name="action" value="buy" class="buy-now">바로구매</button>
-						</div>						
+							<button type="submit" name="action" value="buy" class="buy-now">바로구매</button>																			
+						</div>
+							 <div class="heart-container">                                
+                                <input type="hidden" name="user_id" value="${loginUser}" />
+                                <button type="submit" name="action1" value="jjim" class="heart-button">♥</button>
+                                <span class="like-count">명</span>
+                            </div>
 						</form>
 						
                     </div>
@@ -75,6 +82,13 @@
         </c:choose>
     </div>
 </div>
-
+<script>
+    // 하트 버튼을 클릭했을 때 상태를 토글하는 함수
+    document.querySelectorAll('.heart-button').forEach(button => {
+        button.addEventListener('click', function() {
+            this.classList.toggle('liked');
+        });
+    });
+</script>
 </body>
 </html>
