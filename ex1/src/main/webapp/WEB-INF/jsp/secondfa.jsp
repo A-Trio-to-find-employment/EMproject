@@ -55,7 +55,7 @@
             <li><a href="#" onclick="requireSecondFactor(event)">선호도 조사 결과</a></li>
             <li><a href="#" onclick="requireSecondFactor(event)">장바구니</a></li>
         </ul>
-        <p><strong><a href="#">나의 1:1 문의내역</a></strong></p>
+        <p><strong><a href="#" onclick="requireSecondFactor(event)">나의 1:1 문의내역</a></strong></p>
     </div>
 
 	 <div class="container">
