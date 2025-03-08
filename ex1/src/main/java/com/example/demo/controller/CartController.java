@@ -140,8 +140,21 @@ public class CartController {
     	if (loginUser == null) {
             return "redirect:/login";
         }
+    	
     	Cart deleteCart = cartService.findCartByCartId(cartId);
-
+    	List<String> catList = this.categoryService.getCatIdFromIsbn(deleteCart.getIsbn());
+    	User_pref up = new User_pref();
+    	for(String catId : catList) {
+    		up.setUser_id(loginUser); up.setCat_id(catId);
+        	up = this.prefService.getUserCatIdByCat(up);
+        	int score = up.getPref_score() - 1;
+        	if(score < 1) {
+        		this.prefService.DeleteUserPref(up);
+        	} else {
+        		up.setPref_score(score);
+        		this.prefService.updateScore(up);
+        	}
+    	}
         if (deleteCart != null) {
             List<Usercoupon> ucList = deleteCart.getAppliedCoupon();
             if (ucList != null) {
