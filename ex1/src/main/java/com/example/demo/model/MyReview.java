@@ -11,4 +11,6 @@ public class MyReview {
     private String book_title;
     private String content;
     private String reg_date;
+    
+    private Integer review_id;
 }

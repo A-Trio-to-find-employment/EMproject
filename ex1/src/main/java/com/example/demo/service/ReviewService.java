@@ -55,4 +55,7 @@ public class ReviewService {
 	 public Integer getTotalMine(String user_id) {
 		 return this.mapper.getTotalMine(user_id);
 	 }
+	 public void deleteReview(Integer review_id) {
+		 this.mapper.deleteReview(review_id);
+	 }
 }

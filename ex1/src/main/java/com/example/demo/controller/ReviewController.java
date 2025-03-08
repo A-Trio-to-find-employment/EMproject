@@ -99,12 +99,20 @@ public class ReviewController {
 	@GetMapping(value = "/listReview")
 	public ModelAndView listReview(Integer pageNo, HttpSession session) {
 		int currentPage = 1;
+		if(pageNo == null) {
+			System.out.println("pageNo is null");
+			pageNo = 1;
+		}
+		else System.out.println("pageNo:"+pageNo);
 		if(pageNo != null)currentPage = pageNo;
 		String id = (String)session.getAttribute("loginUser");
 		List<MyReview> mineReview = this.service.listReview(pageNo, id);
+		
+		System.out.println("건 수 : "+mineReview.size());
+		
 		ModelAndView mav = new ModelAndView("myArea");
 		Integer totalCount  = this.service.getTotalMine(id);
-		int pageCount = totalCount / 10;
+		int pageCount = totalCount / 5;
 		if(totalCount % 5 != 0)pageCount++;
 		mav.addObject("mine",mineReview);
 		mav.addObject("PAGES",pageCount);mav.addObject("currentPage",currentPage);
@@ -112,8 +120,12 @@ public class ReviewController {
 		return mav;
 	}
 	@PostMapping(value = "/listReview/delete")
-	public ModelAndView deleteReview() {
+	public ModelAndView deleteReview(@RequestParam("review_id") Integer review_id) {
+		System.out.println("review_id: " + review_id);
+		
 		ModelAndView mav = new ModelAndView("myArea");
+		this.service.deleteReview(review_id);
+		mav.addObject("BODY","deleteReviewComplete.jsp");
 		return mav;
 	}
 }

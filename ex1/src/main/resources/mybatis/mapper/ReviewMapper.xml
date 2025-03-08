@@ -2,6 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mapper.ReviewMapper">
+	
+	<delete id="deleteReview" parameterType="Integer">
+		delete from review where review_id=#{review_id}
+	</delete>
 	<insert id="writeReview" parameterType="Review">
 		insert into review
 		values (#{review_id},#{isbn},#{user_id},#{rating},#{content},sysdate,0)
@@ -44,24 +48,38 @@
 	</select>
 	<select id="getTotalMine" parameterType="String" resultType="Integer">
 		select count(*) 
-			from review r join book b on r.isbn = b.isbn
-			join orders_detail od on b.isbn = od.isbn
-			join orders o on od.order_id = o.order_id
-			where r.user_id = #{user_id} 
+			from orders o, orders_detail od, review r, book b
+			where o.order_id = od.order_id and o.user_id = #{user_id} 
+			and od.isbn = b.isbn and od.isbn = r.isbn and o.user_id = r.user_id
+
 	</select>
 	<select id="getMaxReview" resultType="Integer">
 		select max(review_id) from review
 	</select> 
 	<select id="listReview" parameterType="StartEnd" resultType="MyReview">
-		select order_id, to_char(created_at, 'YYYY-MM-DD') as created_at, book_title, content, to_char(reg_date, 'YYYY-MM-DD') as reg_date
-			from (select rownum as rank, a.*
-				from (select o.order_id, o.created_at, b.book_title, r.content, r.reg_date
-				from orders o join orders_detail od on o.order_id = od.order_id
-					join book b on od.isbn = b.isbn 	
-						join review r on b.isbn = r.isbn and od.isbn = r.isbn
-						where r.user_id=#{user_id, jdbcType=VARCHAR} order by r.reg_date desc) a )
-						where rank > #{start} AND rank <![CDATA[<=]]> #{end}
+		select order_id, to_char(created_at, 'YYYY-MM-DD') as created_at, book_title,
+				content, to_char(reg_date, 'YYYY-MM-DD') as reg_date, review_id
+				from (select rownum as rank, a. *
+					from (select o.order_id, o.created_at, b.book_title, r.content, r.reg_date, r.review_id
+						from orders o, orders_detail od, review r, book b
+						where o.order_id = od.order_id and o.user_id = #{user_id} 
+								and od.isbn = b.isbn and od.isbn = r.isbn and o.user_id = r.user_id
+					) a
+				)
+				where rank > #{start} AND rank <![CDATA[<]]> #{end}
 	</select>
 </mapper>
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
