@@ -138,28 +138,66 @@ public class SearchController {
 		for(Book book :testList) {			
 			Book finalBook = this.fieldService.getBookDetail(book.getIsbn());
 			if (action1 != null) {
-			    // 로그인한 사용자가 없으면 로그인 페이지로 리다이렉트				    
+		        // 로그인한 사용자가 없으면 로그인 페이지로 리다이렉트
+		        if (loginUser == null) {
+		            ModelAndView loginFailMav = new ModelAndView("loginFail");
+		            return loginFailMav;
+		        }
 
-			    // JJim 객체 생성 및 값 설정
-			    JJim jjim = new JJim();
-			    jjim.setUser_id(loginUser);
-			    jjim.setIsbn(BOOKID);
+		        // JJim 객체 생성 및 값 설정
+		        JJim jjim = new JJim();
+		        jjim.setUser_id(loginUser);
+		        jjim.setIsbn(BOOKID);
 
-			    // 찜 상태를 확인하여 찜 상태 변경
-			    if (action1.equals("jjim")) {
-			        // 찜 상태 확인
-			        boolean isLiked = jjimservice.isBookLiked(jjim) > 0;  // 반환값을 boolean으로 변환
-			        
-			        if (isLiked) {
-			            // 이미 찜한 책이라면 찜 삭제
-			            jjimservice.deleteJjim(jjim);
-			        } else {
-			            // 찜하지 않은 책이라면 찜 추가
-			            jjimservice.insertjjim(jjim);
-			        }
-			    }
-			   
-			}
+		        // 찜 상태를 확인하여 찜 상태 변경
+		        if (action1.equals("jjim")) {
+		            // 찜 상태 확인
+		            boolean isLiked = jjimservice.isBookLiked(jjim) > 0;  // 반환값을 boolean으로 변환
+
+		            if (isLiked) {
+		                // 이미 찜한 책이라면 찜 삭제
+		                jjimservice.deleteJjim(jjim);
+
+		                // 찜을 삭제했으므로 카테고리 선호도 점수도 감소
+		                List<String> catList = this.categoryService.getCatIdFromIsbn(BOOKID);  // 해당 책의 카테고리 목록
+		                for (String catId : catList) {
+		                    User_pref up = new User_pref();
+		                    up.setUser_id(loginUser);
+		                    up.setCat_id(catId);
+		                    User_pref testUp = this.prefService.getUserCatIdByCat(up);
+
+		                    if (testUp != null && testUp.getPref_score() > 0) {
+		                        Integer score = testUp.getPref_score() - 1;  // 찜을 제거했으므로 점수 감소
+		                        up.setPref_score(score);
+		                        this.prefService.updateScore(up);
+		                    }
+		                }
+		            } else {
+		                // 찜하지 않은 책이라면 찜 추가
+		                jjimservice.insertjjim(jjim);
+
+		                // 찜을 추가했으므로 카테고리 선호도 점수도 증가 (1점 증가)
+		                List<String> catList = this.categoryService.getCatIdFromIsbn(BOOKID);  // 해당 책의 카테고리 목록
+		                for (String catId : catList) {
+		                    User_pref up = new User_pref();
+		                    up.setUser_id(loginUser);
+		                    up.setCat_id(catId);
+		                    User_pref testUp = this.prefService.getUserCatIdByCat(up);
+
+		                    if (testUp == null) {
+		                        // 사용자가 해당 카테고리를 선호하지 않았다면 선호도를 1점 부여
+		                        up.setPref_score(1);
+		                        this.prefService.insertPref(up);
+		                    } else {
+		                        // 점수를 1점만 증가
+		                        Integer score = testUp.getPref_score() + 1;  // 찜을 추가했으므로 점수 증가
+		                        up.setPref_score(score);
+		                        this.prefService.updateScore(up);
+		                    }
+		                }
+		            }
+		        }
+		    }
 		
 			    JJim jjim = new JJim();
 			    jjim.setUser_id(loginUser);
@@ -266,29 +304,67 @@ public class SearchController {
 		    }
 		    searchedBook.setAuthors(authorPath.toString());
 		    searchList.add(searchedBook);
-			if (action1 != null) {
-			    // 로그인한 사용자가 없으면 로그인 페이지로 리다이렉트				    
+		    if (action1 != null) {
+		        // 로그인한 사용자가 없으면 로그인 페이지로 리다이렉트
+		        if (loginUser == null) {
+		            ModelAndView loginFailMav = new ModelAndView("loginFail");
+		            return loginFailMav;
+		        }
 
-			    // JJim 객체 생성 및 값 설정
-			    JJim jjim = new JJim();
-			    jjim.setUser_id(loginUser);
-			    jjim.setIsbn(BOOKID);
+		        // JJim 객체 생성 및 값 설정
+		        JJim jjim = new JJim();
+		        jjim.setUser_id(loginUser);
+		        jjim.setIsbn(BOOKID);
 
-			    // 찜 상태를 확인하여 찜 상태 변경
-			    if (action1.equals("jjim")) {
-			        // 찜 상태 확인
-			        boolean isLiked = jjimservice.isBookLiked(jjim) > 0;  // 반환값을 boolean으로 변환
-			        
-			        if (isLiked) {
-			            // 이미 찜한 책이라면 찜 삭제
-			            jjimservice.deleteJjim(jjim);
-			        } else {
-			            // 찜하지 않은 책이라면 찜 추가
-			            jjimservice.insertjjim(jjim);
-			        }
-			    }
-			   
-			}
+		        // 찜 상태를 확인하여 찜 상태 변경
+		        if (action1.equals("jjim")) {
+		            // 찜 상태 확인
+		            boolean isLiked = jjimservice.isBookLiked(jjim) > 0;  // 반환값을 boolean으로 변환
+
+		            if (isLiked) {
+		                // 이미 찜한 책이라면 찜 삭제
+		                jjimservice.deleteJjim(jjim);
+
+		                // 찜을 삭제했으므로 카테고리 선호도 점수도 감소
+		                List<String> catList = this.categoryService.getCatIdFromIsbn(BOOKID);  // 해당 책의 카테고리 목록
+		                for (String catId : catList) {
+		                    User_pref up = new User_pref();
+		                    up.setUser_id(loginUser);
+		                    up.setCat_id(catId);
+		                    User_pref testUp = this.prefService.getUserCatIdByCat(up);
+
+		                    if (testUp != null && testUp.getPref_score() > 0) {
+		                        Integer score = testUp.getPref_score() - 1;  // 찜을 제거했으므로 점수 감소
+		                        up.setPref_score(score);
+		                        this.prefService.updateScore(up);
+		                    }
+		                }
+		            } else {
+		                // 찜하지 않은 책이라면 찜 추가
+		                jjimservice.insertjjim(jjim);
+
+		                // 찜을 추가했으므로 카테고리 선호도 점수도 증가 (1점 증가)
+		                List<String> catList = this.categoryService.getCatIdFromIsbn(BOOKID);  // 해당 책의 카테고리 목록
+		                for (String catId : catList) {
+		                    User_pref up = new User_pref();
+		                    up.setUser_id(loginUser);
+		                    up.setCat_id(catId);
+		                    User_pref testUp = this.prefService.getUserCatIdByCat(up);
+
+		                    if (testUp == null) {
+		                        // 사용자가 해당 카테고리를 선호하지 않았다면 선호도를 1점 부여
+		                        up.setPref_score(1);
+		                        this.prefService.insertPref(up);
+		                    } else {
+		                        // 점수를 1점만 증가
+		                        Integer score = testUp.getPref_score() + 1;  // 찜을 추가했으므로 점수 증가
+		                        up.setPref_score(score);
+		                        this.prefService.updateScore(up);
+		                    }
+		                }
+		            }
+		        }
+		    }
 			
 			    JJim jjim = new JJim();
 			    jjim.setUser_id(loginUser);

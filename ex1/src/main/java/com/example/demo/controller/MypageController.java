@@ -219,15 +219,30 @@ public class MypageController {
 	    JJim jjim = new JJim();
 	    jjim.setIsbn(isbn);
 	    jjim.setUser_id(userId);
+
+	    // 찜 삭제
 	    this.jjimservice.deleteJjim(jjim);
+
+	    // 찜을 삭제했으므로 카테고리 선호도 점수도 감소
+	    List<String> catList = this.categoryService.getCatIdFromIsbn(isbn);  // 해당 책의 카테고리 목록
+	    for (String catId : catList) {
+	        User_pref up = new User_pref();
+	        up.setUser_id(userId);
+	        up.setCat_id(catId);
+	        User_pref testUp = this.prefService.getUserCatIdByCat(up);
+
+	        if (testUp != null && testUp.getPref_score() > 0) {
+	            // 찜을 제거했으므로 점수 감소
+	            Integer score = testUp.getPref_score() - 1;  // 점수를 1 감소
+	            up.setPref_score(score);
+	            this.prefService.updateScore(up);
+	        }
+	    }
 
 	    // 리다이렉트하면서 URL에 alert 파라미터 추가
 	    mav.setViewName("redirect:/jjimlist?alert=true");
 	    return mav;
 	}
-
-	
-	
 
 
 }
