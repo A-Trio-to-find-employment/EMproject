@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.example.demo.mapper.JJimMapper">
+	<insert id="insertjjim" parameterType="JJim">
+		insert into jjim values(#{user_id},#{isbn})
+	</insert>
+	 <delete id="deleteJjim" parameterType="JJim">
+        DELETE FROM jjim
+        WHERE user_id = #{user_id} AND isbn = #{isbn}
+    </delete>
+    <select id="isBookLiked" resultType="Integer" parameterType="JJim">
+        SELECT COUNT(*) 
+        FROM jjim
+        WHERE user_id = #{user_id} AND isbn = #{isbn}
+    </select>
+    <select id="getLikeCount" parameterType="java.lang.Long" resultType="Integer">
+        SELECT COUNT(*) 
+        FROM jjim
+        WHERE isbn = #{isbn} 
+    </select>
+</mapper>
+
+	
+
+
+
+

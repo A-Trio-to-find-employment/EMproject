@@ -10,12 +10,14 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.demo.model.Book;
 import com.example.demo.model.Cart;
 import com.example.demo.model.Category;
+import com.example.demo.model.JJim;
 import com.example.demo.model.Review;
 import com.example.demo.model.StartEnd;
 import com.example.demo.model.User_pref;
 import com.example.demo.service.CartService;
 import com.example.demo.service.CategoryService;
 import com.example.demo.service.FieldService;
+import com.example.demo.service.JJimService;
 import com.example.demo.service.PrefService;
 import com.example.demo.service.ReviewService;
 
@@ -35,6 +37,8 @@ public class FieldController {
 	private PrefService prefService;
 	@Autowired
 	private CategoryService categoryService;
+	@Autowired
+	private JJimService jjimservice;
 	
 	@RequestMapping(value = "/field.html")
 	public ModelAndView field(String cat_id) {
@@ -60,17 +64,59 @@ public class FieldController {
 	    return mav;
 	}
 
+	
 	@RequestMapping(value = "/booklist.html")//마지막 하위카테고리면 그것을 클릭했을때 상품이 보여짐
 	public ModelAndView fields(String cat_id, String sort, 
 			Long BOOKID, String action, String action1, HttpSession session) {
 		String loginUser = (String)session.getAttribute("loginUser");
+		List<Book> bookLists = service.getorderByBook(cat_id, sort); // 정렬된 도서 목록 가져오기
+		ModelAndView mav1 = new ModelAndView("fieldlayout");
 		
-		if(action1 != null) {
-			if(loginUser == null) {
-				ModelAndView mav = new ModelAndView("loginFail");
-				return mav;
-			}
-	     }
+		if (action1 != null) {
+		    // 로그인한 사용자가 없으면 로그인 페이지로 리다이렉트
+		    if (loginUser == null) {
+		        ModelAndView loginFailMav = new ModelAndView("loginFail");
+		        return loginFailMav;
+		    }
+
+		    // JJim 객체 생성 및 값 설정
+		    JJim jjim = new JJim();
+		    jjim.setUser_id(loginUser);
+		    jjim.setIsbn(BOOKID);
+
+		    // 찜 상태를 확인하여 찜 상태 변경
+		    if (action1.equals("jjim")) {
+		        // 찜 상태 확인
+		        boolean isLiked = jjimservice.isBookLiked(jjim) > 0;  // 반환값을 boolean으로 변환
+		        
+		        if (isLiked) {
+		            // 이미 찜한 책이라면 찜 삭제
+		            jjimservice.deleteJjim(jjim);
+		        } else {
+		            // 찜하지 않은 책이라면 찜 추가
+		            jjimservice.insertjjim(jjim);
+		        }
+		    }
+		   
+		}
+		 JJim jjim = new JJim();
+		    jjim.setUser_id(loginUser);
+		    jjim.setIsbn(BOOKID);
+		    // `bookList`의 각 책에 대해 찜 상태를 확인하고 업데이트
+		    for (Book book : bookLists) {		        
+		        jjim.setUser_id(loginUser);
+		        jjim.setIsbn(book.getIsbn());
+
+		        // 찜 상태 체크
+		        boolean isLiked = jjimservice.isBookLiked(jjim) > 0;
+		        book.setLiked(isLiked);
+
+		        // 찜한 사람 수 계산 (예: 찜한 사람 수를 가져오는 메소드 호출)
+		        int likeCount = jjimservice.getLikeCount(book.getIsbn());
+		        book.setLikecount(likeCount);
+		    }
+	    
+		
 		if(BOOKID != null && action != null) {
 			if(loginUser == null) {
 				ModelAndView mav = new ModelAndView("loginFail");
@@ -139,15 +185,15 @@ public class FieldController {
 				return mav;
 			}
 		}
-        ModelAndView mav = new ModelAndView("fieldlayout");
-        List<Book> bookLists = service.getorderByBook(cat_id, sort); // 정렬된 도서 목록 가져오기        
-        String categoryName = service.getCategoriesName(cat_id); // 카테고리 이름 가져오기        
-        mav.addObject("bookList", bookLists); // 도서 목록 전달        
-        mav.addObject("cat_name", categoryName); // 카테고리 이름 전달
-        mav.addObject("loginUser",loginUser);
-        mav.addObject("BODY", "booklist.jsp"); // booklist.jsp를 BODY로 설정
         
-        return mav;
+                
+        String categoryName = service.getCategoriesName(cat_id); // 카테고리 이름 가져오기        
+        mav1.addObject("bookList", bookLists); // 도서 목록 전달        
+        mav1.addObject("cat_name", categoryName); // 카테고리 이름 전달
+        mav1.addObject("loginUser",loginUser);
+        mav1.addObject("BODY", "booklist.jsp"); // booklist.jsp를 BODY로 설정
+     // 서버에서 isLiked 값을 모델에 추가               
+        return mav1;
 	}
 	@RequestMapping(value = "/bookdetail.html")
 	public ModelAndView bookdetail(Long isbn, String action, Integer PAGE_NUM, 
