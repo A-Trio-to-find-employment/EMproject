@@ -14,10 +14,12 @@ import com.example.demo.model.Book;
 import com.example.demo.model.Book_author;
 import com.example.demo.model.Cart;
 import com.example.demo.model.DetailSearch;
+import com.example.demo.model.JJim;
 import com.example.demo.model.User_pref;
 import com.example.demo.service.CartService;
 import com.example.demo.service.CategoryService;
 import com.example.demo.service.FieldService;
+import com.example.demo.service.JJimService;
 import com.example.demo.service.PrefService;
 import com.example.demo.service.SearchService;
 
@@ -27,6 +29,8 @@ import jakarta.servlet.http.HttpSession;
 public class SearchController {
 	@Autowired
 	private SearchService searchService;
+	@Autowired
+	private JJimService jjimservice;
 	@Autowired
 	private PrefService prefService;
 	@Autowired
@@ -44,14 +48,15 @@ public class SearchController {
 	@GetMapping(value="/detailSearch")
 	public ModelAndView detailSearch(String TITLE, String AUTHOR, String PUBLISHER, 
 			String PUB_DATE_START, String PUB_DATE_END, Long BOOKID, String action, 
-			HttpSession session) {
+			HttpSession session,String action1) {
 		System.out.println("TITLE: " + TITLE);
 		System.out.println("AUTHOR: " + AUTHOR);
 		System.out.println("PUBLISHER: " + PUBLISHER);
 		System.out.println("PUB_DATE_START: " + PUB_DATE_START);
 		System.out.println("PUB_DATE_END: " + PUB_DATE_END);
-
+		
 		String loginUser = (String)session.getAttribute("loginUser");
+	
 		if(BOOKID != null && action != null) {
 			if(loginUser == null) {
 				ModelAndView mav = new ModelAndView("loginFail");
@@ -129,8 +134,45 @@ public class SearchController {
 		ds.setPub_date_start(PUB_DATE_START); ds.setPub_date_end(PUB_DATE_END);
 		List<Book> testList = this.searchService.searchBooks(ds);
 		List<Book> searchList = new ArrayList<Book>();
-		for(Book book :testList) {
+
+		for(Book book :testList) {			
 			Book finalBook = this.fieldService.getBookDetail(book.getIsbn());
+			if (action1 != null) {
+			    // 로그인한 사용자가 없으면 로그인 페이지로 리다이렉트				    
+
+			    // JJim 객체 생성 및 값 설정
+			    JJim jjim = new JJim();
+			    jjim.setUser_id(loginUser);
+			    jjim.setIsbn(BOOKID);
+
+			    // 찜 상태를 확인하여 찜 상태 변경
+			    if (action1.equals("jjim")) {
+			        // 찜 상태 확인
+			        boolean isLiked = jjimservice.isBookLiked(jjim) > 0;  // 반환값을 boolean으로 변환
+			        
+			        if (isLiked) {
+			            // 이미 찜한 책이라면 찜 삭제
+			            jjimservice.deleteJjim(jjim);
+			        } else {
+			            // 찜하지 않은 책이라면 찜 추가
+			            jjimservice.insertjjim(jjim);
+			        }
+			    }
+			   
+			}
+		
+			    JJim jjim = new JJim();
+			    jjim.setUser_id(loginUser);
+			    jjim.setIsbn(BOOKID);
+			    // 			    
+			    boolean isLiked = jjimservice.isBookLiked(jjim) > 0;
+				finalBook.setLiked(isLiked);
+
+				// 찜한 사람 수 계산
+				int likeCount = jjimservice.getLikeCount(finalBook.getIsbn());
+				finalBook.setLikecount(likeCount);
+
+				// searchList에 finalBook 추가				
 			searchList.add(finalBook);
 		}
 		mav.addObject("TITLE", TITLE);
@@ -142,7 +184,7 @@ public class SearchController {
 		return mav;
 	}
 	@GetMapping(value="/goIsbnSearch")
-	public ModelAndView isbnSearch(Long ISBN, Long BOOKID, String action, HttpSession session) {
+	public ModelAndView isbnSearch(Long ISBN, Long BOOKID, String action,String action1, HttpSession session) {
 		String loginUser = (String)session.getAttribute("loginUser");
 		if(BOOKID != null && action != null) {
 			if(loginUser == null) {
@@ -215,18 +257,60 @@ public class SearchController {
 		ModelAndView mav = new ModelAndView("searchResultIsbn");
 		Book searchedBook = this.searchService.searchByIsbn(ISBN);
 		List<Book> searchList = new ArrayList<Book>();
+
 		if(searchedBook != null) {
-			List<Book_author> baList = this.searchService.searchByIsbnAuthor(ISBN);
-			StringJoiner authorPath = new StringJoiner(", ");
-			for (Book_author ba : baList) {
-			    authorPath.add(ba.getAuthor());
+		    List<Book_author> baList = this.searchService.searchByIsbnAuthor(ISBN);
+		    StringJoiner authorPath = new StringJoiner(", ");
+		    for (Book_author ba : baList) {
+		        authorPath.add(ba.getAuthor());
+		    }
+		    searchedBook.setAuthors(authorPath.toString());
+		    searchList.add(searchedBook);
+			if (action1 != null) {
+			    // 로그인한 사용자가 없으면 로그인 페이지로 리다이렉트				    
+
+			    // JJim 객체 생성 및 값 설정
+			    JJim jjim = new JJim();
+			    jjim.setUser_id(loginUser);
+			    jjim.setIsbn(BOOKID);
+
+			    // 찜 상태를 확인하여 찜 상태 변경
+			    if (action1.equals("jjim")) {
+			        // 찜 상태 확인
+			        boolean isLiked = jjimservice.isBookLiked(jjim) > 0;  // 반환값을 boolean으로 변환
+			        
+			        if (isLiked) {
+			            // 이미 찜한 책이라면 찜 삭제
+			            jjimservice.deleteJjim(jjim);
+			        } else {
+			            // 찜하지 않은 책이라면 찜 추가
+			            jjimservice.insertjjim(jjim);
+			        }
+			    }
+			   
 			}
-			searchedBook.setAuthors(authorPath.toString());
-			searchList.add(searchedBook);
-			mav.addObject("searchList", searchList);
-			return mav;
+			
+			    JJim jjim = new JJim();
+			    jjim.setUser_id(loginUser);
+			    jjim.setIsbn(BOOKID);		
+			    // `searchList`의 각 책에 대해 찜 상태를 확인하고 업데이트
+			    for (Book book : searchList) {
+			        jjim.setUser_id(loginUser);
+			        jjim.setIsbn(book.getIsbn());
+
+			        // 찜 상태 체크
+			        boolean isLiked = jjimservice.isBookLiked(jjim) > 0;
+			        book.setLiked(isLiked);
+			      
+			        // 찜한 사람 수 계산
+			        int likeCount = jjimservice.getLikeCount(book.getIsbn());
+			        book.setLikecount(likeCount);
+			    }	
 		}
-		mav.addObject("searchList", null);
+
+		// 찜 상태 및 찜한 사람 수가 포함된 searchList를 ModelAndView에 추가
+		mav.addObject("searchList", searchList);
 		return mav;
+
 	}
 }
