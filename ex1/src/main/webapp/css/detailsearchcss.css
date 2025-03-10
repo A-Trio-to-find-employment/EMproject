@@ -1,0 +1,78 @@
+@charset "UTF-8";
+/* 테이블 스타일 */
+table {
+    width: 80%;
+    margin: 30px auto;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f4f4f4;
+    color: #333;
+    font-weight: bold;
+}
+
+td input[type="text"]{
+    width: 80%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+td input[type="date"] {
+	width: 40%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+/* 버튼 스타일 */
+/* 버튼 스타일 - 중앙 정렬 */
+/* 버튼 스타일 - 중앙 정렬 */
+.centerb {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+
+    display: block; /* 블록 요소로 변경 */
+    margin: 0 auto; /* 좌우 마진을 자동으로 설정하여 중앙 정렬 */
+    text-align: center;
+}
+/* 버튼 스타일 - 중앙 정렬 */
+.rightb {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    margin: left 10px; /* 좌우 마진을 자동으로 설정하여 중앙 정렬 */
+    text-align: center;
+}
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* 경고 메시지 스타일 */
+.alert {
+    color: red;
+    font-size: 16px;
+    text-align: center;
+}
