@@ -21,10 +21,14 @@ public class JJimService {
 		this.mapper.deleteJjim(jjim);
 	}
 	public Integer isBookLiked(JJim jjim) {
-		return this.mapper.isBookLiked(jjim);
+		Integer count = this.mapper.isBookLiked(jjim);
+		if(count == null) return 0;
+		else return count;
 	}
 	public Integer getLikeCount(Long isnb) {
-		return this.mapper.getLikeCount(isnb);
+		Integer count =  this.mapper.getLikeCount(isnb);
+		if(count == null) return 0;
+		else return count;
 	}
 	public List<Book> getorderByjjim(StartEndKey key) {
 		return this.mapper.getorderByjjim(key);
