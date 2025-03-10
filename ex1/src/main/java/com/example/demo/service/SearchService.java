@@ -27,4 +27,12 @@ public class SearchService {
 		List<Book_author> baList = this.searchMapper.searchByIsbnAuthor(ISBN);
 		return baList;
 	}
+	public List<Book> searchBookByTitleCat(Book book){
+		List<Book> bookList = this.searchMapper.searchBookByTitleCat(book);
+		return bookList;
+	}
+	public List<Book> searchBookByTitle(String book_title){
+		List<Book> bookList = this.searchMapper.searchBookByTitle(book_title);
+		return bookList;
+	}
 }

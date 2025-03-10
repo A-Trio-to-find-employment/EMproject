@@ -33,7 +33,6 @@
 		</c:if>
 		<a href="/secondfa">마이페이지</a> <a href="/qna">고객센터</a>
 	</div>
-
 	<!-- 고정 검색 폼 (상단 중앙) -->
 	<div id="fixedSearchForm">
 		<form action="/searchByTitleCat" method="get">
@@ -75,8 +74,8 @@
 	<div class="book-list">
 		<h2>검색된 도서 목록</h2>
 		<c:choose>
-			<c:when test="${not empty searchList}">
-				<c:forEach var="book" items="${ searchList }">
+			<c:when test="${not empty bookList}">
+				<c:forEach var="book" items="${ bookList }">
 					<div class="book-item">
 						<!-- 책 이미지 -->
 						<div class="book-image">
@@ -94,9 +93,11 @@
 							<p align="left" class="book-publisher">출판사:${book.publisher}</p>
 						</div>
 						<!-- 버튼 (위아래 배치) -->
-						<form method="get" action="/goIsbnSearch">
+						<form method="get" action="/detailSearch">
 							<input type="hidden" name="BOOKID" value="${book.isbn}" /> <input
-								type="hidden" name="ISBN" value="${book.isbn}" />
+								type="hidden" name="cat_id" value="${cat_id}" /> <input
+								type="hidden" name="bookTitle" value="${bookTitle}" />
+
 							<div class="actions">
 								<button type="submit" name="action" value="add"
 									class="add-to-cart">장바구니</button>
@@ -111,6 +112,7 @@
 			</c:otherwise>
 		</c:choose>
 	</div>
+
 	<script>
 function toggleDropdown() {
 	var dropdown = document.getElementById("categoryDropdown");

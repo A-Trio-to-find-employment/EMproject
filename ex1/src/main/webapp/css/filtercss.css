@@ -1,0 +1,97 @@
+@charset "UTF-8";
+/* 상단 중앙에 고정된 검색폼 */
+#fixedSearchForm {
+	position: fixed;
+	top: 10%;
+	left: 50%;
+	transform: translateX(-50%);
+	background: #fff;
+	z-index: 1001;
+	padding: 10px 20px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+/* 검색폼 내부 요소 */
+#fixedSearchForm form {
+	margin: 0;
+}
+
+#fixedSearchForm input[type="text"] {
+	padding: 5px;
+	font-size: 14px;
+	vertical-align: middle;
+}
+
+#fixedSearchForm button {
+	padding: 6px 10px;
+	margin-left: 5px;
+	vertical-align: middle;
+}
+
+/* 모달 (필터 선택 화면) */
+.modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+	display: none;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
+}
+
+.modal-content {
+	width: 80%;
+	max-width: 600px;
+	background: #fff;
+	padding: 20px;
+	border-radius: 4px;
+	position: relative;
+}
+/* 모달 닫기 버튼 */
+.modal-content .close-btn {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	cursor: pointer;
+}
+
+/* 필터 탭 영역 */
+#filterTabs {
+	border-bottom: 1px solid #ddd;
+	padding-bottom: 5px;
+	margin-bottom: 10px;
+}
+
+.filter-tab {
+	cursor: pointer;
+	padding: 6px 10px;
+	display: inline-block;
+	margin-right: 5px;
+	border: 1px solid #ddd;
+	border-bottom: none;
+	background: #f9f9f9;
+}
+
+.filter-tab.selected {
+	background: #e0e0e0;
+	font-weight: bold;
+}
+/* 선택 경로에 취소 버튼 */
+#selectedPathText span {
+	font-size: 14px;
+	margin-right: 5px;
+}
+
+.cancel-btn {
+	color: red;
+	cursor: pointer;
+	margin-left: 4px;
+	font-weight: bold;
+}
+
+/* 페이지 내부 컨텐츠 여백 (검색폼이 고정되므로) */
+.container {
+	margin-top: 120px;
+}

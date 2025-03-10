@@ -13,4 +13,6 @@ public interface SearchMapper {
 	List<Book> searchBooks(DetailSearch ds);
 	Book searchByIsbn(Long ISBN);
 	List<Book_author> searchByIsbnAuthor(Long ISBN);
+	List<Book> searchBookByTitleCat(Book book);
+	List<Book> searchBookByTitle(String book_title);
 }
