@@ -183,13 +183,7 @@ public class PreferenceController {
 					return mav;
 				}
 			}
-			
-			
-			
-			
-			
-			
-			
+
 			ModelAndView mav = new ModelAndView("prefList");
 //			List<UserPreference> upList = this.preferenceService.getUserTopCat(loginUser);
 //			List<String> catList = new ArrayList<String>();
@@ -251,7 +245,7 @@ public class PreferenceController {
 				        book.setLikecount(likeCount);
 				    }
 				}
-		     }
+		     }	
 		     return mav;
 		}
 		ModelAndView maav = new ModelAndView("index");

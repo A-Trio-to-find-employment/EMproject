@@ -43,7 +43,7 @@ public class FieldController {
 	@RequestMapping(value = "/field.html")
 	public ModelAndView field(String cat_id) {
 	    ModelAndView mav = new ModelAndView("fieldlayout");
-
+	    
 	    boolean hasSubCategories = service.countSubCategories(Integer.parseInt(cat_id));	    
 	    if (hasSubCategories) {
 	        List<Category> fieldlist = service.getCategories(cat_id);
@@ -386,7 +386,7 @@ public class FieldController {
 		
 		int currentPage = 1;
 		if(PAGE_NUM != null) currentPage = PAGE_NUM;
-		int count = this.reviewservice.getTotal();
+		int count = this.reviewservice.getTotal(isbn);
 		int startRow = 0; int endRow = 0; int totalPageCount = 0;
 		if(count > 0) {
 			totalPageCount = count / 5;
