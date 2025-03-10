@@ -16,6 +16,7 @@ public interface ReviewMapper {
    Integer getTotal();
    List<Review> ReviewList(StartEnd st);
    void writeReview(Review review);
+   void deleteReview(Integer review_id);
    Integer getMaxReview();
    Integer checkOrder(String user_id,Long isbn);
    List<MyReview> listReview(StartEnd se);
