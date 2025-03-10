@@ -197,7 +197,7 @@ public class FieldController {
         return mav1;
 	}
 	@RequestMapping(value = "/bookdetail.html")
-	public ModelAndView bookdetail(Long isbn, String action, Integer PAGE_NUM, 
+	public ModelAndView bookdetail(Long isbn, String action,String action1, Integer PAGE_NUM, 
 			HttpSession session) {
 		String loginUser = (String)session.getAttribute("loginUser");
 	    // 1. 책 정보 가져오기
@@ -268,6 +268,50 @@ public class FieldController {
 				return mav;
 			}
 		}
+		
+		
+		 if (action1 != null) {
+		        // 로그인한 사용자가 없으면 로그인 페이지로 리다이렉트
+		        if (loginUser == null) {
+		            ModelAndView loginFailMav = new ModelAndView("loginFail");
+		            return loginFailMav;
+		        }
+
+		        // JJim 객체 생성 및 값 설정
+		        JJim jjim = new JJim();
+		        jjim.setUser_id(loginUser);
+		        jjim.setIsbn(isbn);
+
+		        // 찜 상태 변경
+		        if (action1.equals("jjim")) {
+		            boolean isLiked = jjimservice.isBookLiked(jjim) > 0;  // 찜 상태 확인
+
+		            if (isLiked) {
+		                // 이미 찜한 책이라면 찜 삭제
+		                jjimservice.deleteJjim(jjim);
+		            } else {
+		                // 찜하지 않은 책이라면 찜 추가
+		                jjimservice.insertjjim(jjim);
+		            }
+		        }
+		    }
+
+		    // 찜 상태 및 찜한 사람 수 업데이트
+		    if (loginUser != null) {
+		        JJim jjim = new JJim();
+		        jjim.setUser_id(loginUser);
+		        jjim.setIsbn(isbn);
+
+		        // 찜 상태 체크
+		        boolean isLiked = jjimservice.isBookLiked(jjim) > 0;
+		        book.setLiked(isLiked);
+
+		        // 찜한 사람 수 계산
+		        int likeCount = jjimservice.getLikeCount(isbn);
+		        book.setLikecount(likeCount);
+		    }
+		
+		
 		ModelAndView mav = new ModelAndView("fieldlayout");
 		List<String> bookcategory = book.getCategoryPath();		
 		
