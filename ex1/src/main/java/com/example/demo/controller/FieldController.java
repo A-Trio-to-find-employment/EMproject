@@ -99,6 +99,7 @@ public class FieldController {
 		    }
 		   
 		}
+		if(loginUser != null) {
 		 JJim jjim = new JJim();
 		    jjim.setUser_id(loginUser);
 		    jjim.setIsbn(BOOKID);
@@ -115,7 +116,7 @@ public class FieldController {
 		        int likeCount = jjimservice.getLikeCount(book.getIsbn());
 		        book.setLikecount(likeCount);
 		    }
-	    
+		}
 		
 		if(BOOKID != null && action != null) {
 			if(loginUser == null) {

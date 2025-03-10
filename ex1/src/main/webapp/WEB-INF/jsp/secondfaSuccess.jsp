@@ -54,6 +54,7 @@
             <li><a href="/gogenretest">선호도 조사</a></li>
             <li><a href="/showprefresult">선호도 조사 결과</a></li>
             <li><a href="/cart">장바구니</a></li>
+            <li><a href="/jjimlist">찜 목록</a></li>
         </ul>
         <p><strong><a href="/qnalist">나의 1:1 문의내역</a></strong></p>
     </div>

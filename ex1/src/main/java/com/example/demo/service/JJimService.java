@@ -1,10 +1,14 @@
 package com.example.demo.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.mapper.JJimMapper;
+import com.example.demo.model.Book;
 import com.example.demo.model.JJim;
+import com.example.demo.model.StartEndKey;
 @Service
 public class JJimService {
 	@Autowired
@@ -21,5 +25,11 @@ public class JJimService {
 	}
 	public Integer getLikeCount(Long isnb) {
 		return this.mapper.getLikeCount(isnb);
+	}
+	public List<Book> getorderByjjim(StartEndKey key) {
+		return this.mapper.getorderByjjim(key);
+	}
+	public Integer getjjimCount(String user_id) {
+		return this.mapper.getjjimCount(user_id);
 	}
 }
