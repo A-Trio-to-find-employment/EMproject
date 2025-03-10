@@ -40,7 +40,7 @@
             <label for="filter">필터</label>
             <input type="text" id="filter" name="filter">
             <button type="submit">검색</button>
-            <a href="#">상세검색</a>
+            <a href="/goDetailSearch">상세검색</a>
         </div>
         
         <div class="book-section">
