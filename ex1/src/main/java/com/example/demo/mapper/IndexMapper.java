@@ -11,4 +11,5 @@ public interface IndexMapper {
 	List<Long> getTop4Books();
 	List<Long> getTop20Books(StartEnd se);
 	Integer getTopCount();
+	List<Long> getTop4NewBook();
 }

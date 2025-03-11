@@ -58,6 +58,7 @@ public class IndexController {
 		// 상위 카테고리 정보만 전달 (비동기 방식으로 중/하위 카테고리를 가져올 예정)
 		List<Category> topCatList = filterService.getTopCategories();
 		mav.addObject("topCatList", topCatList);
+		
 		List<Long> isbnList = this.indexService.getTop4Books();
 		List<Book> bestList = new ArrayList<Book>();
 		for (Long bestIsbn : isbnList) {
@@ -65,6 +66,16 @@ public class IndexController {
 			bestList.add(bestBook);
 		}
 		mav.addObject("bestList", bestList);
+		
+		List<Long> newIsbnList = this.indexService.getTop4NewBook();
+		List<Book> newBookList = new ArrayList<Book>();
+		for(Long newIsbn : newIsbnList) {
+			System.out.println("isbn : " + newIsbn);
+			Book newBook = this.fieldService.getBookDetail(newIsbn);
+			newBookList.add(newBook);
+		}
+		mav.addObject("newList", newBookList);
+		
 		// 로그인한 사용자의 추천 도서 관련 로직 (기존 코드 그대로)
 		String loginUser = (String) session.getAttribute("loginUser");
 		if (loginUser != null) {

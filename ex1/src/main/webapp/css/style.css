@@ -76,6 +76,24 @@ body {
     border: 1px solid #ddd; 
     margin: 10px 0; 
 }
+.book-section table {
+    width: 100%; /* 부모 요소(.book-section)의 너비를 100% 활용 */
+    border-collapse: collapse;
+    table-layout: fixed; /* 테이블 셀 크기를 균등하게 조정 */
+}
+
+.book-section td {
+    width: 25%; /* 한 줄에 4개의 책을 배치 */
+    text-align: center;
+    padding: 10px;
+}
+
+.book-section img {
+    width: 100%; /* 이미지가 셀 크기에 맞게 조정됨 */
+    height: auto;
+    max-height: 200px; /* 최대 높이 설정 */
+    object-fit: contain; /* 비율을 유지하며 이미지가 잘리거나 찌그러지지 않도록 함 */
+}
  ul { list-style-type: none; padding-left: 20px; }
 
 .category-link {
