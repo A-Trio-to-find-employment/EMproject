@@ -13,6 +13,7 @@ import com.example.demo.model.Category;
 import com.example.demo.model.JJim;
 import com.example.demo.model.Review;
 import com.example.demo.model.StartEnd;
+import com.example.demo.model.StartEndKey;
 import com.example.demo.model.User_pref;
 import com.example.demo.service.CartService;
 import com.example.demo.service.CategoryService;
@@ -66,10 +67,41 @@ public class FieldController {
 
 	
 	@RequestMapping(value = "/booklist.html")//마지막 하위카테고리면 그것을 클릭했을때 상품이 보여짐
-	public ModelAndView fields(String cat_id, String sort, 
+	public ModelAndView fields(Integer PAGE_NUM,String cat_id, String sort, 
 			Long BOOKID, String action, String action1, HttpSession session) {
 		String loginUser = (String)session.getAttribute("loginUser");
-		List<Book> bookLists = service.getorderByBook(cat_id, sort); // 정렬된 도서 목록 가져오기
+		 int currentPage = 1;
+		    // 페이지 번호가 null이 아니면 currentPage 설정
+		    if (PAGE_NUM != null) {
+		    	currentPage = PAGE_NUM;
+		    }
+
+		    // 사용자의 찜 갯수 조회
+		    int count1 = this.service.getBookCategoriesCount(cat_id);  // 갯수를 검색
+		    int startRow = 0;
+		    int endRow = 0;
+		    int totalPageCount = 0;
+
+		    if(count1 > 0) {
+		        totalPageCount = count1 / 5;  // 페이지 수 계산
+		        if(count1 % 5 != 0) totalPageCount++;  // 나머지가 있으면 페이지 수 +1
+
+		        // startRow는 currentPage에 맞게 계산, 첫 페이지는 0, 두 번째 페이지는 5
+		        startRow = (currentPage - 1) * 5;
+
+		        // endRow는 startRow + 5로 설정, 단 endRow가 count보다 클 수 있으므로 count로 제한
+		        endRow = startRow + 5;
+
+		        if(endRow > count1) {
+		            endRow = count1;
+		        }
+		    }
+		    StartEnd se = new StartEnd();
+		    se.setStart(startRow);
+		    se.setEnd(endRow);
+		    se.setCat_id(cat_id);
+		    System.out.print(cat_id);
+		List<Book> bookLists = service.getorderByBook(se); // 정렬된 도서 목록 가져오기
 		ModelAndView mav1 = new ModelAndView("fieldlayout");
 		 if (action1 != null) {
 		        // 로그인한 사용자가 없으면 로그인 페이지로 리다이렉트
@@ -221,7 +253,12 @@ public class FieldController {
 		}
         
                 
-        String categoryName = service.getCategoriesName(cat_id); // 카테고리 이름 가져오기        
+        String categoryName = service.getCategoriesName(cat_id); // 카테고리 이름 가져오기
+        mav1.addObject("START", startRow);
+	    mav1.addObject("END", endRow);
+	    mav1.addObject("TOTAL", count1);
+	    mav1.addObject("currentPage", currentPage);
+	    mav1.addObject("pageCount", totalPageCount);
         mav1.addObject("bookList", bookLists); // 도서 목록 전달        
         mav1.addObject("cat_name", categoryName); // 카테고리 이름 전달
         mav1.addObject("loginUser",loginUser);

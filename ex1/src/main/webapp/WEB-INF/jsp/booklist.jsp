@@ -83,6 +83,37 @@
         </c:choose>
     </div>
 </div>
+<div class="pagination">
+    <c:set var="currentPage" value="${currentPage}"/>
+    <c:set var="pageCount" value="${pageCount}"/>
+    <c:set var="startPage" value="${currentPage - (currentPage % 10 == 0 ? 10 : (currentPage % 10)) + 1}"/>
+    <c:set var="endPage" value="${startPage + 9}"/>    
+
+    <c:if test="${endPage > pageCount}">
+        <c:set var="endPage" value="${pageCount}"/>
+    </c:if>
+
+    <!-- 이전 페이지 링크 -->
+    <c:if test="${startPage > 10}">
+        <a href="/booklist.html?PAGE_NUM=${startPage - 1}&cat_id=${param.cat_id}">[이전]</a>
+    </c:if>
+
+    <!-- 페이지 번호 링크 -->
+    <c:forEach begin="${startPage}" end="${endPage}" var="i">
+        <c:if test="${currentPage == i}">
+            <font size="4"></font>
+        </c:if>
+        <a href="/booklist.html?PAGE_NUM=${i}&cat_id=${param.cat_id}">${i}</a>
+        <c:if test="${currentPage == i}">
+            </font>
+        </c:if>
+    </c:forEach>
+
+    <!-- 다음 페이지 링크 -->
+    <c:if test="${endPage < pageCount}">
+        <a href="/booklist.html?PAGE_NUM=${endPage + 1}&cat_id=${param.cat_id}">[다음]</a>
+    </c:if>
+</div>
 
 <script>
     // 하트 버튼을 클릭했을 때 상태를 토글하는 함수

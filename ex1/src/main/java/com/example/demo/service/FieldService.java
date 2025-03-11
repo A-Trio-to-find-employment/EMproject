@@ -1,7 +1,5 @@
 package com.example.demo.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +9,7 @@ import com.example.demo.mapper.FieldMapper;
 import com.example.demo.model.Book;
 import com.example.demo.model.BookStatistics;
 import com.example.demo.model.Category;
+import com.example.demo.model.StartEnd;
 import com.example.demo.model.StartEndKey;
 
 @Service
@@ -40,8 +39,8 @@ public class FieldService {
 	 public List<String> getCategoryById(Long isbn) {
 		    return mapper.getCategoryById(isbn); // SQL에서 이미 "국내 > 소설 > 장르소설" 형태로 가져옴
 		}
-	 public List<Book> getorderByBook(String cat_id, String sort) { // 반환 타입 확인!
-	        return mapper.getorderByBook(cat_id, sort);
+	 public List<Book> getorderByBook(StartEnd se) { // 반환 타입 확인!
+	        return mapper.getorderByBook(se);
 	    }
 	 public void buyBook(Book book) {
 		 this.mapper.buyBook(book);
@@ -87,5 +86,8 @@ public class FieldService {
 		 Integer count = this.mapper.getBookCountSearch(SEARCH);
 		 if(count == null) return 0;
 		 else return count;
+	 }
+	 public Integer getBookCategoriesCount(String cat_id) {
+		 return this.mapper.getBookCategoriesCount(cat_id);
 	 }
 }

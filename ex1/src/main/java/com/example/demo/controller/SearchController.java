@@ -198,7 +198,8 @@ public class SearchController {
 		            }
 		        }
 		    }
-		
+						
+				if(loginUser != null) {
 			    JJim jjim = new JJim();
 			    jjim.setUser_id(loginUser);
 			    jjim.setIsbn(BOOKID);
@@ -209,7 +210,7 @@ public class SearchController {
 				// 찜한 사람 수 계산
 				int likeCount = jjimservice.getLikeCount(finalBook.getIsbn());
 				finalBook.setLikecount(likeCount);
-
+				}
 				// searchList에 finalBook 추가				
 			searchList.add(finalBook);
 		}
@@ -365,7 +366,7 @@ public class SearchController {
 		            }
 		        }
 		    }
-			
+		    if(loginUser != null) {
 			    JJim jjim = new JJim();
 			    jjim.setUser_id(loginUser);
 			    jjim.setIsbn(BOOKID);		
@@ -381,7 +382,8 @@ public class SearchController {
 			        // 찜한 사람 수 계산
 			        int likeCount = jjimservice.getLikeCount(book.getIsbn());
 			        book.setLikecount(likeCount);
-			    }	
+			    }
+		    }
 		}
 
 		// 찜 상태 및 찜한 사람 수가 포함된 searchList를 ModelAndView에 추가

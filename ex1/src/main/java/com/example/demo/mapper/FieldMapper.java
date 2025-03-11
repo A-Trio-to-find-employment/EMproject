@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.example.demo.model.Book;
 import com.example.demo.model.BookStatistics;
 import com.example.demo.model.Category;
+import com.example.demo.model.StartEnd;
 import com.example.demo.model.StartEndKey;
 
 
@@ -17,7 +18,7 @@ public interface FieldMapper {
 	 String getCategoriesName(String cat_id);
 	 Book getBookDetail(Long isbn);
 	 List<String> getCategoryById(Long isbn);
-	 List<Book>getorderByBook(String cat_id, String sort);	 
+	 List<Book>getorderByBook(StartEnd se);	 
 	 void buyBook(Book book);
 	 List<BookStatistics> getBookSalesReport(StartEndKey sek);
 	 List<BookStatistics> getBookSalesReportDT(StartEndKey sek);
@@ -29,4 +30,5 @@ public interface FieldMapper {
 	 List<BookStatistics> getBookSalesSearchDR(StartEndKey sek);
 	 Integer getBookCount();
 	 Integer getBookCountSearch(String SEARCH);
+	 Integer getBookCategoriesCount(String cat_id);
 }

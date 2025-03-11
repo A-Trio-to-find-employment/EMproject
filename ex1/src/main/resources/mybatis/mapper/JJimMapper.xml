@@ -50,7 +50,7 @@ ORDER BY a.rn
 </select>
    
    <select id="getjjimCount" parameterType="String" resultType="Integer">
-	select count(*) from jjim where user_id=#{user_id}
+	select count(*) from jjim where user_id=#{user_id, jdbcType=VARCHAR}
 </select>
 <select id="getCategoriesName" parameterType="String" resultType="String">
 		select cat_name from categories where cat_id=#{cat_id}

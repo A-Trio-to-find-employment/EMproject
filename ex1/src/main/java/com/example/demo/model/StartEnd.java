@@ -11,5 +11,7 @@ public class StartEnd {
 	private String user_id;
 	private Long isbn;
 	private String title;
+	private String sort;
+	private String cat_id;
 
 }
