@@ -132,7 +132,7 @@
             <li><a href="/showprefresult">선호도 조사 결과</a></li>
             <li><a href="/cart">장바구니</a></li>
             </ul>
-            <p><strong><a href="#">나의 1:1 문의내역</a></strong></p>
+            <p><strong><a href="/qna">나의 1:1 문의내역</a></strong></p>
         </div>
         
         <!-- 카테고리 선택 및 선택된 카테고리 표시 영역 -->

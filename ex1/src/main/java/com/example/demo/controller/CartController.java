@@ -59,6 +59,7 @@ public class CartController {
     
     @Autowired
     private CategoryService categoryService;
+    
     // 장바구니 조회
     @GetMapping
     public ModelAndView CartList(HttpSession session) {
@@ -323,7 +324,37 @@ public class CartController {
             	} 
             }
         }
+        Integer totalSum = this.cartService.getUserTotalPriceSum(loginUser); // 최근 3개월의 결제 금액 확인
+        if(totalSum >= 150000 && totalSum < 300000) {
+        	Users findUser = this.loginService.getUserById(loginUser);
+        	int grade = findUser.getGrade();
+        	Users updateUser = new Users();
+        	if(grade == 0) { 
+        		grade = grade + 1;
+        		updateUser.setUser_id(loginUser);
+            	updateUser.setGrade(grade);
+            	session.setAttribute("userGrade", updateUser.getGrade());
+        	} else if(grade == 2) {
+        		grade = grade - 1;
+        		updateUser.setUser_id(loginUser);
+            	updateUser.setGrade(grade);
+            	session.setAttribute("userGrade", updateUser.getGrade());
+        	}
+        	this.loginService.updateUserGrade(updateUser);
+        } else if(totalSum >= 300000) {
+        	Users findUser = this.loginService.getUserById(loginUser);
+        	int grade = findUser.getGrade();
+        	if(grade == 1 || grade == 0) {
+        		grade = grade + 1;
+        		Users updateUser = new Users();
+        		updateUser.setUser_id(loginUser);
+        		updateUser.setGrade(grade);
+        		this.loginService.updateUserGrade(updateUser);
+            	session.setAttribute("userGrade", updateUser.getGrade());
+        	}
+        } // 조건에 맞다면 사용자의 등급을 올린다.
         this.cartService.deleteUserCart(loginUser);
+		
         ModelAndView mav = new ModelAndView("redirect:/index");
         return mav;
     }

@@ -41,8 +41,11 @@ JOIN book_categories bc ON b.isbn = bc.isbn
 WHERE b.isbn = #{isbn, jdbcType=BIGINT}
 </select>
 <!-- 책을 필터적용해서 정렬해서 보여주는 쿼리 -->
-<select id="getorderByBook" parameterType="String" resultType="Book">
-    SELECT b.isbn,
+<select id="getorderByBook" parameterType="StartEnd" resultType="Book">
+    SELECT * 
+FROM (
+    SELECT ROWNUM AS rn, 
+           b.isbn, 
            b.book_title,
            (SELECT LISTAGG(ba.author, ', ') WITHIN GROUP (ORDER BY ba.author)
             FROM book_author ba
@@ -53,17 +56,17 @@ WHERE b.isbn = #{isbn, jdbcType=BIGINT}
            b.image_name,
            NVL(s.sales_count, 0) AS sales_count,
            NVL(r.review_count, 0) AS review_count,
-           NVL(b.total_rating, 0) AS total_rating
+           NVL(b.total_rating, 0) AS total_rating,
+           bc.cat_id -- book_categories
     FROM book b
     LEFT JOIN (SELECT od.isbn, SUM(od.quantity) AS sales_count
                FROM orders_detail od
-               GROUP BY od.isbn) s
-        ON b.isbn = s.isbn
+               GROUP BY od.isbn) s ON b.isbn = s.isbn
     LEFT JOIN (SELECT r.isbn, COUNT(r.review_id) AS review_count
                FROM review r
-               GROUP BY r.isbn) r
-        ON b.isbn = r.isbn
-    WHERE b.isbn IN (SELECT bc.isbn FROM book_categories bc WHERE bc.cat_id = #{cat_id})
+               GROUP BY r.isbn) r ON b.isbn = r.isbn
+    LEFT JOIN book_categories bc ON b.isbn = bc.isbn
+    WHERE bc.cat_id =#{cat_id, jdbcType=VARCHAR}  
     <choose>
         <when test="sort == 'sales'">
             ORDER BY sales_count DESC
@@ -75,10 +78,15 @@ WHERE b.isbn = #{isbn, jdbcType=BIGINT}
             ORDER BY total_rating DESC
         </when>
         <otherwise>
-            ORDER BY pub_date DESC
+            ORDER BY b.pub_date DESC
         </otherwise>
     </choose>
+) a
+WHERE a.rn > #{start} AND a.rn <![CDATA[<=]]> #{end} 
+ORDER BY a.rn
+
 </select>
+
 <update id="buyBook" parameterType="Book">
 	update book set stock = #{stock} where isbn = #{isbn}
 </update>
@@ -275,6 +283,9 @@ WHERE b.isbn = #{isbn, jdbcType=BIGINT}
 </select>
 <select id="getBookCountSearch" parameterType="String" resultType="Integer">
 	select count(isbn) from book where book_title like '%' || #{SEARCH} || '%'
+</select>
+<select id="getBookCategoriesCount" parameterType="String" resultType="Integer">
+	select count(*) from book_categories where cat_id=#{cat_id}
 </select>
 </mapper>
 

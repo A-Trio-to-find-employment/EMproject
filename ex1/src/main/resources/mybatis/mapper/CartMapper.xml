@@ -60,6 +60,13 @@
 	<delete id="deleteUserCart" parameterType="String">
 		delete from cart where user_id = #{user_id}
 	</delete>
+	<select id="getUserTotalPriceSum" parameterType="String" resultType="Integer">
+		select NVL(SUM(total_price), 0) as total_price
+		from orders
+		where user_id = #{user_id}
+		and created_at >= sysdate - 90
+		and order_status= 0
+	</select>
 </mapper>
 
 	

@@ -46,5 +46,7 @@ public class LoginService {
 		Users userDetail = this.loginMapper.getUserByIdAdmin(id);
 		return userDetail;
 	}
-
+	public void updateUserGrade(Users users) {
+		this.loginMapper.updateUserGrade(users);
+	}
 }

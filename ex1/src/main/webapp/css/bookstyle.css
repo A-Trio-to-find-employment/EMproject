@@ -124,3 +124,31 @@ body {
 .actions button:hover {
     opacity: 0.8;
 }
+.pagination {
+    display: flex;
+    justify-content: center; /* 페이지네이션을 가로로 중앙 정렬 */
+    gap: 10px; /* 페이지 번호 사이의 간격 */
+    padding: 20px;
+}
+
+/* 페이지네이션 번호 스타일 */
+.pagination a {
+    text-decoration: none;
+    color: #007bff;
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: 1px solid #007bff;
+}
+
+.pagination a:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+/* 현재 페이지 번호 스타일 */
+.pagination .current {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+}

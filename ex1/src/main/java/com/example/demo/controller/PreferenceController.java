@@ -15,11 +15,13 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.demo.model.Book;
 import com.example.demo.model.Cart;
 import com.example.demo.model.Category;
+import com.example.demo.model.JJim;
 import com.example.demo.model.UserPreference;
 import com.example.demo.model.User_pref;
 import com.example.demo.service.CartService;
 import com.example.demo.service.CategoryService;
 import com.example.demo.service.FieldService;
+import com.example.demo.service.JJimService;
 import com.example.demo.service.PrefService;
 import com.example.demo.service.PreferenceService;
 
@@ -29,6 +31,8 @@ import jakarta.servlet.http.HttpSession;
 public class PreferenceController {
 	@Autowired
     private CategoryService service;
+	@Autowired
+	private JJimService jjimservice;
 	
 	@Autowired
 	private PreferenceService preferenceService;
@@ -150,7 +154,7 @@ public class PreferenceController {
 	}
 	
 	@GetMapping(value="/myPrefBookList")
-	public ModelAndView prefList(Long BOOKID, String action, HttpSession session) {
+	public ModelAndView prefList(Long BOOKID, String action,String action1, HttpSession session) {
 		String loginUser = (String)session.getAttribute("loginUser");
 		if(loginUser == null){
 			ModelAndView mav = new ModelAndView("loginFail");
@@ -179,6 +183,7 @@ public class PreferenceController {
 					return mav;
 				}
 			}
+
 			ModelAndView mav = new ModelAndView("prefList");
 //			List<UserPreference> upList = this.preferenceService.getUserTopCat(loginUser);
 //			List<String> catList = new ArrayList<String>();
@@ -193,13 +198,54 @@ public class PreferenceController {
 			// 최소 1개 이상의 카테고리가 있어야 추천 도서 검색 실행
 		    if (!catList.isEmpty()) {
 		    	List<Long> recommendedIsbn = this.preferenceService.getRecommendedBookList(paramMap);
-		    	List<Book> recommendedBooks = new ArrayList<Book>();
+		    	List<Book> recommendedBooks = new ArrayList<Book>();		    	
 		    	for(Long isbn : recommendedIsbn) {
 		    		Book book = this.fieldService.getBookDetail(isbn);
 		            recommendedBooks.add(book);
 		        }
 		    	mav.addObject("recommendedBooks", recommendedBooks);
-		     }
+		    	if (action1 != null) {
+				    // 로그인한 사용자가 없으면 로그인 페이지로 리다이렉트				    
+
+				    // JJim 객체 생성 및 값 설정
+				    JJim jjim = new JJim();
+				    jjim.setUser_id(loginUser);
+				    jjim.setIsbn(BOOKID);
+
+				    // 찜 상태를 확인하여 찜 상태 변경
+				    if (action1.equals("jjim")) {
+				        // 찜 상태 확인
+				        boolean isLiked = jjimservice.isBookLiked(jjim) > 0;  // 반환값을 boolean으로 변환
+				        
+				        if (isLiked) {
+				            // 이미 찜한 책이라면 찜 삭제
+				            jjimservice.deleteJjim(jjim);
+				        } else {
+				            // 찜하지 않은 책이라면 찜 추가
+				            jjimservice.insertjjim(jjim);
+				        }
+				    }
+				   
+				}
+				if(loginUser != null) {
+				 JJim jjim = new JJim();
+				    jjim.setUser_id(loginUser);
+				    jjim.setIsbn(BOOKID);
+				    // `bookList`의 각 책에 대해 찜 상태를 확인하고 업데이트
+				    for (Book book : recommendedBooks) {		        
+				        jjim.setUser_id(loginUser);
+				        jjim.setIsbn(book.getIsbn());
+
+				        // 찜 상태 체크
+				        boolean isLiked = jjimservice.isBookLiked(jjim) > 0;
+				        book.setLiked(isLiked);
+
+				        // 찜한 사람 수 계산 (예: 찜한 사람 수를 가져오는 메소드 호출)
+				        int likeCount = jjimservice.getLikeCount(book.getIsbn());
+				        book.setLikecount(likeCount);
+				    }
+				}
+		     }	
 		     return mav;
 		}
 		ModelAndView maav = new ModelAndView("index");

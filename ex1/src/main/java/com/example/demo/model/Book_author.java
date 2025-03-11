@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Book_author {
-	private Integer isbn;
+	private Long isbn;
 	private String author;
 }

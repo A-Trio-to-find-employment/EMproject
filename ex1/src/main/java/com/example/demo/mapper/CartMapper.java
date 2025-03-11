@@ -20,4 +20,5 @@ public interface CartMapper {
 	void updateCartCoupon(Cart cart);
 	void deleteCartCoupon(String cart_id);
 	void deleteUserCart(String user_id);
+	Integer getUserTotalPriceSum(String user_id);
 }

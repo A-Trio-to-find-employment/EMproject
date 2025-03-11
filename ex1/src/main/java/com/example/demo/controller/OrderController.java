@@ -14,7 +14,10 @@ import com.example.demo.model.Orders_detail;
 import com.example.demo.model.Return_exchange_refund;
 import com.example.demo.model.StartEnd;
 import com.example.demo.model.User_pref;
+import com.example.demo.model.Users;
+import com.example.demo.service.CartService;
 import com.example.demo.service.CategoryService;
+import com.example.demo.service.LoginService;
 import com.example.demo.service.OrderService;
 import com.example.demo.service.PrefService;
 import com.example.demo.service.ReturnExchangeService;
@@ -32,7 +35,10 @@ public class OrderController {
     private PrefService prefService;
     @Autowired
     private CategoryService categoryService;
-    
+    @Autowired
+    private CartService cartService;
+    @Autowired
+    private LoginService loginService;
     
     @GetMapping(value="/order/orderlist.html")
     public ModelAndView orderList(Integer PAGE_NUM, HttpSession session) {
@@ -102,6 +108,35 @@ public class OrderController {
         		this.prefService.updateScore(up);
         	}
         }
+        Integer totalSum = this.cartService.getUserTotalPriceSum(loginUser); // 최근 3개월의 결제 금액 확인
+        if(totalSum >= 150000 && totalSum < 300000) {
+        	Users findUser = this.loginService.getUserById(loginUser);
+        	int grade = findUser.getGrade();
+        	Users updateUser = new Users();
+        	if(grade == 0) { 
+        		grade = grade + 1;
+        		updateUser.setUser_id(loginUser);
+            	updateUser.setGrade(grade);
+            	session.setAttribute("userGrade", updateUser.getGrade());
+        	} else if(grade == 2) {
+        		grade = grade - 1;
+        		updateUser.setUser_id(loginUser);
+            	updateUser.setGrade(grade);
+            	session.setAttribute("userGrade", updateUser.getGrade());
+        	}
+        	this.loginService.updateUserGrade(updateUser);
+        } else if(totalSum >= 300000) {
+        	Users findUser = this.loginService.getUserById(loginUser);
+        	int grade = findUser.getGrade();
+        	if(grade == 1 || grade == 0) {
+        		grade = grade + 1;
+        		Users updateUser = new Users();
+        		updateUser.setUser_id(loginUser);
+        		updateUser.setGrade(grade);
+        		this.loginService.updateUserGrade(updateUser);
+        		session.setAttribute("userGrade", updateUser.getGrade());
+        	}
+        } // 조건에 맞다면 사용자의 등급을 올린다.
         // 취소 후 주문 내역 페이지로 리디렉션
         return "redirect:/order/orderlist.html";
     }
@@ -151,12 +186,41 @@ public class OrderController {
         		this.prefService.updateScore(up);
         	}
         }
+        Integer totalSum = this.cartService.getUserTotalPriceSum(loginUser); // 최근 3개월의 결제 금액 확인
+        if(totalSum >= 150000 && totalSum < 300000) {
+        	Users findUser = this.loginService.getUserById(loginUser);
+        	int grade = findUser.getGrade();
+        	Users updateUser = new Users();
+        	if(grade == 0) { 
+        		grade = grade + 1;
+        		updateUser.setUser_id(loginUser);
+            	updateUser.setGrade(grade);
+            	session.setAttribute("userGrade", updateUser.getGrade());
+        	} else if(grade == 2) {
+        		grade = grade - 1;
+        		updateUser.setUser_id(loginUser);
+            	updateUser.setGrade(grade);
+            	session.setAttribute("userGrade", updateUser.getGrade());
+        	}
+        	this.loginService.updateUserGrade(updateUser);
+        } else if(totalSum >= 300000) {
+        	Users findUser = this.loginService.getUserById(loginUser);
+        	int grade = findUser.getGrade();
+        	if(grade == 1 || grade == 0) {
+        		grade = grade + 1;
+        		Users updateUser = new Users();
+        		updateUser.setUser_id(loginUser);
+        		updateUser.setGrade(grade);
+        		this.loginService.updateUserGrade(updateUser);
+        		session.setAttribute("userGrade", updateUser.getGrade());
+        	}
+        } // 조건에 맞다면 사용자의 등급을 변경한다.
     	ModelAndView mav = new ModelAndView("redirect:/order/orderlist.html");
         return mav;
     }
     @PostMapping("/submitExchange")
-    public ModelAndView submitExchange(String detailid, Integer reason) { 
-
+    public ModelAndView submitExchange(String detailid, Integer reason, HttpSession session) { 
+    	String loginUser = (String)session.getAttribute("loginUser");
         Return_exchange_refund rer = new Return_exchange_refund();
 
         // 주문 상태 업데이트 (order_status를 4로 변경하는 로직)
@@ -184,7 +248,35 @@ public class OrderController {
         rer.setOrder_status(4);  // 🔥 무조건 4로 설정 (이전 값이 2라도 덮어쓰기)
 
         this.returnExchangeService.InsertReturnExchange(rer);
-
+        Integer totalSum = this.cartService.getUserTotalPriceSum(loginUser); // 최근 3개월의 결제 금액 확인
+        if(totalSum >= 150000 && totalSum < 300000) {
+        	Users findUser = this.loginService.getUserById(loginUser);
+        	int grade = findUser.getGrade();
+        	Users updateUser = new Users();
+        	if(grade == 0) { 
+        		grade = grade + 1;
+        		updateUser.setUser_id(loginUser);
+            	updateUser.setGrade(grade);
+            	session.setAttribute("userGrade", updateUser.getGrade());
+        	} else if(grade == 2) {
+        		grade = grade - 1;
+        		updateUser.setUser_id(loginUser);
+            	updateUser.setGrade(grade);
+            	session.setAttribute("userGrade", updateUser.getGrade());
+        	}
+        	this.loginService.updateUserGrade(updateUser);
+        } else if(totalSum >= 300000) {
+        	Users findUser = this.loginService.getUserById(loginUser);
+        	int grade = findUser.getGrade();
+        	if(grade == 1 || grade == 0) {
+        		grade = grade + 1;
+        		Users updateUser = new Users();
+        		updateUser.setUser_id(loginUser);
+        		updateUser.setGrade(grade);
+        		this.loginService.updateUserGrade(updateUser);
+        		session.setAttribute("userGrade", updateUser.getGrade());
+        	}
+        } // 조건에 맞다면 사용자의 등급을 올린다.
         System.out.println("📌 반품 데이터 삽입 완료! order_status: " + rer.getOrder_status());
 
         return new ModelAndView("redirect:/order/orderlist.html");

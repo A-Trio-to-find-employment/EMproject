@@ -44,7 +44,9 @@ public class Book {
 	private String image_name;
 	private MultipartFile coverImage;
 	private List<String> categoryPath;
-	
+	private boolean isLiked;
+	private Integer likecount;
+	private String user_id;
 //	public String getAuthors() {
 //        return authors;
 //    }
