@@ -205,6 +205,7 @@
 						<img src="${pageContext.request.contextPath}/upload/${recentBook.image_name}" width="250" height="200" alt="책 이미지">
                     </div>
                 </c:if>
+                
             </c:forEach>
         </div>
     </div>
