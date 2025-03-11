@@ -42,14 +42,23 @@
 	<select id="getTopCount" resultType="Integer">
 		SELECT COUNT(*)
 		FROM (
-		SELECT od.ISBN
+		SELECT
+		od.ISBN
 		FROM orders_detail od
 		JOIN orders o ON od.ORDER_ID = o.ORDER_ID
 		WHERE o.ORDER_STATUS = 0
 		GROUP BY od.ISBN
 		ORDER BY SUM(od.QUANTITY) DESC
 		)
-
+	</select>
+	<select id="getTop4NewBook" resultType="java.lang.Long">
+		SELECT sub.isbn
+		FROM (
+		SELECT b.isbn
+		FROM book b
+		ORDER BY b.reg_date DESC
+		) sub
+		WHERE ROWNUM <![CDATA[<=]]> 4
 	</select>
 </mapper>
 

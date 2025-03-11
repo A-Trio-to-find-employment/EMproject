@@ -25,4 +25,8 @@ public class IndexService {
 		Integer count = this.indexMapper.getTopCount();
 		return count;
 	}
+	public List<Long> getTop4NewBook(){
+		List<Long> isbnList = this.indexMapper.getTop4NewBook();
+		return isbnList;
+	}
 }
