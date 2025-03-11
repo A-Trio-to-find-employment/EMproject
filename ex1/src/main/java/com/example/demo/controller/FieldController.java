@@ -13,7 +13,6 @@ import com.example.demo.model.Category;
 import com.example.demo.model.JJim;
 import com.example.demo.model.Review;
 import com.example.demo.model.StartEnd;
-import com.example.demo.model.StartEndKey;
 import com.example.demo.model.User_pref;
 import com.example.demo.service.CartService;
 import com.example.demo.service.CategoryService;
@@ -22,6 +21,9 @@ import com.example.demo.service.JJimService;
 import com.example.demo.service.PrefService;
 import com.example.demo.service.ReviewService;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -271,8 +273,39 @@ public class FieldController {
 	}
 
 	@RequestMapping(value = "/bookdetail.html")
-	public ModelAndView bookdetail(Long isbn, String action, String action1, Integer PAGE_NUM, HttpSession session) {
+	public ModelAndView bookdetail(Long isbn, String action, String action1, Integer PAGE_NUM, HttpSession session,HttpServletResponse response,HttpServletRequest request) {
 		String loginUser = (String) session.getAttribute("loginUser");
+		
+		// 기존 쿠키를 가져오기
+		String recentBookIsbnStr = null;
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null) {
+		    for (Cookie cookie : cookies) {
+		        if (cookie.getName().equals("recentBook")) {
+		            recentBookIsbnStr = cookie.getValue();
+		            break;
+		        }
+		    }
+		}
+
+		// 새로운 ISBN을 추가하기 전에 기존 값을 가져와서 구분자로 구분하여 추가
+		String newIsbn = String.valueOf(isbn);  // 새로운 ISBN 값
+		if (recentBookIsbnStr != null && !recentBookIsbnStr.isEmpty()) {
+		    // 기존 값이 있으면, 파이프(|)로 구분하여 새로운 ISBN을 추가
+		    recentBookIsbnStr += "|" + newIsbn;  // 파이프 사용
+		} else {
+		    // 기존 값이 없으면 새로운 ISBN만 저장
+		    recentBookIsbnStr = newIsbn;
+		}
+
+		// 쿠키에 새로운 ISBN 값 저장
+		Cookie recentBookCookie = new Cookie("recentBook", recentBookIsbnStr);
+		recentBookCookie.setMaxAge(60 * 60 * 24 * 7); // 7일 동안 유지
+		recentBookCookie.setPath("/"); // 모든 경로에서 접근 가능
+		response.addCookie(recentBookCookie); // 응답에 쿠키 추가
+
+		System.out.println("📌 최근 본 책 쿠키 추가됨: ISBN들 = " + recentBookIsbnStr);
+
 		// 1. 책 정보 가져오기
 		Book book = service.getBookDetail(isbn);
 		if (isbn != null && action != null) {

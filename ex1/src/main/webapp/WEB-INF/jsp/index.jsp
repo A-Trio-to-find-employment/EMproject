@@ -6,6 +6,68 @@
 <!DOCTYPE html>
 <html>
 <head>
+<!-- CSS -->
+<style>
+/* 동그라미 버튼 스타일 */
+.circle-button {
+    background-color: #ddd;
+    border: none;
+    padding: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: center;
+    transition: transform 0.3s ease;
+    margin: 10px;
+}
+
+.circle-button:hover {
+    transform: scale(1.1);
+}
+
+/* 팝업 모달 스타일 */
+.modal {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed;
+    z-index: 1; /* 최상위 */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 배경 어둡게 */
+}
+
+/* 모달 내용 스타일 */
+.modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%; /* 필요에 따라 크기 조정 */
+    max-width: 500px;
+}
+
+/* 닫기 버튼 스타일 */
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 최근 본 책들 항목 스타일 */
+.recent-viewed-item {
+    margin-bottom: 10px;
+}
+
+</style>
     <meta charset="UTF-8">
     <title>도서 검색</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
@@ -112,26 +174,7 @@
                 </div>
 
                 <div class="book-section">
-                    <h3><a href="/goBestSeller">화제의 베스트셀러 ></a></h3>
-                    <table border="1">
-                    	<tr>
-                    		<c:forEach var="bestImage" items="${ bestList }">
-                    			<td>
-                    				<a href="/bookdetail.html?isbn=${bestImage.isbn}">
-                                                <img src="${pageContext.request.contextPath}/upload/${bestImage.image_name}"
-                                                     width="200" height="200" />
-                                            </a>
-                    			</td>
-                    		</c:forEach>
-						</tr>
-						<tr>
-                        	<c:forEach var="bestName" items="${bestList}">
-                            <td>
-                            	<a href="/bookdetail.html?isbn=${bestName.isbn}">제목: ${bestName.book_title}</a>
-							</td>
-                            </c:forEach>
-						</tr>
-                    </table>
+                    <h3>화제의 베스트셀러 ></h3>
                 </div>
 
                 <div class="book-section">
@@ -146,6 +189,31 @@
             </div>
         </c:otherwise>
     </c:choose>
+    
+<c:if test="${not empty recentBooks}">
+    <!-- 동그라미 버튼 -->
+    <button class="circle-button" onclick="openModal()">최근 본 책들</button>
+    
+    <!-- 팝업 모달 (책 정보 표시) -->
+    <div id="recentBooksModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">×</span>
+            <h3>최근 본 책들</h3>
+            <c:forEach var="recentBook" items="${recentBooks}" varStatus="status">
+                <c:if test="${status.index < 5}">  <!-- 5개까지만 출력 -->
+                    <div class="recent-viewed-item">                        
+						<img src="${pageContext.request.contextPath}/upload/${recentBook.image_name}" width="250" height="200" alt="책 이미지">
+                    </div>
+                </c:if>
+            </c:forEach>
+        </div>
+    </div>
+</c:if>
+
+
+
+
+
 
 <script>
 function toggleDropdown() {
@@ -303,5 +371,28 @@ function toggleDropdown() {
             document.getElementById("filterModal").style.display = "none";
         }
     </script>
+    <script type="text/javascript">
+ // 팝업 모달 열기
+    function openModal() {
+        document.getElementById("recentBooksModal").style.display = "block";
+    }
+
+    // 팝업 모달 닫기
+    function closeModal() {
+        document.getElementById("recentBooksModal").style.display = "none";
+    }
+
+    // 페이지 외부 클릭 시 팝업 닫기 (모달 외부 클릭 시 닫히도록)
+    window.onclick = function(event) {
+        var modal = document.getElementById("recentBooksModal");
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+
+    </script>
+    
+
 </body>
 </html>
