@@ -68,6 +68,10 @@
 		to_char(birth,'YYYY.MM.DD') "birth", phone, grade from users
 		where user_id=#{user_id}
 	</select>
+	
+	<update id="updateUserGrade" parameterType="Users">
+		update users set grade = #{grade} where user_id = #{user_id}
+	</update>
 </mapper>
 
 	

@@ -49,6 +49,8 @@ public class LoginController {
 					ModelAndView newMav = new ModelAndView("admin");
 					return newMav;
 				}
+				System.out.println("사용자 등급 : " + loginUser.getGrade());
+				session.setAttribute("userGrade", loginUser.getGrade());
 				return mav;
 			}else {
 				br.reject("error.login.users");

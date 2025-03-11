@@ -97,4 +97,9 @@ public class CartService {
 	public void deleteUserCart(String user_id) {
 		this.cartMapper.deleteUserCart(user_id);
 	}
+	public Integer getUserTotalPriceSum(String user_id) {
+		Integer total_price = this.cartMapper.getUserTotalPriceSum(user_id);
+		if(total_price == null) return 0;
+		else return total_price;
+	}
 }

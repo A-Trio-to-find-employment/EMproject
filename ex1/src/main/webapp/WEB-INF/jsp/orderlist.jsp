@@ -61,8 +61,20 @@
         <a href="/qna">고객센터</a>
     </div>
     <div class="sidebar">
-        <h3>나의 등급 <span style="float: right;">일반 회원</span></h3>
-        <p>주문금액이 10만원 이상일 경우 우수 회원이 됩니다.</p>
+        <c:choose>
+    		<c:when test="${ sessionScope.userGrade == 0}">
+				<h3>나의 등급 <span style="float: right;">일반 회원</span></h3>
+        		<p>최근 3개월 주문금액이 15만원 이상일 경우 VIP 회원이 됩니다.</p>
+			</c:when>
+			<c:when test="${ sessionScope.userGrade == 1}">
+				<h3>나의 등급 <span style="float: right;">VIP 회원</span></h3>
+        		<p>최근 3개월 주문금액이 30만원 이상일 경우 VVIP 회원이 됩니다.</p>
+			</c:when>
+			<c:when test="${ sessionScope.userGrade == 2}">
+				<h3>나의 등급 <span style="float: right;">VVIP 회원</span></h3>
+				<p>항상 감사합니다. VVIP 회원 ${ sessionScope.loginUser }님</p>
+			</c:when>
+    	</c:choose>
         <ul>
             <li><a href="/order/orderlist.html">주문내역/배송조회</a></li>            
             <li><a href="/myCoupon">쿠폰조회</a></li>
