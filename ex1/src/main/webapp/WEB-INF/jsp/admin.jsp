@@ -70,14 +70,14 @@
         }
 
         // 다른 곳 클릭하면 드롭다운 닫힘
-        document.addEventListener("click", function(event) {
-            var dropdown = document.getElementById("categoryDropdown");
-            var categoryLink = document.querySelector(".nav div a");
+//         document.addEventListener("click", function(event) {
+//             var dropdown = document.getElementById("categoryDropdown");
+//             var categoryLink = document.querySelector(".nav div a");
 
-            if (!dropdown.contains(event.target) && event.target !== categoryLink) {
-                dropdown.style.display = "none";
-            }
-        });
+//             if (!dropdown.contains(event.target) && event.target !== categoryLink) {
+//                 dropdown.style.display = "none";
+//             }
+//         });
     </script>
 </body>
 </html>

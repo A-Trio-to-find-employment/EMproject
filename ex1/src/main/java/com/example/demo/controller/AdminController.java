@@ -50,10 +50,13 @@ public class AdminController {
 	@Autowired
 	private OrderService orderService;
 	
+	private List<Category> categories;
+	
     @GetMapping("/getCategories")
     public ResponseEntity<List<Category>> getCategories(@RequestParam("parent_id") String parentId) {
-    	List<Category> categories = goodsService.getCategoriesByParentId(parentId);
-        System.out.println("parent_id: " + parentId + " → categories: " + categories);
+    	//List<Category> categories = goodsService.getCategoriesByParentId(parentId);
+    	categories = goodsService.getCategoriesByParentId(parentId);
+    	System.out.println("parent_id: " + parentId + " → categories: " + categories);
         
         if (categories.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(categories);
@@ -135,13 +138,16 @@ public class AdminController {
 	public ModelAndView goodsAdd() {
 		ModelAndView mav = new ModelAndView("admin");
 		mav.addObject(new Book());
+		
+		
+		mav.addObject("CAT",categories);
 		mav.addObject("BODY","addGoods.jsp");
 		return mav;
 	}
 	@PostMapping(value = "/manageGoods/insert")
 	public ModelAndView goodsInsert(@Valid Book book,
 			BindingResult br, HttpSession session, @RequestParam("cat_id") 
-			String selectedCat, @RequestParam("authors") String authors) {
+			List<String> selectedCat, @RequestParam("authors") String authors) {
 		ModelAndView mav = new ModelAndView("admin");
 		this.coverValidator.validate(book, br);
 		if(br.hasErrors()) {
@@ -183,16 +189,16 @@ public class AdminController {
 		//저자,옮긴이 주입 위해서
 		book.setAuthors(authors);
 		
-		this.goodsService.addGoods(book, selectedCat);//책 객체와 cat_id 동시에 불러옴
+		this.goodsService.addGoods(book);//책 객체와 cat_id 동시에 불러옴
 		
+		for(String catId : selectedCat) {
 		BookCategories bookcat = new BookCategories();
 		bookcat.setIsbn(book.getIsbn());
-		bookcat.setCat_id(selectedCat);
+		bookcat.setCat_id(catId);
 		this.goodsService.addInfoCategory(bookcat);
-		
-		System.out.println("선택된 카테고리 ID: " + selectedCat);
+		}
+		System.out.println("선택된 카테고리 ID들: " + selectedCat);
 		System.out.println("INSERT SQL 실행: " + book);
-//		System.out.println("DB INSERT 결과: " + result);
 		mav.addObject("BODY","addGoodsComplete.jsp");
 		return mav;
 	}

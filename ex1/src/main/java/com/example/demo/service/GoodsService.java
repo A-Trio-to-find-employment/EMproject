@@ -45,8 +45,7 @@ public class GoodsService {
 	public Integer getIsbnDup(Long isbn) {
 		return this.goodsMapper.getIsbnDup(isbn);
 	}
-	public void addGoods(Book book,String selectedCat) {
-		book.setCat_id(selectedCat);
+	public void addGoods(Book book) {
 		this.goodsMapper.addGoods(book);
 		if (book.getAuthors() != null) {
             List<String> authorList = Arrays.asList(book.getAuthors().split(","));
