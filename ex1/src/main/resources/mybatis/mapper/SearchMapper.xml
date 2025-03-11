@@ -26,11 +26,13 @@
 		</if>
 		<if test="pub_date_start != null and pub_date_end != null">
 			b.PUB_DATE >= TO_DATE(#{pub_date_start}, 'YYYY-MM-DD') AND
-			b.PUB_DATE <![CDATA[<=]]> TO_DATE(#{pub_date_end}, 'YYYY-MM-DD') AND
+			b.PUB_DATE <![CDATA[<=]]>
+			TO_DATE(#{pub_date_end}, 'YYYY-MM-DD') AND
 		</if>
 		1=1
 		GROUP BY b.ISBN, b.BOOK_TITLE, b.PUBLISHER, b.PUB_DATE
-		ORDER BY b.PUB_DATE DESC
+		ORDER BY
+		b.PUB_DATE DESC
 	</select>
 
 
@@ -42,6 +44,58 @@
 	<select id="searchByIsbnAuthor" parameterType="java.lang.Long"
 		resultType="Book_author">
 		select * from book_author where isbn = #{ISBN}
+	</select>
+
+	<select id="searchBookByTitleCat" parameterType="StartEndKey"
+		resultType="Book">
+		select * from (
+		select b.*, rownum rn
+		from (
+		select b.*
+		from book b
+		join book_categories bc on b.isbn = bc.isbn
+		join categories c on bc.cat_id = c.cat_id
+		where (bc.cat_id = #{cat_id} or c.parent_id = #{cat_id})
+		and b.book_title like '%' || #{book_title} || '%'
+		order by b.book_title
+		) b
+		)
+		where rn > #{start} and rn <![CDATA[<]]> #{end}
+	</select>
+
+	<select id="searchBookByTitle" parameterType="StartEndKey"
+		resultType="Book">
+		select * from (
+		select b.*, row_number() over (order by b.book_title) as rn
+		from (
+		select distinct b.book_title, b.isbn
+		from book b
+		where b.book_title like '%' || #{book_title} || '%'
+		order by b.pub_date
+		) b
+		)
+		where rn > #{start} and rn <![CDATA[<]]> #{end}
+	</select>
+
+	<select id="getTotalCountTitle" parameterType="String"
+		resultType="Integer">
+		select count(*)
+		from book
+		where book_title like '%' ||
+		#{book_title} || '%'
+	</select>
+
+	<select id="getTotalCountTitleCat" parameterType="StartEndKey"
+		resultType="Integer">
+		select count(*)
+		from book b
+		join book_categories bc on b.isbn
+		= bc.isbn
+		join categories c on bc.cat_id = c.cat_id
+		where b.book_title
+		like '%' || #{book_title} || '%'
+		and (bc.cat_id = #{cat_id} or
+		c.parent_id = #{cat_id})
 	</select>
 </mapper>
 

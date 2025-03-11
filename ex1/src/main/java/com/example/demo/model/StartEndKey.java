@@ -11,4 +11,6 @@ public class StartEndKey {
 	private String key;
 	private Integer ans;
 	private String user_id;
+	private String book_title;
+	private String cat_id;
 }
