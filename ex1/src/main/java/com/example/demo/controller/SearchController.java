@@ -19,6 +19,7 @@ import com.example.demo.model.Book_author;
 import com.example.demo.model.Cart;
 import com.example.demo.model.Category;
 import com.example.demo.model.DetailSearch;
+import com.example.demo.model.StartEndKey;
 import com.example.demo.model.User_pref;
 import com.example.demo.service.CartService;
 import com.example.demo.service.CategoryService;
@@ -45,22 +46,47 @@ public class SearchController {
 	private FilterService filterService;
 	
 	@GetMapping(value="/searchByTitleCat")
-	public ModelAndView searchByTitleCat(String cat_id, String bookTitle, HttpSession session) {
+	public ModelAndView searchByTitleCat(String cat_id, String bookTitle, 
+			Integer PAGE, HttpSession session) {
 	    ModelAndView mav = new ModelAndView("searchResultDefault");
 	    // 상위 카테고리 정보만 전달 (비동기 방식으로 중/하위 카테고리를 가져올 예정)
         List<Category> topCatList = filterService.getTopCategories();
         mav.addObject("topCatList", topCatList);
 	    // cat_id가 null이거나 공백이면 제목으로만 검색
 	    if(cat_id == null || cat_id.trim().isEmpty()) {
-	        List<Book> bookList = this.searchService.searchBookByTitle(bookTitle);
+	    	int currentPage = 1;
+			if(PAGE != null) currentPage = PAGE;
+			int start = (currentPage - 1) * 5;
+			int end = ((currentPage - 1) * 5) + 6;
+			System.out.println("start : " + start + ", end : " + end);
+			StartEndKey sek = new StartEndKey();
+			sek.setStart(start); sek.setEnd(end); sek.setBook_title(bookTitle);
+	        List<Book> bookList = this.searchService.searchBookByTitle(sek);
 	        mav.addObject("bookList", bookList);
+	        int totalCount = this.searchService.getTotalCountTitle(bookTitle);
+			int pageCount = totalCount / 5;
+			if(totalCount % 5 != 0) pageCount++;
+			mav.addObject("currentPage",currentPage);
+			mav.addObject("PAGES", pageCount);
+			mav.addObject("totalCount", totalCount);
 	    } else {
 	        // 카테고리가 선택된 경우, 카테고리와 제목 둘 다 조건에 맞게 검색
-	        Book book = new Book();
-	        book.setCat_id(cat_id);
-	        book.setBook_title(bookTitle);
-	        List<Book> bookList = this.searchService.searchBookByTitleCat(book);
+	    	int currentPage = 1;
+			if(PAGE != null) currentPage = PAGE;
+			int start = (currentPage - 1) * 5;
+			int end = ((currentPage - 1) * 5) + 6;
+			System.out.println("start : " + start + ", end : " + end);
+			StartEndKey sek = new StartEndKey();
+			sek.setStart(start); sek.setEnd(end); 
+			sek.setBook_title(bookTitle); sek.setCat_id(cat_id);
+	        List<Book> bookList = this.searchService.searchBookByTitleCat(sek);
 	        mav.addObject("bookList", bookList);
+	        int totalCount = this.searchService.getTotalCountTitleCat(sek);
+			int pageCount = totalCount / 5;
+			if(totalCount % 5 != 0) pageCount++;
+			mav.addObject("currentPage",currentPage);
+			mav.addObject("PAGES", pageCount);
+			mav.addObject("totalCount", totalCount);
 	    }
 	    
 	    mav.addObject("cat_id", cat_id);

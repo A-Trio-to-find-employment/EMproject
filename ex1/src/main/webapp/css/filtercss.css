@@ -1,30 +1,41 @@
 @charset "UTF-8";
 /* 상단 중앙에 고정된 검색폼 */
 #fixedSearchForm {
-	position: fixed;
-	top: 10%;
-	left: 50%;
+	margin-left : 50%;
+	top: 15%;
 	transform: translateX(-50%);
 	background: #fff;
 	z-index: 1001;
-	padding: 10px 20px;
+	padding: 5px 10px;
+	width: 300px;
 	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
-/* 검색폼 내부 요소 */
+/* 검색 폼 내부 요소 정렬 */
 #fixedSearchForm form {
-	margin: 0;
+    display: flex;
+    align-items: center;
 }
 
+/* 검색 입력창 크기 조정 */
 #fixedSearchForm input[type="text"] {
-	padding: 5px;
-	font-size: 14px;
-	vertical-align: middle;
+    padding: 5px;
+    font-size: 14px;
+    flex: 1; /* 입력창이 유동적으로 크기 조정됨 */
+    min-width: 120px; /* 최소 너비 설정 */
 }
 
+/* 버튼 정렬 */
 #fixedSearchForm button {
-	padding: 6px 10px;
-	margin-left: 5px;
-	vertical-align: middle;
+    padding: 6px 10px;
+    font-size: 14px;
+    margin-left: 5px;
+    white-space: nowrap; /* 버튼이 여러 줄로 내려가는 것 방지 */
+}
+
+/* 필터 버튼과 검색 버튼 정렬 */
+#buttonContainer {
+    display: flex;
+    gap: 5px; /* 버튼 간격 조정 */
 }
 
 /* 모달 (필터 선택 화면) */
@@ -94,4 +105,8 @@
 /* 페이지 내부 컨텐츠 여백 (검색폼이 고정되므로) */
 .container {
 	margin-top: 120px;
+}
+.pagenation{
+	margin-left: 50%;
+	font-size : 14px;
 }

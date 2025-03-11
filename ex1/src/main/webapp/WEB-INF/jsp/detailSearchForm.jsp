@@ -56,10 +56,15 @@
 <script>
 function isbnCheck(){
 	var isbn = document.getElementById("ISBN").value;
+	var isbnRegex = /^\d{13}$/; // 13자리 숫자 정규식
 	if(! isbn){
 		alert("isbn을 입력 후 검색해주세요.");
 		return false;
 	}
+	if (!isbnRegex.test(isbn)) {
+        alert("13자리 숫자를 입력 후 검색해주세요.");
+        return false;
+    }
 	return true;
 }
 function searchCheck() {
