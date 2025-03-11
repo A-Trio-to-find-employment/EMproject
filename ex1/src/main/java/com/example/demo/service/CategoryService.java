@@ -47,4 +47,8 @@ public class CategoryService {
 	public List<Category> getsubcategory(){
 		return this.mymapper.getsubcategory();
 	}
+	public List<Category> getAllCategories(){
+		List<Category> catList = this.mymapper.getAllCategories();
+		return catList;
+	}
 }

@@ -1,134 +1,145 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>도서 검색</title>
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
-    <link rel="stylesheet" type="text/css" href="/css/filtercss.css">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="/css/style.css">
+<link rel="stylesheet" type="text/css" href="/css/bookstyle.css">
+<link rel="stylesheet" type="text/css" href="/css/filtercss.css">
 </head>
 <body>
-    <c:set var="body" value="${param.BODY}" />
-
-    <!-- 네비게이션 영역 (기존 내용 그대로) -->
-    <div class="nav">
-        <a href="/index">HOME</a>
+	<div class="nav">
+		<a href="/index">HOME</a>
 		<div style="position: relative;">
 			<a onclick="toggleDropdown()">분야보기</a>
 			<div id="categoryDropdown" class="dropdown">
 				<a href="/field.html?cat_id=0">국내도서</a> <a
 					href="/field.html?cat_id=1">외국도서</a>
 			</div>
-        </div>
-        <a href="/eventlist">이벤트</a>
-        <c:if test="${sessionScope.loginUser != null}">
-            <p>사용자 : ${sessionScope.loginUser}</p>
-            <a href="/logout">로그아웃</a>
-        </c:if>
-        <c:if test="${sessionScope.loginUser == null}">
-            <a href="/signup">회원가입</a>
-            <a href="/login">로그인</a>
-        </c:if>
-        <a href="/secondfa">마이페이지</a>
-        <a href="/qna">고객센터</a>
-    </div>
+		</div>
+		<a href="/eventlist">이벤트</a>
+		<c:if test="${sessionScope.loginUser != null}">
+			<p>사용자 : ${ sessionScope.loginUser }</p>
+			<a href="/logout">로그아웃</a>
+		</c:if>
+		<c:if test="${sessionScope.loginUser == null}">
+			<a href="/signup">회원가입</a>
+			<a href="/login">로그인</a>
+		</c:if>
+		<a href="/secondfa">마이페이지</a> <a href="/qna">고객센터</a>
+	</div>
+	<!-- 고정 검색 폼 (상단 중앙) -->
+	<div id="fixedSearchForm">
+		<form action="/searchByTitleCat" method="get">
+			<!-- 선택된 카테고리 id를 저장하는 hidden input -->
+			<input type="hidden" name="cat_id" id="cat_id" value=""> <input
+				type="text" id="bookTitle" name="bookTitle" placeholder="책 제목">
+			<button type="submit">검색</button>
+			<!-- 필터 버튼 (모달 호출) -->
+			<button type="button" id="openFilterBtn" onclick="openFilterModal()">필터</button>
+		</form>
+		<div align="right">
+			<a href="/goDetailSearch">상세검색</a>
+		</div>
+	</div>
 
-    <!-- 고정 검색 폼 (상단 중앙) -->
-    <div id="fixedSearchForm">
-        <form action="/searchByTitleCat" method="get">
-            <!-- 선택된 카테고리 id를 저장하는 hidden input -->
-            <input type="hidden" name="cat_id" id="cat_id" value="">
-            <input type="text" id="bookTitle" name="bookTitle" placeholder="책 제목">
-            <button type="submit">검색</button>
-            <!-- 필터 버튼 (모달 호출) -->
-            <button type="button" id="openFilterBtn" onclick="openFilterModal()">필터</button>
-        </form>
-        <div align="right"><a href="/goDetailSearch">상세검색</a></div>
-    </div>
+	<!-- 필터 모달 (카테고리 선택 화면) -->
+	<div id="filterModal" class="modal">
+		<div class="modal-content">
+			<h3>카테고리 선택</h3>
+			<span class="close-btn" onclick="closeFilterModal()">[닫기]</span>
 
-    <!-- 필터 모달 (카테고리 선택 화면) -->
-    <div id="filterModal" class="modal">
-        <div class="modal-content">
-            <h3>카테고리 선택</h3>
-            <span class="close-btn" onclick="closeFilterModal()">[닫기]</span>
-            
-            <!-- 선택 경로 표시 -->
-            <div id="filterPath" style="margin-bottom:10px;">
-                현재 선택: <span id="selectedPathText"></span>
-            </div>
-            <!-- 탭 영역: 초기에는 상위 카테고리 탭들이 보임 -->
-            <div id="filterTabs">
-                <c:forEach var="category" items="${topCatList}">
-                    <span class="filter-tab" data-level="top" data-cat-id="${category.cat_id}" data-cat-name="${category.cat_name}">
-                        ${category.cat_name}
-                    </span>
-                </c:forEach>
-            </div>
-        </div>
-    </div>
+			<!-- 선택 경로 표시 -->
+			<div id="filterPath" style="margin-bottom: 10px;">
+				현재 선택: <span id="selectedPathText"></span>
+			</div>
+			<!-- 탭 영역: 초기에는 상위 카테고리 탭들이 보임 -->
+			<div id="filterTabs">
+				<c:forEach var="category" items="${topCatList}">
+					<span class="filter-tab" data-level="top"
+						data-cat-id="${category.cat_id}"
+						data-cat-name="${category.cat_name}"> ${category.cat_name}
+					</span>
+				</c:forEach>
+			</div>
+		</div>
+	</div>
+	<br />
+	<br />
+	<div class="book-list">
+		<h2>검색된 도서 목록</h2>
+		<c:choose>
+			<c:when test="${not empty bookList}">
+				<h4 align="right">검색된 도서 수 : ${ totalCount }</h4>
+				<c:forEach var="book" items="${ bookList }">
+					<div class="book-item">
+						<!-- 책 이미지 -->
+						<div class="book-image">
+							<img
+								src="${pageContext.request.contextPath}/upload/${book.image_name}"
+								width="100" height="120" />
+						</div>
+						<!-- 책 정보 (더 넓게 배치) -->
+						<div class="book-info">
+							<h3 class="book-title">
+								<a href="/bookdetail.html?isbn=${book.isbn}">제목:${book.book_title}</a>
+							</h3>
+							<p align="left" class="book-author">저자:${book.authors}</p>
+							<p align="left" class="book-price">가격:${book.price}원</p>
+							<p align="left" class="book-publisher">출판사:${book.publisher}</p>
+						</div>
+						<!-- 버튼 (위아래 배치) -->
+						<form method="get" action="/detailSearch">
+							<input type="hidden" name="BOOKID" value="${book.isbn}" /> <input
+								type="hidden" name="cat_id" value="${cat_id}" /> <input
+								type="hidden" name="bookTitle" value="${bookTitle}" />
 
-    <!-- 컨텐츠 영역 (추천 도서 등) -->
-    <c:choose>
-        <c:when test="${empty body}">
-            <div class="container">
-                <!-- 추천 도서 영역 -->
-                <div class="book-section">
-                    <c:if test="${sessionScope.loginUser == null}">
-                        <h3>맞춤 도서</h3>
-                    </c:if>
-                    <c:if test="${sessionScope.loginUser != null}">
-                        <h3><a href="/myPrefBookList">맞춤 도서</a></h3>
-                    </c:if>
-                    <c:choose>
-                        <c:when test="${catList == null}">
-                            <p>로그인 후 선호 도서 설문에 참여하시면 맞춤형 도서 안내 서비스를 제공합니다.</p>
-                        </c:when>
-                        <c:otherwise>
-                            <table border="1">
-                                <tr>
-                                    <c:forEach var="bookImage" items="${recommendedBooks}">
-                                        <td>
-                                            <a href="/bookdetail.html?isbn=${bookImage.isbn}">
-                                                <img src="${pageContext.request.contextPath}/upload/${bookImage.image_name}"
-                                                     width="200" height="200" />
-                                            </a>
-                                        </td>
-                                    </c:forEach>
-                                </tr>
-                                <tr>
-                                    <c:forEach var="bookName" items="${recommendedBooks}">
-                                        <td>
-                                            <a href="/bookdetail.html?isbn=${bookName.isbn}">제목: ${bookName.book_title}</a>
-                                        </td>
-                                    </c:forEach>
-                                </tr>
-                            </table>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
+							<div class="actions">
+								<button type="submit" name="action" value="add"
+									class="add-to-cart">장바구니</button>
+								<button type="submit" name="action" value="buy" class="buy-now">바로구매</button>
+							</div>
+						</form>
+					</div>
+				</c:forEach>
+				<div align="center" class="pagenation">
+				<c:set var="currentPage" value="${currentPage}" />
+				<c:set var="startPage"
+					value="${currentPage - (currentPage % 10 == 0 ? 10 :(currentPage % 10)) + 1 }" />
+				<c:set var="endPage" value="${startPage + 9}" />
+				<c:set var="pageCount" value="${ PAGES }" />
+				<c:if test="${endPage > pageCount }">
+					<c:set var="endPage" value="${pageCount }" />
+				</c:if>
+				<c:if test="${startPage > 10 }">
+					<a href="/searchByTitleCat?PAGE=${startPage - 1 }&cat_id=${ cat_id }&bookTitle=${ bookTitle }">[이전]</a>
+				</c:if>
+				<c:forEach begin="${startPage }" end="${endPage }" var="i">
+					<c:if test="${currentPage == i }">
+						<font size="4">
+					</c:if>
+					<a href="/searchByTitleCat?PAGE=${ i }&cat_id=${ cat_id }&bookTitle=${ bookTitle }">${ i }</a>
+					<c:if test="${currentPage == i }">
+						</font>
+					</c:if>
+				</c:forEach>
+				<c:if test="${endPage < pageCount }">
+					<a href="/searchByTitleCat?PAGE=${endPage + 1 }&cat_id=${ cat_id }&bookTitle=${ bookTitle }">[다음]</a>
+				</c:if>
+				</div>
+			</c:when>
+			<c:otherwise>
+				<p>등록된 도서가 없습니다.</p>
+			</c:otherwise>
+		</c:choose>
+	</div>
 
-                <div class="book-section">
-                    <h3>화제의 베스트셀러 ></h3>
-                </div>
-
-                <div class="book-section">
-                    <h3>장르별</h3>
-                    <p>인문학 | 자기계발 | 경제·경영 | 장르소설 | 종교/역학 | 에세이 | 역사</p>
-                </div>
-            </div>
-        </c:when>
-        <c:otherwise>
-            <div class="content">
-                <jsp:include page="${body}"></jsp:include>
-            </div>
-        </c:otherwise>
-    </c:choose>
-
-<script>
+	<script>
 function toggleDropdown() {
 	var dropdown = document.getElementById("categoryDropdown");
 		dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
@@ -144,9 +155,7 @@ function toggleDropdown() {
 		}
 	});
 </script>
-
-    <!-- 필터 탭 및 Ajax 동작 스크립트 (모달 내) -->
-    <script>
+	<script>
         // 전역 변수: 현재 선택된 카테고리 경로와 초기 상위 탭 HTML 저장
         var selectedPath = [];
         var initialTopHTML = "";

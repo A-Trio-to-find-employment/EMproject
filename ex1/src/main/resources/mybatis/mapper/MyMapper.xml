@@ -5,7 +5,7 @@
 <mapper namespace="com.example.demo.mapper.MyMapper">
 	
     <select id="getAllCategories" resultType="Category">
-       SELECT * FROM categories
+       SELECT * FROM categories order by cat_id
     </select>
     <select id="getTopCategories" resultType="Category">
         SELECT cat_id, cat_name, parent_id

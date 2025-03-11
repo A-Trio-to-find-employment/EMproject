@@ -7,18 +7,20 @@ import java.util.StringJoiner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.model.Book;
 import com.example.demo.model.Book_author;
 import com.example.demo.model.Cart;
+import com.example.demo.model.Category;
 import com.example.demo.model.DetailSearch;
 import com.example.demo.model.JJim;
+import com.example.demo.model.StartEndKey;
 import com.example.demo.model.User_pref;
 import com.example.demo.service.CartService;
 import com.example.demo.service.CategoryService;
 import com.example.demo.service.FieldService;
+import com.example.demo.service.FilterService;
 import com.example.demo.service.JJimService;
 import com.example.demo.service.PrefService;
 import com.example.demo.service.SearchService;
@@ -39,6 +41,58 @@ public class SearchController {
 	private CategoryService categoryService;
 	@Autowired
 	private FieldService fieldService;
+	@Autowired
+	private FilterService filterService;
+	
+	@GetMapping(value="/searchByTitleCat")
+	public ModelAndView searchByTitleCat(String cat_id, String bookTitle, 
+			Integer PAGE, HttpSession session) {
+	    ModelAndView mav = new ModelAndView("searchResultDefault");
+	    // 상위 카테고리 정보만 전달 (비동기 방식으로 중/하위 카테고리를 가져올 예정)
+        List<Category> topCatList = filterService.getTopCategories();
+        mav.addObject("topCatList", topCatList);
+	    // cat_id가 null이거나 공백이면 제목으로만 검색
+	    if(cat_id == null || cat_id.trim().isEmpty()) {
+	    	int currentPage = 1;
+			if(PAGE != null) currentPage = PAGE;
+			int start = (currentPage - 1) * 5;
+			int end = ((currentPage - 1) * 5) + 6;
+			System.out.println("start : " + start + ", end : " + end);
+			StartEndKey sek = new StartEndKey();
+			sek.setStart(start); sek.setEnd(end); sek.setBook_title(bookTitle);
+	        List<Book> bookList = this.searchService.searchBookByTitle(sek);
+	        mav.addObject("bookList", bookList);
+	        int totalCount = this.searchService.getTotalCountTitle(bookTitle);
+			int pageCount = totalCount / 5;
+			if(totalCount % 5 != 0) pageCount++;
+			mav.addObject("currentPage",currentPage);
+			mav.addObject("PAGES", pageCount);
+			mav.addObject("totalCount", totalCount);
+	    } else {
+	        // 카테고리가 선택된 경우, 카테고리와 제목 둘 다 조건에 맞게 검색
+	    	int currentPage = 1;
+			if(PAGE != null) currentPage = PAGE;
+			int start = (currentPage - 1) * 5;
+			int end = ((currentPage - 1) * 5) + 6;
+			System.out.println("start : " + start + ", end : " + end);
+			StartEndKey sek = new StartEndKey();
+			sek.setStart(start); sek.setEnd(end); 
+			sek.setBook_title(bookTitle); sek.setCat_id(cat_id);
+	        List<Book> bookList = this.searchService.searchBookByTitleCat(sek);
+	        mav.addObject("bookList", bookList);
+	        int totalCount = this.searchService.getTotalCountTitleCat(sek);
+			int pageCount = totalCount / 5;
+			if(totalCount % 5 != 0) pageCount++;
+			mav.addObject("currentPage",currentPage);
+			mav.addObject("PAGES", pageCount);
+			mav.addObject("totalCount", totalCount);
+	    }
+	    
+	    mav.addObject("cat_id", cat_id);
+	    mav.addObject("bookTitle", bookTitle);
+	    return mav;
+	}
+	
 	@GetMapping(value="/goDetailSearch")
 	public ModelAndView goDetailSearch() {
 		ModelAndView mav = new ModelAndView("detailSearchForm");
@@ -54,7 +108,8 @@ public class SearchController {
 		System.out.println("PUBLISHER: " + PUBLISHER);
 		System.out.println("PUB_DATE_START: " + PUB_DATE_START);
 		System.out.println("PUB_DATE_END: " + PUB_DATE_END);
-		
+		// 상위 카테고리 정보만 전달 (비동기 방식으로 중/하위 카테고리를 가져올 예정)
+        List<Category> topCatList = filterService.getTopCategories();
 		String loginUser = (String)session.getAttribute("loginUser");
 	
 		if(BOOKID != null && action != null) {
@@ -103,6 +158,7 @@ public class SearchController {
 						this.prefService.updateScore(up);
 					}
 				}
+				mav.addObject("topCatList", topCatList);
 				return mav;
 			} else if(action.equals("buy")) {
 				ModelAndView mav = new ModelAndView("redirect:/cart");
@@ -152,11 +208,11 @@ public class SearchController {
 		        // 찜 상태를 확인하여 찜 상태 변경
 		        if (action1.equals("jjim")) {
 		            // 찜 상태 확인
-		            boolean isLiked = jjimservice.isBookLiked(jjim) > 0;  // 반환값을 boolean으로 변환
+		            boolean isLiked = this.jjimservice.isBookLiked(jjim) > 0;  // 반환값을 boolean으로 변환
 
 		            if (isLiked) {
 		                // 이미 찜한 책이라면 찜 삭제
-		                jjimservice.deleteJjim(jjim);
+		                this.jjimservice.deleteJjim(jjim);
 
 		                // 찜을 삭제했으므로 카테고리 선호도 점수도 감소
 		                List<String> catList = this.categoryService.getCatIdFromIsbn(BOOKID);  // 해당 책의 카테고리 목록
@@ -174,7 +230,7 @@ public class SearchController {
 		                }
 		            } else {
 		                // 찜하지 않은 책이라면 찜 추가
-		                jjimservice.insertjjim(jjim);
+		                this.jjimservice.insertjjim(jjim);
 
 		                // 찜을 추가했으므로 카테고리 선호도 점수도 증가 (1점 증가)
 		                List<String> catList = this.categoryService.getCatIdFromIsbn(BOOKID);  // 해당 책의 카테고리 목록
@@ -214,6 +270,7 @@ public class SearchController {
 				// searchList에 finalBook 추가				
 			searchList.add(finalBook);
 		}
+		mav.addObject("topCatList", topCatList);
 		mav.addObject("TITLE", TITLE);
 		mav.addObject("AUTHOR", AUTHOR);
 		mav.addObject("PUBLISHER", PUBLISHER);
@@ -385,10 +442,13 @@ public class SearchController {
 			    }
 		    }
 		}
-
 		// 찜 상태 및 찜한 사람 수가 포함된 searchList를 ModelAndView에 추가
 		mav.addObject("searchList", searchList);
+		List<Category> topCatList = filterService.getTopCategories();
+        mav.addObject("topCatList", topCatList);
 		return mav;
 
 	}
+	
+
 }
