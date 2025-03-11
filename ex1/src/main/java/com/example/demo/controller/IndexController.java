@@ -119,6 +119,7 @@ public class IndexController {
 		se.setEnd(end);
 		List<Long> isbnList = this.indexService.getTop20Books(se);
 		List<Book> bestSellerList = new ArrayList<Book>();
+		
 		if(loginUser == null) {
 			for (Long bestIsbn : isbnList) {
 				Book bestBook = this.fieldService.getBookDetail(bestIsbn);
@@ -186,23 +187,29 @@ public class IndexController {
 				}
 			}
 		}
-		if(loginUser != null) {
+		if (loginUser != null) {
+			JJim jjim = new JJim();
+			jjim.setUser_id(loginUser);
+			jjim.setIsbn(BOOKID);
 			for (Long bestIsbn : isbnList) {
 				Book bestBook = this.fieldService.getBookDetail(bestIsbn);
-				JJim jjim = new JJim();
-				jjim.setUser_id(loginUser);
-				if(BOOKID != null) {
-					jjim.setIsbn(BOOKID);
-					//
-					boolean isLiked = jjimService.isBookLiked(jjim) > 0;
-					bestBook.setLiked(isLiked);
-
-					// 찜한 사람 수 계산
-					int likeCount = jjimService.getLikeCount(bestBook.getIsbn());
-					bestBook.setLikecount(likeCount);
-				}
 				bestSellerList.add(bestBook);
 			}
+			// `bookList`의 각 책에 대해 찜 상태를 확인하고 업데이트
+			for (Book book : bestSellerList) {
+				jjim.setUser_id(loginUser);
+				jjim.setIsbn(book.getIsbn());
+
+				// 찜 상태 체크
+				boolean isLiked = jjimService.isBookLiked(jjim) > 0;
+				book.setLiked(isLiked);
+
+				// 찜한 사람 수 계산 (예: 찜한 사람 수를 가져오는 메소드 호출)
+				int likeCount = jjimService.getLikeCount(book.getIsbn());
+				book.setLikecount(likeCount);
+				
+			}
+			
 		}
 		if (BOOKID != null && action != null) {
 			if (loginUser == null) {
