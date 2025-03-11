@@ -46,11 +46,82 @@ public class SearchController {
 	
 	@GetMapping(value="/searchByTitleCat")
 	public ModelAndView searchByTitleCat(String cat_id, String bookTitle, 
-			Integer PAGE, HttpSession session) {
+			Integer PAGE, Long BOOKID, String action, HttpSession session) {
 	    ModelAndView mav = new ModelAndView("searchResultDefault");
 	    // 상위 카테고리 정보만 전달 (비동기 방식으로 중/하위 카테고리를 가져올 예정)
         List<Category> topCatList = filterService.getTopCategories();
         mav.addObject("topCatList", topCatList);
+        String loginUser = (String)session.getAttribute("loginUser");
+    	
+		if(BOOKID != null && action != null) {
+			if(loginUser == null) {
+				ModelAndView newmav = new ModelAndView("loginFail");
+				return newmav;
+			}
+			Cart cart = new Cart();
+			cart.setIsbn(BOOKID); cart.setUser_id(loginUser);
+			String cart_id = this.cartService.findEqualItem(cart);
+			if(cart_id != null) {
+				Cart existCart = this.cartService.findCartByCartId(cart_id);
+				Integer quantity = existCart.getQuantity() + 1;
+				existCart.setQuantity(quantity);
+				this.cartService.updateCart(existCart);
+			} else {
+				Integer count = this.cartService.getCountCart() + 1;
+				cart_id = count.toString();
+				cart.setCart_id(cart_id); cart.setQuantity(1);
+				this.cartService.insertCart(cart);
+			}
+			if(action.equals("add")) {
+				ModelAndView newmav = new ModelAndView("cartAlertDefaultSearch");
+				mav.addObject("cat_id", cat_id);
+				mav.addObject("bookTitle", bookTitle);
+				List<String> catList = this.categoryService.getCatIdFromIsbn(BOOKID);
+				for(String catId : catList) {
+					User_pref up = new User_pref();
+					up.setUser_id(loginUser); up.setCat_id(catId);
+					System.out.println(catId);
+					User_pref testUp = this.prefService.getUserCatIdByCat(up);
+					if(testUp == null) { // 사용자가 기존에 선호하지 않았던 카테고리
+						up.setPref_score(1);
+						this.prefService.insertPref(up); // 이 장르에 1점을 부여한 후 선호 장르에 추가
+					}else {
+						Integer score = 0;
+						if(testUp.getPref_score() >= 999) {
+							score = testUp.getPref_score();
+						}else {
+							score = testUp.getPref_score() + 1;
+						}
+						up.setPref_score(score);
+						this.prefService.updateScore(up);
+					}
+				}
+				newmav.addObject("topCatList", topCatList);
+				return newmav;
+			} else if(action.equals("buy")) {
+				ModelAndView newmav = new ModelAndView("redirect:/cart");
+				List<String> catList = this.categoryService.getCatIdFromIsbn(BOOKID);
+				for(String catId : catList) {
+					User_pref up = new User_pref();
+					up.setUser_id(loginUser); up.setCat_id(catId);
+					User_pref testUp = this.prefService.getUserCatIdByCat(up);
+					if(testUp == null) { // 사용자가 기존에 선호하지 않았던 카테고리
+						up.setPref_score(1);
+						this.prefService.insertPref(up); // 이 장르에 1점을 부여한 후 선호 장르에 추가
+					}else {
+						Integer score = 0;
+						if(testUp.getPref_score() >= 999) {
+							score = testUp.getPref_score();
+						}else {
+							score = testUp.getPref_score() + 1;
+						}
+						up.setPref_score(score);
+						this.prefService.updateScore(up);
+					}
+				}
+				return newmav;
+			}
+		}
 	    // cat_id가 null이거나 공백이면 제목으로만 검색
 	    if(cat_id == null || cat_id.trim().isEmpty()) {
 	    	int currentPage = 1;
