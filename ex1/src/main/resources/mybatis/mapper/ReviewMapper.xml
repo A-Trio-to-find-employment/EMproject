@@ -43,8 +43,8 @@
 			     	) a)
 		where rank > #{start} and rank <![CDATA[<]]> #{end}	
 	</select>
-	<select id="getTotal" resultType="Integer">
-		select count(*) from review 
+	<select id="getTotal" resultType="Integer" parameterType="java.lang.Long">
+		select count(*) from review where isbn=#{isbn}
 	</select>
 	<select id="getTotalMine" parameterType="String" resultType="Integer">
 		select count(*) 

@@ -10,6 +10,7 @@ public class StartEndKey {
 	private Integer end;
 	private String key;
 	private Integer ans;
+	private String user_id;
 	private String book_title;
 	private String cat_id;
 }

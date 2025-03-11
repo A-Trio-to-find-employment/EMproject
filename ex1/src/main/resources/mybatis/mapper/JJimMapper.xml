@@ -20,6 +20,41 @@
         FROM jjim
         WHERE isbn = #{isbn} 
     </select>
+    
+    <select id="getorderByjjim" parameterType="StartEndKey" resultType="Book">
+SELECT * 
+FROM (
+    SELECT ROWNUM AS rn, 
+           b.isbn, 
+           b.book_title,
+           (SELECT LISTAGG(ba.author, ', ') WITHIN GROUP (ORDER BY ba.author)
+            FROM book_author ba
+            WHERE ba.isbn = b.isbn) AS authors,
+           b.price,
+           b.publisher,
+           b.pub_date,
+           b.image_name,
+           bc.cat_id -- book_categories 
+    FROM book b
+    LEFT JOIN book_categories bc ON b.isbn = bc.isbn 
+    WHERE b.isbn IN (
+        SELECT j.isbn
+        FROM jjim j
+        WHERE j.user_id = #{user_id}
+    )
+    ORDER BY b.pub_date DESC  
+) a
+WHERE a.rn > #{start} AND a.rn <![CDATA[<=]]> #{end} 
+ORDER BY a.rn 
+
+</select>
+   
+   <select id="getjjimCount" parameterType="String" resultType="Integer">
+	select count(*) from jjim where user_id=#{user_id}
+</select>
+<select id="getCategoriesName" parameterType="String" resultType="String">
+		select cat_name from categories where cat_id=#{cat_id}
+	</select>
 </mapper>
 
 	

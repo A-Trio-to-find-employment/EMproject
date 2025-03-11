@@ -13,7 +13,7 @@ public interface ReviewMapper {
    List<Review> getReview(Long isbn);
    void increaseReportCount(Integer review_id);
    void deleteReportedReviews();
-   Integer getTotal();
+   Integer getTotal(Long isbn);
    List<Review> ReviewList(StartEnd st);
    void writeReview(Review review);
    void deleteReview(Integer review_id);

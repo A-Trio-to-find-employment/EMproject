@@ -10,6 +10,22 @@
 <title>Insert title here</title>
 <link rel="stylesheet" type="text/css" href="/css/style.css">
 <link rel="stylesheet" type="text/css" href="/css/bookstyle.css">
+<style>
+.heart-button {
+	font-size: 24px;
+	cursor: pointer;
+	color: gray;
+}
+
+.heart-button.liked {
+	color: pink; /* 찜한 상태일 때 하트를 분홍색으로 변경 */
+}
+
+.like-count {
+	font-size: 14px;
+	color: #555;
+}
+</style>
 <link rel="stylesheet" type="text/css" href="/css/filtercss.css">
 </head>
 <body>
@@ -94,6 +110,7 @@
 							<p align="left" class="book-publisher">출판사:${book.publisher}</p>
 						</div>
 						<!-- 버튼 (위아래 배치) -->
+						<!-- 버튼 (위아래 배치) -->
 						<form method="get" action="/goIsbnSearch">
 							<input type="hidden" name="BOOKID" value="${book.isbn}" /> <input
 								type="hidden" name="ISBN" value="${book.isbn}" />
@@ -101,6 +118,16 @@
 								<button type="submit" name="action" value="add"
 									class="add-to-cart">장바구니</button>
 								<button type="submit" name="action" value="buy" class="buy-now">바로구매</button>
+							</div>
+							<div class="heart-container">
+								<input type="hidden" name="user_id" value="${loginUser}" />
+								<!-- 찜 상태에 맞게 하트 버튼의 클래스를 동적으로 추가 -->
+								<button type="submit" name="action1" value="jjim"
+									class="heart-button ${book.liked ? 'liked' : ''}"
+									onclick="toggleHeart(this)">♥</button>
+
+								<span class="like-count">${book.likecount}</span>
+								<!-- 찜한 사람 수 -->
 							</div>
 						</form>
 					</div>
@@ -126,6 +153,12 @@ function toggleDropdown() {
         	dropdown.style.display = "none";
 		}
 	});
+	function toggleHeart(button) {
+	    button.classList.toggle('liked');
+	    // 서버에 찜 상태를 업데이트하는 요청을 보냄
+	    let form = button.closest('form');
+	    form.submit();  // 폼을 제출하여 서버로 상태를 전송
+	}
 </script>
 	<script>
         // 전역 변수: 현재 선택된 카테고리 경로와 초기 상위 탭 HTML 저장
