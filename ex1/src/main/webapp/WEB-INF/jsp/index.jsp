@@ -112,7 +112,26 @@
                 </div>
 
                 <div class="book-section">
-                    <h3>화제의 베스트셀러 ></h3>
+                    <h3><a href="/goBestSeller">화제의 베스트셀러 ></a></h3>
+                    <table border="1">
+                    	<tr>
+                    		<c:forEach var="bestImage" items="${ bestList }">
+                    			<td>
+                    				<a href="/bookdetail.html?isbn=${bestImage.isbn}">
+                                                <img src="${pageContext.request.contextPath}/upload/${bestImage.image_name}"
+                                                     width="200" height="200" />
+                                            </a>
+                    			</td>
+                    		</c:forEach>
+						</tr>
+						<tr>
+                        	<c:forEach var="bestName" items="${bestList}">
+                            <td>
+                            	<a href="/bookdetail.html?isbn=${bestName.isbn}">제목: ${bestName.book_title}</a>
+							</td>
+                            </c:forEach>
+						</tr>
+                    </table>
                 </div>
 
                 <div class="book-section">

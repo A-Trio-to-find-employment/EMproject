@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.IndexMapper">
+	<select id="getTop4Books" resultType="java.lang.Long">
+		SELECT sub.isbn
+		FROM (
+		SELECT od.isbn, SUM(od.QUANTITY) AS
+		total_quantity
+		FROM orders_detail od
+		JOIN orders o ON od.order_id =
+		o.order_id
+		WHERE o.order_status = 0
+		GROUP BY od.isbn
+		ORDER BY
+		total_quantity DESC
+		) sub
+		WHERE ROWNUM <![CDATA[<=]]>
+		4
+	</select>
+	<select id="getTop20Books" parameterType="StartEnd"
+		resultType="java.lang.Long">
+		SELECT isbn
+		FROM (
+		SELECT a.ISBN, ROWNUM rn
+		FROM (
+		SELECT od.ISBN,
+		SUM(od.QUANTITY) AS total_quantity
+		FROM orders_detail od
+		JOIN orders o
+		ON od.ORDER_ID = o.ORDER_ID
+		WHERE o.ORDER_STATUS = 0
+		GROUP BY od.ISBN
+		ORDER BY total_quantity DESC
+		) a
+		WHERE ROWNUM <![CDATA[<]]>
+		#{end}
+		)
+		WHERE rn > #{start}
+	</select>
+	<select id="getTopCount" resultType="Integer">
+		SELECT COUNT(*)
+		FROM (
+		SELECT od.ISBN
+		FROM orders_detail od
+		JOIN orders o ON od.ORDER_ID = o.ORDER_ID
+		WHERE o.ORDER_STATUS = 0
+		GROUP BY od.ISBN
+		ORDER BY SUM(od.QUANTITY) DESC
+		)
+
+	</select>
+</mapper>
+
+	
+
+
+
+
