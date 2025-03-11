@@ -94,7 +94,7 @@
 							<p align="left" class="book-publisher">출판사:${book.publisher}</p>
 						</div>
 						<!-- 버튼 (위아래 배치) -->
-						<form method="get" action="/detailSearch">
+						<form method="get" action="/searchByTitleCat">
 							<input type="hidden" name="BOOKID" value="${book.isbn}" /> <input
 								type="hidden" name="cat_id" value="${cat_id}" /> <input
 								type="hidden" name="bookTitle" value="${bookTitle}" />
