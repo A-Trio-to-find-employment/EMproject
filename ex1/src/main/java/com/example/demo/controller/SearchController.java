@@ -61,7 +61,13 @@ public class SearchController {
 			StartEndKey sek = new StartEndKey();
 			sek.setStart(start); sek.setEnd(end); sek.setBook_title(bookTitle);
 	        List<Book> bookList = this.searchService.searchBookByTitle(sek);
-	        mav.addObject("bookList", bookList);
+	        List<Book> insertBookList = new ArrayList<Book>();
+	        for(Book book : bookList) {
+	        	System.out.println("현재 등록된 책의 isbn : " + book.getIsbn());
+	        	Book insertBook = this.fieldService.getBookDetail(book.getIsbn());
+	        	insertBookList.add(insertBook);
+	        }
+	        mav.addObject("bookList", insertBookList);
 	        int totalCount = this.searchService.getTotalCountTitle(bookTitle);
 			int pageCount = totalCount / 5;
 			if(totalCount % 5 != 0) pageCount++;
