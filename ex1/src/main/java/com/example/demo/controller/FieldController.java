@@ -364,9 +364,24 @@ public class FieldController {
 
 		// 새로운 ISBN을 추가하기 전에 기존 값을 가져와서 구분자로 구분하여 추가
 		String newIsbn = String.valueOf(isbn);  // 새로운 ISBN 값
+
 		if (recentBookIsbnStr != null && !recentBookIsbnStr.isEmpty()) {
-		    // 기존 값이 있으면, 파이프(|)로 구분하여 새로운 ISBN을 추가
-		    recentBookIsbnStr += "|" + newIsbn;  // 파이프 사용
+		    // 기존 값이 있으면 파이프(|)로 구분하여 배열로 나누기
+		    String[] existingIsbns = recentBookIsbnStr.split("\\|");
+		    
+		    // 새로운 ISBN이 기존 목록에 있는지 확인
+		    boolean isDuplicate = false;
+		    for (String existingIsbn : existingIsbns) {
+		        if (existingIsbn.equals(newIsbn)) {
+		            isDuplicate = true;
+		            break;
+		        }
+		    }
+
+		    // 중복이 아니면 새로운 ISBN을 추가
+		    if (!isDuplicate) {
+		        recentBookIsbnStr += "|" + newIsbn;  // 파이프 사용하여 추가
+		    }
 		} else {
 		    // 기존 값이 없으면 새로운 ISBN만 저장
 		    recentBookIsbnStr = newIsbn;
@@ -379,7 +394,9 @@ public class FieldController {
 		response.addCookie(recentBookCookie); // 응답에 쿠키 추가
 
 		System.out.println("📌 최근 본 책 쿠키 추가됨: ISBN들 = " + recentBookIsbnStr);
-
+		
+		
+		
 		// 1. 책 정보 가져오기
 		Book book = service.getBookDetail(isbn);
 		if (isbn != null && action != null) {
@@ -554,6 +571,34 @@ public class FieldController {
 		se.setEnd(endRow);
 		se.setIsbn(isbn);
 		List<Review> review = this.reviewservice.ReviewList(se);
+		
+		
+		// 쿠키에서 가져온 ISBN 목록을 처리
+				
+				List<Book> recentBooks = new ArrayList<>();
+				if (recentBookIsbnStr != null) {
+				    try {
+				        // 여러 ISBN이 파이프(|)로 구분되어 있다고 가정
+				        String[] isbnList = recentBookIsbnStr.split("\\|");  // 파이프 구분자로 분리
+				        
+				        // 배열을 뒤집어서 최근에 본 책을 먼저 처리
+				        for (int i = isbnList.length - 1; i >= 0; i--) {
+				            String isbn1 = isbnList[i].trim();
+				            long recentBookIsbn = Long.parseLong(isbn1);
+				            Book recentBook = this.fieldService.getBookDetail(recentBookIsbn);
+				            if (recentBook != null) {
+				                recentBooks.add(recentBook);
+				            }
+				        }
+
+				        // 뷰에 전달
+				        mav.addObject("recentBooks", recentBooks);
+				    } catch (NumberFormatException e) {
+				        System.out.println("❌ 잘못된 ISBN 값: " + recentBookIsbnStr);
+				    }
+				}
+		
+		
 		mav.addObject("START", startRow);
 		mav.addObject("END", endRow);
 		mav.addObject("TOTAL", count);

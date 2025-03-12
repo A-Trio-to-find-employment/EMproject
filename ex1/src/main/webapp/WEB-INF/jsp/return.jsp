@@ -308,9 +308,12 @@ table {
 							</form>
 
 							<!-- 책 이미지 -->
-							<img
-								src="${pageContext.request.contextPath}/upload/${recentBook.image_name}"
-								width="100" height="100" alt="책 이미지">
+							<!-- 책 이미지 -->
+							 <a href="${pageContext.request.contextPath}/bookdetail.html?isbn=${recentBook.isbn}">
+                            <img src="${pageContext.request.contextPath}/upload/${recentBook.image_name}"
+                                 width="100" height="100" alt="책 이미지">
+                        </a>
+                        ${recentBook.book_title}
 						</div>
 
 					</c:if>
