@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.WelcomeMapper">
+	<select id="getCategoryPurchaseStats" parameterType="String" resultType="map">
+		SELECT c.CAT_NAME, COUNT(*) AS purchase_count
+		FROM
+		orders_detail od
+		JOIN orders o ON od.ORDER_ID = o.ORDER_ID
+		JOIN book b
+		ON od.ISBN = b.ISBN
+		JOIN book_categories bc ON b.ISBN = bc.ISBN
+		JOIN
+		categories c ON bc.CAT_ID = c.CAT_ID
+		WHERE o.USER_ID = #{user_id}
+		AND
+		o.ORDER_STATUS = 0
+		GROUP BY c.CAT_NAME
+		ORDER BY purchase_count DESC
+	</select>
+	<select id="getMonthlyPurchaseStats" parameterType="String" resultType="map">
+		SELECT TO_CHAR(o.CREATED_AT, 'YYYY-MM') AS purchase_month, COUNT(*) AS
+		book_count
+		FROM orders o
+		JOIN orders_detail od ON o.ORDER_ID = od.ORDER_ID
+		WHERE o.USER_ID = #{user_id}
+		AND o.ORDER_STATUS = 0
+		AND o.CREATED_AT >= ADD_MONTHS(TRUNC(SYSDATE, 'MM'), -2) 
+		GROUP BY TO_CHAR(o.CREATED_AT, 'YYYY-MM')
+		ORDER BY purchase_month ASC
+	</select>
+
+
+</mapper>
+
+	
+
+
+
+

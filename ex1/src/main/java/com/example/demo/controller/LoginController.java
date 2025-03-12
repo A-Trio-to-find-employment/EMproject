@@ -25,6 +25,7 @@ import com.example.demo.service.FieldService;
 import com.example.demo.service.LoginService;
 import com.example.demo.service.PrefService;
 import com.example.demo.service.PreferenceService;
+import com.example.demo.service.WelcomeService;
 import com.example.demo.utils.LoginValidator;
 
 import jakarta.servlet.http.HttpSession;
@@ -48,6 +49,9 @@ public class LoginController {
 	public PreferenceService preferenceService;
 	@Autowired
 	public FieldService fieldService;
+	@Autowired
+	public WelcomeService welcomeService;
+	
 	@GetMapping(value = "/login")
 	public ModelAndView login(Users user) {
 		ModelAndView mav = new ModelAndView("login");
@@ -79,7 +83,7 @@ public class LoginController {
 				List<UserCouponModel> testList = this.couponService.getAvailableCoupons(loginUser.getUser_id());
 				List<UserCouponModel> ucList = new ArrayList<UserCouponModel>();
 				for(UserCouponModel ucm : testList) {
-					String cat_id = this.categoryService.getCatName(ucm.getCat_id());
+					String cat_id = this.fieldService.getCategoryPathByCatId(ucm.getCat_id());
 					ucm.setCat_id(cat_id);
 					ucList.add(ucm);
 				}
@@ -100,6 +104,13 @@ public class LoginController {
 					mav.addObject("catList", catList);
 					mav.addObject("recommendedBooks", recommendedBooks);
 				}
+				// 사용자 구매 카테고리, 사용자 구매 도서량 받아오기
+				List<Map<String, Object>> categoryPurchases = this.welcomeService.getCategoryPurchaseStats(loginUser.getUser_id());
+				mav.addObject("categoryPurchases", categoryPurchases);
+				
+				List<Map<String, Object>> recentPurchases = this.welcomeService.getMonthlyPurchaseStats(loginUser.getUser_id());
+	            mav.addObject("recentPurchases", recentPurchases);
+				
 				mav.addObject("events", eventList);
 				mav.addObject("coupons", ucList);
 				System.out.println("사용자 등급 : " + loginUser.getGrade());

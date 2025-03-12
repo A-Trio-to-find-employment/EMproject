@@ -3,7 +3,6 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f9f9f9;
-    text-align: center;
 }
 
 .container {
@@ -36,6 +35,7 @@ body {
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     overflow-y: auto; /* 스크롤 가능 */
+    text-align: left;
 }
 
 /* 맞춤 도서 추천 (2, 3열 - 첫 번째 및 두 번째 행) */
@@ -99,4 +99,49 @@ body {
     white-space: nowrap; /* 텍스트 줄바꿈 방지 */
     overflow: hidden;
     text-overflow: ellipsis; /* 긴 텍스트는 ... 표시 */
+}
+li {
+	font-size: 14px;
+	align-content: left;
+}
+.small-text {
+    font-size: 0.7em; /* 글자 크기를 기본보다 작게 */
+    color: gray; /* 색상을 연하게 (선택 사항) */
+}
+/* 공통 버튼 스타일 */
+input[type="submit"] {
+    border: none;
+    cursor: pointer;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+}
+
+/* 작은 버튼 (쿠폰 수령) */
+.small-btn {
+    background-color: #007bff;  /* 밝은 파란색 */
+    color: white;
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.small-btn:hover {
+    background-color: #0056b3; /* 살짝 어두운 파란색 */
+}
+
+/* 큰 버튼 (메인 이동) */
+.large-btn {
+    background-color: #2c3e50; /* 진한 네이비 */
+    color: white;
+    padding: 15px 30px;
+    font-size: 18px;
+    border-radius: 10px;
+    transition: 0.3s;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.large-btn:hover {
+    background-color: #1a252f; /* 더 깊은 네이비 */
+    transform: scale(1.05); /* 약간 확대 */
 }
