@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -61,8 +62,14 @@ public class GoodsService {
 	public List<Category> getCategoriesByParentId(String parnetId){
 		return this.goodsMapper.getCategoriesByParentId(parnetId);
 	}
-	public List<String> getCategoryPath(List<String> catIds) {
-		return this.goodsMapper.getCategoryPath(catIds);
+	public List<String> getCategoryPath(List<String> catIds, Book book) {
+	    List<String> result = new ArrayList<>();
+	    
+	    if (book != null && book.getCategoryPath() != null) {
+	        result.addAll(book.getCategoryPath());
+	    }
+	    
+	    return result;
 	}
 	public void addInfoCategory(BookCategories bookcat) {
 		this.goodsMapper.addInfoCategory(bookcat);

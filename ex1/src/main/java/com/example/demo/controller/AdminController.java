@@ -66,8 +66,8 @@ public class AdminController {
         }
     @GetMapping("/getCategoryPath")
     @ResponseBody   //jsp가 아닌 json으로 받아와 정상출력 위해
-    public List<String> getCategoryPath(@RequestParam("cat_id") List<String> catId) {
-        return goodsService.getCategoryPath(catId);
+    public List<String> getCategoryPath(@RequestParam("cat_id") List<String> catIds, Book book) {
+    	return goodsService.getCategoryPath(catIds, book);
     }
 	@GetMapping(value = "/adminPage")
 	public ModelAndView adminPage() {
@@ -111,7 +111,7 @@ public class AdminController {
 		ModelAndView mav = new ModelAndView("admin");
 		Book goods = this.goodsService.getGoodsDetail(isbn);
 		List<String> catId = this.goodsService.getCategoryByIsbn(isbn);
-		List<String> categoryPath = this.goodsService.getCategoryPath(catId);
+		List<String> categoryPath = this.goodsService.getCategoryPath(catId, goods);
 		mav.addObject(goods);
 		mav.addObject("GOODS", goods);
 		mav.addObject("catId", catId);

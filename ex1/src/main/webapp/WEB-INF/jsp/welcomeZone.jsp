@@ -328,6 +328,7 @@
         let categoryData = [];
 
         <c:forEach var="category" items="${categoryPurchases}">
+//         이 부분이 카테고리 이름 띄워주는 곳 여기에 이거를 클릭하면 해당 카테고리의 도서로 가게 해보자!!
             categoryLabels.push("${category.CAT_NAME}");
             categoryData.push(${category.PURCHASE_COUNT});
         </c:forEach>

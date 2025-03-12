@@ -66,15 +66,26 @@
 	    SELECT cat_id, cat_name FROM categories 
 		where (parent_id = #{parent_id} OR (#{parent_id} IS NULL AND parent_id IS NULL))
 	</select>
-	<select id="getCategoryPath" parameterType="java.util.List" resultType="String">
-	    SELECT LISTAGG(cat_name, ' > ') WITHIN GROUP (ORDER BY LEVEL DESC) 
-	    FROM categories
-	    where cat_id in
-	    <foreach item="catId" collection="catIds" open="(" separator="," close=")">
+<!-- 	<select id="getCategoryPath" parameterType="java.util.List" resultType="String"> -->
+<!-- 	    SELECT LISTAGG(cat_name, ' > ') WITHIN GROUP (ORDER BY LEVEL DESC)  -->
+<!-- 	    FROM categories -->
+<!-- 	    where cat_id in -->
+<!-- 	    <foreach item="catId" collection="catIds" open="(" separator="," close=")"> -->
+<!--         #{catId} -->
+<!--     	</foreach> -->
+<!-- 	    CONNECT BY PRIOR parent_id = cat_id -->
+<!-- 	</select> -->
+	<select id="getCategoryPath" parameterType="java.util.List" resultType="java.util.Map">
+    SELECT cat_id, 
+           LISTAGG(cat_name, ' > ') WITHIN GROUP (ORDER BY LEVEL DESC) AS cat_path
+    FROM categories
+    START WITH cat_id IN 
+    <foreach item="catId" collection="catIds" open="(" separator="," close=")">
         #{catId}
-    	</foreach>
-	    CONNECT BY PRIOR parent_id = cat_id
-	</select>
+    </foreach>
+    CONNECT BY PRIOR parent_id = cat_id
+    GROUP BY cat_id
+</select>
 	<insert id="addInfoCategory" parameterType="BookCategories">
 		insert into book_categories (isbn, cat_id) values (#{isbn}, #{cat_id}) 
 	</insert>
