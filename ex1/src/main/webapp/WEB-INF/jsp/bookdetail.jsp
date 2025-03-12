@@ -198,7 +198,6 @@ function toggleHeart(button) {
 }
 </script>
 
-
-	</div>
+	
 </body>
 </html>

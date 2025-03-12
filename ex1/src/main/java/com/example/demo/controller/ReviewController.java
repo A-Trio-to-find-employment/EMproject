@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,10 +16,13 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.demo.model.Book;
 import com.example.demo.model.MyReview;
 import com.example.demo.model.Review;
+import com.example.demo.service.FieldService;
 import com.example.demo.service.GoodsService;
 import com.example.demo.service.LoginService;
 import com.example.demo.service.ReviewService;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 
@@ -30,6 +34,8 @@ public class ReviewController {
 	private LoginService loginService;
 	@Autowired
 	private GoodsService goodsService;
+	@Autowired
+	private FieldService fieldService;
 	@ResponseBody
     @PostMapping("/reportReview")
     public Map<String, Object> reportReview(@RequestParam("review_id") Integer review_id) {
@@ -97,7 +103,7 @@ public class ReviewController {
 	    return response;
 	}
 	@GetMapping(value = "/listReview")
-	public ModelAndView listReview(Integer pageNo, HttpSession session) {
+	public ModelAndView listReview(Integer pageNo, HttpSession session,HttpServletRequest request) {
 		int currentPage = 1;
 		if(pageNo == null) {
 			System.out.println("pageNo is null");
@@ -111,6 +117,40 @@ public class ReviewController {
 		System.out.println("건 수 : "+mineReview.size());
 		
 		ModelAndView mav = new ModelAndView("myArea");
+		// 쿠키에서 가져온 ISBN 목록을 처리
+				String recentBookIsbnStr = null;
+				Cookie[] cookies = request.getCookies();
+				if (cookies != null) {
+				    for (Cookie cookie : cookies) {
+				        if (cookie.getName().equals("recentBook")) {
+				            recentBookIsbnStr = cookie.getValue();
+				            break;
+				        }
+				    }
+				}
+
+				List<Book> recentBooks = new ArrayList<>();
+				if (recentBookIsbnStr != null) {
+				    try {
+				        // 여러 ISBN이 파이프(|)로 구분되어 있다고 가정
+				        String[] isbnList = recentBookIsbnStr.split("\\|");  // 파이프 구분자로 분리
+				        
+				        // 배열을 뒤집어서 최근에 본 책을 먼저 처리
+				        for (int i = isbnList.length - 1; i >= 0; i--) {
+				            String isbn = isbnList[i].trim();
+				            long recentBookIsbn = Long.parseLong(isbn);
+				            Book recentBook = this.fieldService.getBookDetail(recentBookIsbn);
+				            if (recentBook != null) {
+				                recentBooks.add(recentBook);
+				            }
+				        }
+
+				        // 뷰에 전달
+				        mav.addObject("recentBooks", recentBooks);
+				    } catch (NumberFormatException e) {
+				        System.out.println("❌ 잘못된 ISBN 값: " + recentBookIsbnStr);
+				    }
+				}
 		Integer totalCount  = this.service.getTotalMine(id);
 		int pageCount = totalCount / 5;
 		if(totalCount % 5 != 0)pageCount++;

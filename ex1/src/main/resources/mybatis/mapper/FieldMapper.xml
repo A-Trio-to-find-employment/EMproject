@@ -287,6 +287,7 @@ ORDER BY a.rn
 <select id="getBookCategoriesCount" parameterType="String" resultType="Integer">
 	select count(*) from book_categories where cat_id=#{cat_id}
 </select>
+
 <select id="getCategoryPathByCatId" parameterType="string" resultType="string">
     SELECT 
         LTRIM(SYS_CONNECT_BY_PATH(CAT_NAME, ' > '), ' > ') AS categoryPath
@@ -295,6 +296,26 @@ ORDER BY a.rn
     START WITH PARENT_ID IS NULL
     CONNECT BY PRIOR CAT_ID = PARENT_ID
 </select>
+
+
+ <select id="getBookDetaill" resultType="Book" parameterType="java.lang.Long">
+        SELECT
+            b.isbn,
+            b.book_title,
+            b.publisher,
+            b.price,
+            b.total_rating,
+            b.stock,
+            b.pub_date,
+            b.reg_date,
+            b.cat_id,
+            b.image_name
+        FROM
+            book b
+        WHERE
+            b.isbn = #{isbn}
+    </select>
+
 
 </mapper>
 

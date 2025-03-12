@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.demo.model.Book;
 import com.example.demo.model.MyOrders;
 import com.example.demo.model.Orders_detail;
 import com.example.demo.model.Return_exchange_refund;
@@ -17,11 +19,14 @@ import com.example.demo.model.User_pref;
 import com.example.demo.model.Users;
 import com.example.demo.service.CartService;
 import com.example.demo.service.CategoryService;
+import com.example.demo.service.FieldService;
 import com.example.demo.service.LoginService;
 import com.example.demo.service.OrderService;
 import com.example.demo.service.PrefService;
 import com.example.demo.service.ReturnExchangeService;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -39,11 +44,46 @@ public class OrderController {
     private CartService cartService;
     @Autowired
     private LoginService loginService;
+    @Autowired
+	private FieldService fieldService;
     
     @GetMapping(value="/order/orderlist.html")
-    public ModelAndView orderList(Integer PAGE_NUM, HttpSession session) {
+    public ModelAndView orderList(Integer PAGE_NUM, HttpSession session,HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("orderlist");
-        
+     // 쿠키에서 가져온 ISBN 목록을 처리
+     		String recentBookIsbnStr = null;
+     		Cookie[] cookies = request.getCookies();
+     		if (cookies != null) {
+     		    for (Cookie cookie : cookies) {
+     		        if (cookie.getName().equals("recentBook")) {
+     		            recentBookIsbnStr = cookie.getValue();
+     		            break;
+     		        }
+     		    }
+     		}
+
+     		List<Book> recentBooks = new ArrayList<>();
+     		if (recentBookIsbnStr != null) {
+     		    try {
+     		        // 여러 ISBN이 파이프(|)로 구분되어 있다고 가정
+     		        String[] isbnList = recentBookIsbnStr.split("\\|");  // 파이프 구분자로 분리
+     		        
+     		        // 배열을 뒤집어서 최근에 본 책을 먼저 처리
+     		        for (int i = isbnList.length - 1; i >= 0; i--) {
+     		            String isbn = isbnList[i].trim();
+     		            long recentBookIsbn = Long.parseLong(isbn);
+     		            Book recentBook = this.fieldService.getBookDetail(recentBookIsbn);
+     		            if (recentBook != null) {
+     		                recentBooks.add(recentBook);
+     		            }
+     		        }
+
+     		        // 뷰에 전달
+     		        mav.addObject("recentBooks", recentBooks);
+     		    } catch (NumberFormatException e) {
+     		        System.out.println("❌ 잘못된 ISBN 값: " + recentBookIsbnStr);
+     		    }
+     		}
         // 로그인된 사용자 정보 가져오기
         String user = (String) session.getAttribute("loginUser");
         
@@ -141,8 +181,42 @@ public class OrderController {
         return "redirect:/order/orderlist.html";
     }
     @PostMapping("/requestAction")
-    public ModelAndView returnRequest( String orderDetailId, String BTN) {
+    public ModelAndView returnRequest( String orderDetailId, String BTN,HttpServletRequest request) {
     	ModelAndView mav = new ModelAndView();
+    	// 쿠키에서 가져온 ISBN 목록을 처리
+    			String recentBookIsbnStr = null;
+    			Cookie[] cookies = request.getCookies();
+    			if (cookies != null) {
+    			    for (Cookie cookie : cookies) {
+    			        if (cookie.getName().equals("recentBook")) {
+    			            recentBookIsbnStr = cookie.getValue();
+    			            break;
+    			        }
+    			    }
+    			}
+
+    			List<Book> recentBooks = new ArrayList<>();
+    			if (recentBookIsbnStr != null) {
+    			    try {
+    			        // 여러 ISBN이 파이프(|)로 구분되어 있다고 가정
+    			        String[] isbnList = recentBookIsbnStr.split("\\|");  // 파이프 구분자로 분리
+    			        
+    			        // 배열을 뒤집어서 최근에 본 책을 먼저 처리
+    			        for (int i = isbnList.length - 1; i >= 0; i--) {
+    			            String isbn = isbnList[i].trim();
+    			            long recentBookIsbn = Long.parseLong(isbn);
+    			            Book recentBook = this.fieldService.getBookDetail(recentBookIsbn);
+    			            if (recentBook != null) {
+    			                recentBooks.add(recentBook);
+    			            }
+    			        }
+
+    			        // 뷰에 전달
+    			        mav.addObject("recentBooks", recentBooks);
+    			    } catch (NumberFormatException e) {
+    			        System.out.println("❌ 잘못된 ISBN 값: " + recentBookIsbnStr);
+    			    }
+    			}
     	MyOrders order = this.orderservice.getUsers(orderDetailId);
 		mav.addObject("order",order);
     	if(BTN.equals("반품")) {    		
@@ -156,7 +230,7 @@ public class OrderController {
     }
     @PostMapping("/submitReturn")
     public ModelAndView submitReturn(String detailid, Integer reason,
-    		HttpSession session) {
+    		HttpSession session,HttpServletRequest request) {
     	String loginUser = (String)session.getAttribute("loginUser");
     	Return_exchange_refund rer = new Return_exchange_refund();
     	this.returnExchangeService.UpdateReturnExchangeRefund(detailid);
@@ -216,6 +290,40 @@ public class OrderController {
         	}
         } // 조건에 맞다면 사용자의 등급을 변경한다.
     	ModelAndView mav = new ModelAndView("redirect:/order/orderlist.html");
+    	// 쿠키에서 가져온 ISBN 목록을 처리
+    			String recentBookIsbnStr = null;
+    			Cookie[] cookies = request.getCookies();
+    			if (cookies != null) {
+    			    for (Cookie cookie : cookies) {
+    			        if (cookie.getName().equals("recentBook")) {
+    			            recentBookIsbnStr = cookie.getValue();
+    			            break;
+    			        }
+    			    }
+    			}
+
+    			List<Book> recentBooks = new ArrayList<>();
+    			if (recentBookIsbnStr != null) {
+    			    try {
+    			        // 여러 ISBN이 파이프(|)로 구분되어 있다고 가정
+    			        String[] isbnList = recentBookIsbnStr.split("\\|");  // 파이프 구분자로 분리
+    			        
+    			        // 배열을 뒤집어서 최근에 본 책을 먼저 처리
+    			        for (int i = isbnList.length - 1; i >= 0; i--) {
+    			            String isbn = isbnList[i].trim();
+    			            long recentBookIsbn = Long.parseLong(isbn);
+    			            Book recentBook = this.fieldService.getBookDetail(recentBookIsbn);
+    			            if (recentBook != null) {
+    			                recentBooks.add(recentBook);
+    			            }
+    			        }
+
+    			        // 뷰에 전달
+    			        mav.addObject("recentBooks", recentBooks);
+    			    } catch (NumberFormatException e) {
+    			        System.out.println("❌ 잘못된 ISBN 값: " + recentBookIsbnStr);
+    			    }
+    			}
         return mav;
     }
     @PostMapping("/submitExchange")

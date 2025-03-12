@@ -90,8 +90,13 @@ public class FieldService {
 	 public Integer getBookCategoriesCount(String cat_id) {
 		 return this.mapper.getBookCategoriesCount(cat_id);
 	 }
+
 	 public String getCategoryPathByCatId(String cat_id) {
 		 String catPath = this.mapper.getCategoryPathByCatId(cat_id);
 		 return catPath;
+	 }
+	 public Book getBookDetaill(Long isbn) {
+		 return this.mapper.getBookDetaill(isbn);
+
 	 }
 }

@@ -30,6 +30,9 @@ import com.example.demo.service.JJimService;
 import com.example.demo.service.PrefService;
 import com.example.demo.service.PreferenceService;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -52,9 +55,45 @@ public class IndexController {
 	private CartService cartService;
 
 	@RequestMapping(value = "/index")
-	public ModelAndView index(HttpSession session) {
+	public ModelAndView index(HttpSession session,HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("index");
+		
+		// 쿠키에서 가져온 ISBN 목록을 처리
+		String recentBookIsbnStr = null;
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null) {
+		    for (Cookie cookie : cookies) {
+		        if (cookie.getName().equals("recentBook")) {
+		            recentBookIsbnStr = cookie.getValue();
+		            break;
+		        }
+		    }
+		}
 
+		List<Book> recentBooks = new ArrayList<>();
+		if (recentBookIsbnStr != null) {
+		    try {
+		        // 여러 ISBN이 파이프(|)로 구분되어 있다고 가정
+		        String[] isbnList = recentBookIsbnStr.split("\\|");  // 파이프 구분자로 분리
+		        
+		        // 배열을 뒤집어서 최근에 본 책을 먼저 처리
+		        for (int i = isbnList.length - 1; i >= 0; i--) {
+		            String isbn = isbnList[i].trim();
+		            long recentBookIsbn = Long.parseLong(isbn);
+		            Book recentBook = this.fieldService.getBookDetail(recentBookIsbn);
+		            if (recentBook != null) {
+		                recentBooks.add(recentBook);
+		            }
+		        }
+
+		        // 뷰에 전달
+		        mav.addObject("recentBooks", recentBooks);
+		    } catch (NumberFormatException e) {
+		        System.out.println("❌ 잘못된 ISBN 값: " + recentBookIsbnStr);
+		    }
+		}
+
+		
 		// 상위 카테고리 정보만 전달 (비동기 방식으로 중/하위 카테고리를 가져올 예정)
 		List<Category> topCatList = filterService.getTopCategories();
 		mav.addObject("topCatList", topCatList);
@@ -130,7 +169,6 @@ public class IndexController {
 		se.setEnd(end);
 		List<Long> isbnList = this.indexService.getTop20Books(se);
 		List<Book> bestSellerList = new ArrayList<Book>();
-		
 		if(loginUser == null) {
 			for (Long bestIsbn : isbnList) {
 				Book bestBook = this.fieldService.getBookDetail(bestIsbn);
@@ -198,29 +236,23 @@ public class IndexController {
 				}
 			}
 		}
-		if (loginUser != null) {
-			JJim jjim = new JJim();
-			jjim.setUser_id(loginUser);
-			jjim.setIsbn(BOOKID);
+		if(loginUser != null) {
 			for (Long bestIsbn : isbnList) {
 				Book bestBook = this.fieldService.getBookDetail(bestIsbn);
+				JJim jjim = new JJim();
+				jjim.setUser_id(loginUser);
+				if(BOOKID != null) {
+					jjim.setIsbn(BOOKID);
+					//
+					boolean isLiked = jjimService.isBookLiked(jjim) > 0;
+					bestBook.setLiked(isLiked);
+
+					// 찜한 사람 수 계산
+					int likeCount = jjimService.getLikeCount(bestBook.getIsbn());
+					bestBook.setLikecount(likeCount);
+				}
 				bestSellerList.add(bestBook);
 			}
-			// `bookList`의 각 책에 대해 찜 상태를 확인하고 업데이트
-			for (Book book : bestSellerList) {
-				jjim.setUser_id(loginUser);
-				jjim.setIsbn(book.getIsbn());
-
-				// 찜 상태 체크
-				boolean isLiked = jjimService.isBookLiked(jjim) > 0;
-				book.setLiked(isLiked);
-
-				// 찜한 사람 수 계산 (예: 찜한 사람 수를 가져오는 메소드 호출)
-				int likeCount = jjimService.getLikeCount(book.getIsbn());
-				book.setLikecount(likeCount);
-				
-			}
-			
 		}
 		if (BOOKID != null && action != null) {
 			if (loginUser == null) {
@@ -306,5 +338,47 @@ public class IndexController {
 		mav.addObject("bestSellerList", bestSellerList);
 		return mav;
 	}
+	@RequestMapping(value = "/deleteRecentBook", method = RequestMethod.POST)
+	public String deleteRecentBook(@RequestParam("isbn") long isbn, HttpServletRequest request, HttpServletResponse response) {
+	    // 기존 쿠키에서 ISBN 목록 가져오기
+	    String recentBookIsbnStr = null;
+	    Cookie[] cookies = request.getCookies();
+	    if (cookies != null) {
+	        for (Cookie cookie : cookies) {
+	            if (cookie.getName().equals("recentBook")) {
+	                recentBookIsbnStr = cookie.getValue();
+	                break;
+	            }
+	        }
+	    }
+
+	    if (recentBookIsbnStr != null) {
+	        // 파이프(|)로 구분된 ISBN 목록에서 삭제할 ISBN을 제거
+	        String[] isbnList = recentBookIsbnStr.split("\\|");
+	        List<String> updatedIsbnList = new ArrayList<>();
+	        for (String isbnItem : isbnList) {
+	            if (!isbnItem.equals(String.valueOf(isbn))) {
+	                updatedIsbnList.add(isbnItem); // 삭제할 ISBN 제외
+	            }
+	        }
+
+	        // 새로 갱신된 ISBN 목록을 쿠키에 다시 저장
+	        String updatedIsbnStr = String.join("|", updatedIsbnList);
+
+	        // 쿠키 갱신
+	        Cookie recentBookCookie = new Cookie("recentBook", updatedIsbnStr);
+	        recentBookCookie.setMaxAge(60 * 60 * 24 * 1); // 1일 동안 유지
+	        recentBookCookie.setPath("/"); // 모든 경로에서 접근 가능
+	        response.addCookie(recentBookCookie);
+
+	        System.out.println("📌 최근 본 책 쿠키 갱신됨: ISBN들 = " + updatedIsbnStr);
+	    }
+
+	    // 현재 페이지로 리다이렉트
+	    String referer = request.getHeader("referer");  // 현재 페이지 URL 가져오기
+	    return "redirect:" + referer;  // 그 페이지로 리다이렉트
+	}
+
+
 
 }

@@ -30,6 +30,8 @@ import com.example.demo.service.OrderService;
 import com.example.demo.service.PrefService;
 import com.example.demo.service.PreferenceService;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -62,7 +64,7 @@ public class CartController {
     
     // 장바구니 조회
     @GetMapping
-    public ModelAndView CartList(HttpSession session) {
+    public ModelAndView CartList(HttpSession session,HttpServletRequest request) {
         String loginUser = (String) session.getAttribute("loginUser");
         if (loginUser == null) {
             ModelAndView mav = new ModelAndView("loginFail");
@@ -74,6 +76,40 @@ public class CartController {
         Map<String, List<Coupon>> selectBox = new HashMap<>();
         List<Integer> subTotalList = new ArrayList<Integer>();
         ModelAndView mav = new ModelAndView("cart");
+     // 쿠키에서 가져온 ISBN 목록을 처리
+     		String recentBookIsbnStr = null;
+     		Cookie[] cookies = request.getCookies();
+     		if (cookies != null) {
+     		    for (Cookie cookie : cookies) {
+     		        if (cookie.getName().equals("recentBook")) {
+     		            recentBookIsbnStr = cookie.getValue();
+     		            break;
+     		        }
+     		    }
+     		}
+
+     		List<Book> recentBooks = new ArrayList<>();
+     		if (recentBookIsbnStr != null) {
+     		    try {
+     		        // 여러 ISBN이 파이프(|)로 구분되어 있다고 가정
+     		        String[] isbnList = recentBookIsbnStr.split("\\|");  // 파이프 구분자로 분리
+     		        
+     		        // 배열을 뒤집어서 최근에 본 책을 먼저 처리
+     		        for (int i = isbnList.length - 1; i >= 0; i--) {
+     		            String isbn = isbnList[i].trim();
+     		            long recentBookIsbn = Long.parseLong(isbn);
+     		            Book recentBook = this.fieldService.getBookDetail(recentBookIsbn);
+     		            if (recentBook != null) {
+     		                recentBooks.add(recentBook);
+     		            }
+     		        }
+
+     		        // 뷰에 전달
+     		        mav.addObject("recentBooks", recentBooks);
+     		    } catch (NumberFormatException e) {
+     		        System.out.println("❌ 잘못된 ISBN 값: " + recentBookIsbnStr);
+     		    }
+     		}
         int totalPrice = 0;
         for (Cart cart : cartList) { // 카트 항목마다 반복
         	// 사용가능한쿠폰 목록
