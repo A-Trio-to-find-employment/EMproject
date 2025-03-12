@@ -8,43 +8,109 @@
     <meta charset="UTF-8">
     <title>도서 검색</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
-   <style type="text/css">
-    .filter {
-            margin: 20px 0;
-            text-align: center;
+    <style type="text/css">
+
+       
+        /* 전체 컨테이너 */
+        .container {
+            width: 50%;
+            margin: 30px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .filter select {
-            padding: 5px;
-            font-size: 16px;
+        /* 헤더 스타일 */
+        h2 {
+            text-align: center;
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
         }
-         .containerr {
-            width: 80%;
-            margin: 0 auto;
-            padding: 20px;
+
+      
+
+        /* 필터 드롭다운 */
+        .filter {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .filter select {
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f8f8f8;
+            transition: all 0.3s ease;
+        }
+        .filter select:hover {
+            background-color: #e9e9e9;
+        }
+
+        /* 테이블 스타일 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #ff6f61;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* 상태별 색상 */
+        .completed {
+            color: green;
+            font-weight: bold;
+        }
+        .pending {
+            color: #ff9800;
+            font-weight: bold;
+        }
+
+        /* 미디어 쿼리 */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 10px;
+            }
+            .sidebar {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            table {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
-<c:set var="body" value="${param.BODY }"/>
-<c:set var="id" value="${sessionScope.user_id }"/>
+    <c:set var="body" value="${param.BODY }"/>
+    <c:set var="id" value="${sessionScope.user_id }"/>
 
     <div class="nav">
         <a href="/adminPage">HOME</a>
-    <a href="/manageGoods">상품 관리</a>
-    <a href="/anslist">고객 문의</a>
-    <a href="/adminevent">이벤트 관리</a>
-    <a href="/adminrer">교환 및 반품 현황</a>
-    <a href="/goStatistics">통계 내역</a>
-    <a href="/categories">필터 관리</a>
-    <a href="/logout">로그아웃</a>
-<!--         관리자 grade==9만들동안 이용 -->
-<%--         <c:if test="${sessionScope.loginUser != null}"> --%>
-<%--         	<p>사용자 : ${ sessionScope.loginUser }</p> --%>
-   			<a href="/logout">로그아웃</a>
-<%-- 		</c:if> --%>
+        <a href="/manageGoods">상품 관리</a>
+        <a href="/anslist">고객 문의</a>
+        <a href="/adminevent">이벤트 관리</a>
+        <a href="/adminrer">교환 및 반품 현황</a>
+        <a href="/goStatistics">통계 내역</a>
+        <a href="/categories">필터 관리</a>
+        <a href="/logout">로그아웃</a>
     </div>
-   <div class="container">
+
+    <div class="container">
         <h2>반품 신청 목록</h2>
         <div class="sidebar">
             <ul>
@@ -102,20 +168,6 @@
                 }
             });
         }
-        function toggleDropdown() {
-            var dropdown = document.getElementById("categoryDropdown");
-            dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
-        }
-
-        // 다른 곳 클릭하면 드롭다운 닫힘
-        document.addEventListener("click", function(event) {
-            var dropdown = document.getElementById("categoryDropdown");
-            var categoryLink = document.querySelector(".nav div a");
-
-            if (!dropdown.contains(event.target) && event.target !== categoryLink) {
-                dropdown.style.display = "none";
-            }
-        });
     </script>
 </body>
 </html>

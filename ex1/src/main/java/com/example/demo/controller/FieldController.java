@@ -82,6 +82,7 @@ public class FieldController {
 				        System.out.println("❌ 잘못된 ISBN 값: " + recentBookIsbnStr);
 				    }
 				}
+				
 		boolean hasSubCategories = service.countSubCategories(Integer.parseInt(cat_id));
 		if (hasSubCategories) {
 			List<Category> fieldlist = service.getCategories(cat_id);
