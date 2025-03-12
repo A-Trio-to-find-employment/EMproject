@@ -77,4 +77,7 @@ public class CouponService {
 		List<UserCouponModel> ucmList = this.couponMapper.getUnavailableCoupons(user_id);
 		return ucmList;
 	}
+	public void insertCatCoupon(Coupon coupon) {
+		this.couponMapper.insertCatCoupon(coupon);
+	}
 }

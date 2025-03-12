@@ -27,4 +27,5 @@ public interface CouponMapper {
 	void InsertCoupon(Coupon coupon);
 	List<UserCouponModel> getAvailableCoupons(String user_id);
 	List<UserCouponModel> getUnavailableCoupons(String user_id);
+	void insertCatCoupon(Coupon coupon);
 }

@@ -91,7 +91,9 @@
     		and c.valid_from >= sysdate  
     		order by c.valid_until asc
 	</select>
-
+	<insert id="insertCatCoupon" parameterType="Coupon">
+	 	insert into coupon values(#{coupon_id}, #{discount_percentage}, sysdate, sysdate+30, #{cat_id})
+	</insert>
 </mapper>
 
 	

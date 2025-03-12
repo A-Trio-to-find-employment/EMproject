@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -201,5 +203,38 @@ public class AdminEvent {
 	    return mav;
 		}
 	}
+	@PostMapping(value="/adminSubCatCoupon")
+	public ModelAndView adminSubCatCoupon(@Valid Coupon coupon, BindingResult br, HttpSession session) {
+		ModelAndView mav = new ModelAndView("admineventmenu");
+		if(br.hasErrors()) {
+			mav.addObject("BODY","adminAutoCoupon.jsp");
+			return mav;
+		} else {
+			Integer discount_percentage = coupon.getDiscount_percentage();
+			Integer dp1 = discount_percentage;
+			Integer dp2 = discount_percentage + 5;
+			Integer dp3 = discount_percentage + 15;
+			List<Category> catList = this.categryservice.getsubcategory();
+			for (Category cat : catList) {
+			    Integer[] dcArray = {dp1, dp2, dp3}; // 할인율 배열
+			    String catName = cat.getCat_name(); // 카테고리 이름 가져오기
+			    String month = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM")); // 현재 연월
+			    String couponName = catName + month;
+			    String[] nameArray = {couponName, couponName + "VIP", couponName + "VVIP"};
 
+			    for (int i = 0; i < 3; i++) {
+			        Integer cid = this.couponService.MaxCouponid() + 1; 
+			        Coupon c = new Coupon(); // 새로운 객체 생성 (재사용 방지)
+			        c.setCoupon_id(cid);
+			        c.setDiscount_percentage(dcArray[i]);
+			        c.setCoupon_code(nameArray[i]);
+			        c.setCat_id(catName);
+
+			        this.couponService.insertCatCoupon(c);
+			    }
+			}
+		}
+		mav.setViewName("redirect:/admincouponlist"); // 리다이렉트 URL을 설정
+		return mav;
+	}
 }
