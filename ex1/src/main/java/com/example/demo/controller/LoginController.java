@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,9 +16,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.model.Book;
+import com.example.demo.model.Coupon;
 import com.example.demo.model.Event;
 import com.example.demo.model.StartEndKey;
 import com.example.demo.model.UserCouponModel;
+import com.example.demo.model.Usercoupon;
 import com.example.demo.model.Users;
 import com.example.demo.service.CategoryService;
 import com.example.demo.service.CouponService;
@@ -29,7 +33,6 @@ import com.example.demo.service.WelcomeService;
 import com.example.demo.utils.LoginValidator;
 
 import jakarta.servlet.http.HttpSession;
-
 
 @Controller
 public class LoginController {
@@ -51,25 +54,26 @@ public class LoginController {
 	public FieldService fieldService;
 	@Autowired
 	public WelcomeService welcomeService;
-	
+
 	@GetMapping(value = "/login")
 	public ModelAndView login(Users user) {
 		ModelAndView mav = new ModelAndView("login");
 		return mav;
 	}
+
 	@PostMapping(value = "/login")
 	public ModelAndView secondfa(Users users, BindingResult br, HttpSession session) {
 		ModelAndView mav = new ModelAndView();
 		this.loginValidator.validate(users, br);
-		if(br.hasErrors()) {
+		if (br.hasErrors()) {
 			mav.getModel().putAll(br.getModel());
 			return mav;
 		}
 		try {
-			//로그인 성공 후 정보 가져오기
+			// 로그인 성공 후 정보 가져오기
 			Users loginUser = this.loginService.getUser(users);
-			if(loginUser != null) {
-				if(loginUser.getGrade() == 9) {
+			if (loginUser != null) {
+				if (loginUser.getGrade() == 9) {
 					ModelAndView newMav = new ModelAndView("admin");
 					return newMav;
 				}
@@ -78,21 +82,96 @@ public class LoginController {
 //				mav.setViewName("loginSuccess");
 //				mav.addObject("loginUser",loginUser);
 				StartEndKey sek = new StartEndKey();
-				sek.setStart(0); sek.setEnd(3);
+				sek.setStart(0);
+				sek.setEnd(3);
 				List<Event> eventList = this.eventService.getEventList(sek);
 				List<UserCouponModel> testList = this.couponService.getAvailableCoupons(loginUser.getUser_id());
 				List<UserCouponModel> ucList = new ArrayList<UserCouponModel>();
-				for(UserCouponModel ucm : testList) {
+				for (UserCouponModel ucm : testList) {
 					String cat_id = this.fieldService.getCategoryPathByCatId(ucm.getCat_id());
 					ucm.setCat_id(cat_id);
 					ucList.add(ucm);
 				}
+
 				List<String> catList = this.prefService.getUserTopCat(loginUser.getUser_id());
 				Map<String, Object> paramMap = new HashMap<>();
-				if (catList != null)
+				if (catList != null) { // 선호 카테고리가 null이 아님.
 					paramMap.put("userId", loginUser.getUser_id());
-				paramMap.put("catIds", catList);
-				mav.addObject("catList", null);
+					paramMap.put("catIds", catList);
+					mav.addObject("catList", null);
+					String prefCatId = this.prefService.getPrefTop(loginUser.getUser_id());
+					if (prefCatId == null) { // 선호 pref_id가 없으면
+						mav.addObject("getCoupon", null);
+					} else { // 선호 pref_id가 있다면
+						String prefCatName = this.categoryService.getCatName(prefCatId);
+						if (loginUser.getGrade() == 0) {
+							String path = "";
+							String month = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM")); // 현재 연월
+							path = prefCatName + month;
+							List<Coupon> prefCoupon = this.couponService.getCouponByCode(path);
+							List<Coupon> getCoupon = new ArrayList<Coupon>();
+							for (Coupon c : prefCoupon) {
+								String catId = this.fieldService.getCategoryPathByCatId(c.getCat_id());
+								c.setCat_id(catId);
+								getCoupon.add(c);
+							}
+							Usercoupon uc = new Usercoupon();
+							for (Coupon cou : prefCoupon) {
+								uc.setUser_id(loginUser.getUser_id());
+								uc.setCoupon_id(cou.getCoupon_id());
+								Integer testcid = this.couponService.findUserCoupon(uc);
+								if (testcid != null) {
+									getCoupon = null;
+								}
+							}
+							mav.addObject("getCoupon", getCoupon);
+						} else if (loginUser.getGrade() == 1) {
+							String path = "";
+							String month = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM")); // 현재 연월
+							path = prefCatName + month + "VIP";
+							List<Coupon> prefCoupon = this.couponService.getCouponByCode(path);
+							List<Coupon> getCoupon = new ArrayList<Coupon>();
+							for (Coupon c : prefCoupon) {
+								String catId = this.fieldService.getCategoryPathByCatId(c.getCat_id());
+								c.setCat_id(catId);
+								getCoupon.add(c);
+							}
+							Usercoupon uc = new Usercoupon();
+							for (Coupon cou : getCoupon) {
+								uc.setUser_id(loginUser.getUser_id());
+								uc.setCoupon_id(cou.getCoupon_id());
+								Integer testcid = this.couponService.findUserCoupon(uc);
+								System.out.println("쿠폰 ID : " + testcid);
+								if (testcid != null) {
+									getCoupon = null;
+								}
+							}
+							mav.addObject("getCoupon", getCoupon);
+						} else if (loginUser.getGrade() == 2) {
+							String path = "";
+							String month = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM")); // 현재 연월
+							path = prefCatName + month + "VVIP";
+							List<Coupon> prefCoupon = this.couponService.getCouponByCode(path);
+							List<Coupon> getCoupon = new ArrayList<Coupon>();
+							for (Coupon c : prefCoupon) {
+								String catId = this.fieldService.getCategoryPathByCatId(c.getCat_id());
+								c.setCat_id(catId);
+								getCoupon.add(c);
+							}
+							Usercoupon uc = new Usercoupon();
+							for (Coupon cou : getCoupon) {
+								uc.setUser_id(loginUser.getUser_id());
+								uc.setCoupon_id(cou.getCoupon_id());
+								Integer testcid = this.couponService.findUserCoupon(uc);
+								
+								if (testcid != null) {
+									getCoupon = null;
+								}
+							}
+							mav.addObject("getCoupon", getCoupon);
+						}
+					}
+				}
 				// 최소 1개 이상의 카테고리가 있어야 추천 도서 검색 실행
 				if (!catList.isEmpty()) {
 					List<Long> recommendedIsbn = this.preferenceService.getRecommendedBookList(paramMap);
@@ -105,23 +184,25 @@ public class LoginController {
 					mav.addObject("recommendedBooks", recommendedBooks);
 				}
 				// 사용자 구매 카테고리, 사용자 구매 도서량 받아오기
-				List<Map<String, Object>> categoryPurchases = this.welcomeService.getCategoryPurchaseStats(loginUser.getUser_id());
+				List<Map<String, Object>> categoryPurchases = this.welcomeService
+						.getCategoryPurchaseStats(loginUser.getUser_id());
 				mav.addObject("categoryPurchases", categoryPurchases);
-				
-				List<Map<String, Object>> recentPurchases = this.welcomeService.getMonthlyPurchaseStats(loginUser.getUser_id());
-	            mav.addObject("recentPurchases", recentPurchases);
-				
+
+				List<Map<String, Object>> recentPurchases = this.welcomeService
+						.getMonthlyPurchaseStats(loginUser.getUser_id());
+				mav.addObject("recentPurchases", recentPurchases);
+
 				mav.addObject("events", eventList);
 				mav.addObject("coupons", ucList);
 				System.out.println("사용자 등급 : " + loginUser.getGrade());
 				session.setAttribute("userGrade", loginUser.getGrade());
 				return mav;
-			}else {
+			} else {
 				br.reject("error.login.users");
 				mav.getModel().putAll(br.getModel());
 				return mav;
 			}
-		}catch(EmptyResultDataAccessException e) {
+		} catch (EmptyResultDataAccessException e) {
 			br.reject("error.login.users");
 			mav.getModel().putAll(br.getModel());
 			return mav;

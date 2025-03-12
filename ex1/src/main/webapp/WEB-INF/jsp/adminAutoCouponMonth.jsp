@@ -116,8 +116,14 @@
     <script type="text/javascript">
     
     function validateForm() {
+        var discountSelect = document.forms["frm"]["discount_percentage"].value;
         
-        return true;
+        if (discountSelect === "") {
+            alert("할인율을 선택하세요.");
+            return false;
+        }
+
+        return confirm("정말 등록하시겠습니까?");
     }
 </script>
 
@@ -128,31 +134,30 @@
 <h2>단체 쿠폰 등록</h2>
 
 <!-- 쿠폰 등록 폼 -->
-<form:form method="POST" modelAttribute="coupon" action="/adminSubCatCoupon" name="frm" onsubmit="return validateForm()">
+<form action="/adminSubCatCoupon" name="frm" onsubmit="return validateForm()">
     <table>
     	<tr><td colspan="2">모든 하위 카테고리에 대한 이달의 쿠폰을 발급하는 화면입니다.</td></tr>
         <tr><td>할인율:</td>
-            <td><form:select path="discount_percentage">
-                    <form:option value="" label="선택하세요" />
-                    <form:option value="5" label="5%" />
-                    <form:option value="10" label="10%" />
-                    <form:option value="15" label="15%" />
-                    <form:option value="20" label="20%" />
-                    <form:option value="25" label="25%" />
-                    <form:option value="30" label="30%" />
-                    <form:option value="35" label="35%" />
-                    <form:option value="40" label="40%" />
-                    <form:option value="45" label="45%" />
-                    <form:option value="50" label="50%" />
-                    <form:option value="55" label="55%" />
-                    <form:option value="60" label="60%" />
-                </form:select>
-                <font color="red"><form:errors path="discount_percentage" cssClass="error" /></font>
+            <td><select name="discount_percentage">
+                    <option value="" label="선택하세요" />
+                    <option value="5" label="5%" />
+                    <option value="10" label="10%" />
+                    <option value="15" label="15%" />
+                    <option value="20" label="20%" />
+                    <option value="25" label="25%" />
+                    <option value="30" label="30%" />
+                    <option value="35" label="35%" />
+                    <option value="40" label="40%" />
+                    <option value="45" label="45%" />
+                    <option value="50" label="50%" />
+                    <option value="55" label="55%" />
+                    <option value="60" label="60%" />
+                </select>
             </td></tr>
         <tr><td colspan="2">
                 <button type="submit">쿠폰 등록</button></td></tr>
     </table>
-</form:form>
+</form>
 
 </body>
 </html>

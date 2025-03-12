@@ -47,18 +47,22 @@
 
     				<h3 class="toggle-header">🏷️ 수령 가능한 이달의 쿠폰</h3>
     				<ul class="toggle-content">
-        			<c:if test="${ getCoupon != null }">
-            		<form action="/getCoupon">
-                		<input type="hidden" name="CP" value="${ getCoupon.coupon_id }"/>
-                		<li>${getCoupon.coupon_code} 
-                    		<input type="submit" value="수 령" class="small-btn" /><br/>
-                    		<span class="small-text">${getCoupon.cat_id}</span>
-                		</li>
-            		</form>
-        			</c:if>
-        			<c:if test="${ getCoupon == null }">
-            			<li>수령 가능한 쿠폰이 없습니다.</li>
-        			</c:if>
+    				<c:choose>
+    					<c:when test="${  getCoupon == null || empty getCoupon }">
+    						<li>수령 가능한 쿠폰이 없습니다.</li>
+    					</c:when>
+    					<c:otherwise>
+    						<form action="/getcoupon">
+                				<c:forEach var="gc" items="${ getCoupon }">
+                					<input type="hidden" name="CP" value="${ gc.coupon_id }"/>
+                					<li>${gc.coupon_code} 
+                    				<input type="submit" value="수 령" class="small-btn" /><br/>
+                    				<span class="small-text">${gc.cat_id}</span>
+                					</li>
+                				</c:forEach>
+            					</form>
+    					</c:otherwise>
+    				</c:choose>
     				</ul>
 				</div>
 
