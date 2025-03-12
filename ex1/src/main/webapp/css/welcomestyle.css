@@ -94,14 +94,15 @@ body {
     font-size: 16px; /* 글자 크기를 약간 키움 */
     margin: 10px 0 0 0; /* 상단 여백 */
     padding: 0 10px; /* 텍스트 좌우 여백 */
-    text-align: center; /* 중앙 정렬 */
+    text-align: left; /* 내부 텍스트는 왼쪽 정렬 */
+    width: 80%; /* 가로 너비 통일 */
     color: #333;
     white-space: nowrap; /* 텍스트 줄바꿈 방지 */
     overflow: hidden;
     text-overflow: ellipsis; /* 긴 텍스트는 ... 표시 */
 }
 li {
-	font-size: 14px;
+	font-size: 16px;
 	align-content: left;
 }
 .small-text {

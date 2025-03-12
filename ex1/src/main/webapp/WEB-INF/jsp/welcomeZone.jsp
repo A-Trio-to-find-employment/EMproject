@@ -19,7 +19,7 @@
 			<div class="welcome-message">
 				<h2>환영합니다, ${ sessionScope.loginUser }님!</h2>
 			</div>
-
+			
 			<div class="content">
 				<!-- 이벤트 및 쿠폰 -->
 				<div class="left-section">
@@ -43,21 +43,20 @@
                     	사용 가능한 쿠폰이 없습니다.
                     </c:if>
 					</ul>
-					<form action="/getCoupon">
 						<h3>🏷️ 수령 가능한 이달의 쿠폰</h3>
 						<ul>
 							<c:if test="${ getCoupon != null }">
-								<c:forEach var="getCoupon" items="${getCoupon}">
-									<li>${getCoupon.coupon_code}<input type="submit"
-										value="수 령" class="small-btn" /><br /> <span
-										class="small-text">${getCoupon.cat_id}</span></li>
-								</c:forEach>
+								<form action="/getCoupon">
+									<input type="hidden" name="CP" value="${ getCoupon.coupon_id }"/>
+									<li>${getCoupon.coupon_code} 
+									<input type="submit" value="수 령" class="small-btn" /><br/> 
+									<span class="small-text">${getCoupon.cat_id}</span></li>
+								</form>
 							</c:if>
 							<c:if test="${ getCoupon == null }">
-                    	수령 가능한 쿠폰이 없습니다.
-                    </c:if>
+                    			수령 가능한 쿠폰이 없습니다.
+                    		</c:if>
 						</ul>
-					</form>
 				</div>
 
 				<!-- 맞춤 도서 추천 (슬라이드) -->
@@ -71,7 +70,10 @@
 									alt="">
 								</a>
 								<p>
-									<a href="/bookdetail.html?isbn=${ book.isbn }">${book.book_title}</a>
+    								제목 : <a href="/bookdetail.html?isbn=${ book.isbn }">${book.book_title}</a><br/>
+    								저자 : ${ book.authors } <br/>
+    								출판사 : ${ book.publisher } <br/>
+    								가격 : ${ book.price }원
 								</p>
 							</div>
 						</c:forEach>
@@ -96,8 +98,7 @@
 				</div>
 			</div>
 		</div>
-		<br />
-		<br />
+		<br/>
 		<form action="/index">
 			<input type="submit" value="메인화면으로 이동" class="large-btn" />
 		</form>
