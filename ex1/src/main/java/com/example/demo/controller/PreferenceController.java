@@ -189,7 +189,7 @@ public class PreferenceController {
 	}
 	
 	@GetMapping(value="/myPrefBookList")
-	public ModelAndView prefList(Long BOOKID, String action,String action1, HttpSession session) {
+	public ModelAndView prefList(Long BOOKID, String action,String action1, HttpSession session,HttpServletRequest request) {
 		String loginUser = (String)session.getAttribute("loginUser");
 		if(loginUser == null){
 			ModelAndView mav = new ModelAndView("loginFail");
@@ -281,8 +281,46 @@ public class PreferenceController {
 				    }
 				}
 		     }	
+		 // 쿠키에서 가져온 ISBN 목록을 처리
+			String recentBookIsbnStr = null;
+			Cookie[] cookies = request.getCookies();
+			if (cookies != null) {
+			    for (Cookie cookie : cookies) {
+			        if (cookie.getName().equals("recentBook")) {
+			            recentBookIsbnStr = cookie.getValue();
+			            break;
+			        }
+			    }
+			}
+
+			List<Book> recentBooks = new ArrayList<>();
+			if (recentBookIsbnStr != null) {
+			    try {
+			        // 여러 ISBN이 파이프(|)로 구분되어 있다고 가정
+			        String[] isbnList = recentBookIsbnStr.split("\\|");  // 파이프 구분자로 분리
+			        
+			        // 배열을 뒤집어서 최근에 본 책을 먼저 처리
+			        for (int i = isbnList.length - 1; i >= 0; i--) {
+			            String isbn = isbnList[i].trim();
+			            long recentBookIsbn = Long.parseLong(isbn);
+			            Book recentBook = this.fieldService.getBookDetail(recentBookIsbn);
+			            if (recentBook != null) {
+			                recentBooks.add(recentBook);
+			            }
+			        }
+
+			        // 뷰에 전달
+			        mav.addObject("recentBooks", recentBooks);
+			    } catch (NumberFormatException e) {
+			        System.out.println("❌ 잘못된 ISBN 값: " + recentBookIsbnStr);
+			    }
+			}
+
+
+
 		     return mav;
 		}
+		
 		ModelAndView maav = new ModelAndView("index");
 		return maav;
 	}

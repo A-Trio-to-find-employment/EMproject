@@ -18,4 +18,5 @@ public interface LoginMapper {
 	Integer getUserCountSearch(String SEARCH);
 	Users getUserByIdAdmin(String id);
 	void updateUserGrade(Users users);
+	void updateCount(String user_id);
 }

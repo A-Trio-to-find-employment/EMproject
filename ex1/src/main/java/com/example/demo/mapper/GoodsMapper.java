@@ -23,11 +23,11 @@ public interface GoodsMapper {
 	void addBookAuthors(Long isbn, String author);
     List<String> getBookAuthors(Long isbn);
     List<Category> getCategoriesByParentId(String parentId);
-	String getCategoryPath(String catId);
+	List<String> getCategoryPath(List<String> catIds);
 	void addInfoCategory(BookCategories bookcat);
 	String getGoodsTitle(Long isbn);
 	
-	String getCategoryByIsbn(Long isbn);
+	List<String> getCategoryByIsbn(Long isbn);
 	void updateInfoCategory(BookCategories bookcat);
 	void updateBookAuthors(Long isbn, String author);
 	void deleteBookAuthors(Long isbn);

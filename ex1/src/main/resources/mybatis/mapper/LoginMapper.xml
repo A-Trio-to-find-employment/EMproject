@@ -9,10 +9,11 @@
 		to_char(birth,'YYYY-MM-DD') "birth", phone, grade from users
 		where user_id=#{user_id}
 	</select>
+<!-- 	하나씩 추가해보자 일단은 count만 -->
 	<select id="getUser" parameterType="Users" 
 							resultType="Users">
 		select user_id, password, user_name, address, address_detail, zipcode, email,
-		to_char(birth,'YYYY-MM-DD') "birth", phone, grade from users
+		to_char(birth,'YYYY-MM-DD') "birth", phone, grade, count from users
 		where user_id=#{user_id} and password=#{password}
 	</select>
 	<update id="modifyUser" parameterType="Users">
@@ -71,6 +72,10 @@
 	
 	<update id="updateUserGrade" parameterType="Users">
 		update users set grade = #{grade} where user_id = #{user_id}
+	</update>
+	
+	<update id="updateCount" parameterType="String">
+		update users set count = count + 1 where user_id=#{user_id}
 	</update>
 </mapper>
 
