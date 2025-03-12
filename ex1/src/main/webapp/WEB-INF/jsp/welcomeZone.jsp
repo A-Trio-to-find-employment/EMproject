@@ -23,45 +23,49 @@
 			<div class="content">
 				<!-- 이벤트 및 쿠폰 -->
 				<div class="left-section">
-					<h3>🎉 진행 중인 이벤트</h3>
-					<ul>
-						<c:forEach var="event" items="${events}">
-							<li><a href="/eventdetail?CODE=${ event.event_code }">${ event.event_title }</a></li>
-						</c:forEach>
-						<c:if test="${ events == null }">
-                    	현재 진행중인 이벤트가 없습니다.
-                    </c:if>
-					</ul>
+    				<h3 class="toggle-header">🎉 진행 중인 이벤트</h3>
+    				<ul class="toggle-content">
+        			<c:forEach var="event" items="${events}">
+            			<li><a href="/eventdetail?CODE=${ event.event_code }">${ event.event_title }</a></li>
+        			</c:forEach>
+        			<c:if test="${ events == null || empty events}">
+            			현재 진행중인 이벤트가 없습니다.
+			        </c:if>
+    				</ul>
 
-					<h3>💰 사용 가능한 쿠폰</h3>
-					<ul>
-						<c:forEach var="coupon" items="${coupons}">
-							<li><a href="/myCoupon">${coupon.coupon_code}</a><br /> <span
-								class="small-text">${coupon.cat_id}</span></li>
-						</c:forEach>
-						<c:if test="${ coupons == null }">
-                    	사용 가능한 쿠폰이 없습니다.
-                    </c:if>
-					</ul>
-						<h3>🏷️ 수령 가능한 이달의 쿠폰</h3>
-						<ul>
-							<c:if test="${ getCoupon != null }">
-								<form action="/getCoupon">
-									<input type="hidden" name="CP" value="${ getCoupon.coupon_id }"/>
-									<li>${getCoupon.coupon_code} 
-									<input type="submit" value="수 령" class="small-btn" /><br/> 
-									<span class="small-text">${getCoupon.cat_id}</span></li>
-								</form>
-							</c:if>
-							<c:if test="${ getCoupon == null }">
-                    			수령 가능한 쿠폰이 없습니다.
-                    		</c:if>
-						</ul>
+    				<h3 class="toggle-header">💰 사용 가능한 쿠폰</h3>
+    				<ul class="toggle-content">
+        			<c:forEach var="coupon" items="${coupons}">
+            			<li><a href="/myCoupon">${coupon.coupon_code}</a><br />
+            			<span class="small-text">${coupon.cat_id}</span>
+			            </li>
+        			</c:forEach>
+        			<c:if test="${ coupons == null || empty coupons }">
+            			<li>사용 가능한 쿠폰이 없습니다.</li>
+			        </c:if>
+    				</ul>
+
+    				<h3 class="toggle-header">🏷️ 수령 가능한 이달의 쿠폰</h3>
+    				<ul class="toggle-content">
+        			<c:if test="${ getCoupon != null }">
+            		<form action="/getCoupon">
+                		<input type="hidden" name="CP" value="${ getCoupon.coupon_id }"/>
+                		<li>${getCoupon.coupon_code} 
+                    		<input type="submit" value="수 령" class="small-btn" /><br/>
+                    		<span class="small-text">${getCoupon.cat_id}</span>
+                		</li>
+            		</form>
+        			</c:if>
+        			<c:if test="${ getCoupon == null }">
+            			<li>수령 가능한 쿠폰이 없습니다.</li>
+        			</c:if>
+    				</ul>
 				</div>
 
 				<!-- 맞춤 도서 추천 (슬라이드) -->
 				<div class="center-section">
 					<h3>📚 맞춤 도서 추천</h3>
+					<c:if test="${recommendedBooks != null}">
 					<div class="book-slider">
 						<c:forEach var="book" items="${recommendedBooks}">
 							<div class="book">
@@ -78,23 +82,46 @@
 							</div>
 						</c:forEach>
 					</div>
+					</c:if>
+					<c:if test="${ recommendedBooks == null || empty recommendedBooks}">
+						<h4>선호도 조사를 진행하지 않으면 맞춤 도서를 출력할 수 없습니다.</h4>
+						<h5><a href="/goNewPrefTest">선호도 조사 하러가기</a></h5>
+					</c:if>
 				</div>
 
 				<!-- 사용자 구매 관련 통계 -->
 				<div class="bottom-section">
+					<div class="chart-container">
 					<h3>📊 장르별 사용자 구매 기록</h3>
-					<canvas id="categoryChart">
-						<c:forEach var="category" items="${categoryPurchases}">
-							<li>${category.CAT_NAME}: ${category.PURCHASE_COUNT}권</li>
-						</c:forEach>
-					</canvas>
-
+					<c:choose>
+						<c:when test="${categoryPurchases == null || empty categoryPurchases}">
+							<li>사용자 구매 기록이 존재하지 않습니다.</li>
+						</c:when>
+						<c:otherwise>
+							<canvas id="categoryChart">
+								<c:forEach var="category" items="${categoryPurchases}">
+								<li>${category.CAT_NAME}: ${category.PURCHASE_COUNT}권</li>
+								</c:forEach>
+							</canvas>
+						</c:otherwise>
+					</c:choose>
+					</div>
+					
+					<div class="chart-container">
 					<h3>📊 최근 3개월 월별 구매 기록</h3>
-					<canvas id="monthChart">
-						<c:forEach var="monthStat" items="${recentPurchases}">
-							<li>${monthStat.PURCHASE_MONTH}월: ${monthStat.BOOK_COUNT}권</li>
-						</c:forEach>
-					</canvas>
+					<c:choose>
+						<c:when test="${recentPurchases == null || empty recentPurchases}">
+							<li>최근 3개월의 사용자 구매 기록이 존재하지 않습니다.</li>
+						</c:when>
+						<c:otherwise>
+							<canvas id="monthChart">
+								<c:forEach var="monthStat" items="${recentPurchases}">
+									<li>${monthStat.PURCHASE_MONTH}월: ${monthStat.BOOK_COUNT}권</li>
+								</c:forEach>
+							</canvas>
+						</c:otherwise>
+					</c:choose>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -180,6 +207,22 @@
                     }
                 }
             }
+        });
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const headers = document.querySelectorAll(".toggle-header");
+
+        headers.forEach(header => {
+            header.addEventListener("click", function () {
+                const content = this.nextElementSibling; // 바로 다음 <ul>
+                if (content.style.display === "none" || content.style.display === "") {
+                    content.style.display = "block";  // 펼치기
+                } else {
+                    content.style.display = "none";  // 닫기
+                }
+            });
         });
     });
 </script>

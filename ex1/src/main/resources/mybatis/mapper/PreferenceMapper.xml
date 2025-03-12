@@ -50,7 +50,7 @@
 		WHERE ROWNUM <![CDATA[<=]]> 3
 	</select>
 	<select id="getRecommendedBooks" parameterType="map" resultType="java.lang.Long">
-    SELECT isbn
+    SELECT DISTINCT isbn
     FROM (
         SELECT bc.isbn
         FROM book_categories bc
@@ -68,7 +68,7 @@
     WHERE ROWNUM <![CDATA[<=]]> 4
 	</select>
 	<select id="getRecommendedBookList" parameterType="map" resultType="java.lang.Long">
-    SELECT isbn
+    SELECT DISTINCT isbn
     FROM (
         SELECT bc.isbn
         FROM book_categories bc
