@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.demo.model.Book;
 import com.example.demo.model.Qna;
 import com.example.demo.model.QnaBoard;
 import com.example.demo.model.StartEnd;
+import com.example.demo.service.FieldService;
 import com.example.demo.service.LoginService;
 import com.example.demo.service.QnaService;
 
 import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
@@ -32,6 +37,8 @@ public class QnaController {
 	
 	@Autowired
 	public LoginService loginService;
+	@Autowired
+	private FieldService fieldService;
 	
 	@GetMapping(value="/qnaDelete")
 	public ModelAndView qnaDelete(Integer qna_number,Integer qna_index) {
@@ -59,7 +66,7 @@ public class QnaController {
 	}
 	
 	@GetMapping(value="/qnalist")
-	public ModelAndView qnalist(Integer PAGE_NUM,HttpSession session) {
+	public ModelAndView qnalist(Integer PAGE_NUM,HttpSession session,HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("qnalayout");		
 		String user = (String)session.getAttribute("loginUser");
 		
@@ -84,7 +91,41 @@ public class QnaController {
 		mav.addObject("currentPage",currentPage);
 		mav.addObject("LIST",imageList); 
 		mav.addObject("pageCount",totalPageCount);
-		
+		// 쿠키에서 가져온 ISBN 목록을 처리
+				String recentBookIsbnStr = null;
+				Cookie[] cookies = request.getCookies();
+				if (cookies != null) {
+				    for (Cookie cookie : cookies) {
+				        if (cookie.getName().equals("recentBook")) {
+				            recentBookIsbnStr = cookie.getValue();
+				            break;
+				        }
+				    }
+				}
+
+				List<Book> recentBooks = new ArrayList<>();
+				if (recentBookIsbnStr != null) {
+				    try {
+				        // 여러 ISBN이 파이프(|)로 구분되어 있다고 가정
+				        String[] isbnList = recentBookIsbnStr.split("\\|");  // 파이프 구분자로 분리
+				        
+				        // 배열을 뒤집어서 최근에 본 책을 먼저 처리
+				        for (int i = isbnList.length - 1; i >= 0; i--) {
+				            String isbn = isbnList[i].trim();
+				            long recentBookIsbn = Long.parseLong(isbn);
+				            Book recentBook = this.fieldService.getBookDetail(recentBookIsbn);
+				            if (recentBook != null) {
+				                recentBooks.add(recentBook);
+				            }
+				        }
+
+				        // 뷰에 전달
+				        mav.addObject("recentBooks", recentBooks);
+				    } catch (NumberFormatException e) {
+				        System.out.println("❌ 잘못된 ISBN 값: " + recentBookIsbnStr);
+				    }
+				}
+
 		return mav;
 	}
 	
@@ -131,22 +172,95 @@ public class QnaController {
 	qna.setUser_id(users);//작성자에 계정을 설정
 	
 	this.service.putQna(qna);//DB에 insert
+	
 	mav.setViewName("redirect:/qnalist");
 	return mav;	
 	}
 	@RequestMapping(value="/qnawrite")
-	public ModelAndView writeform() {
+	public ModelAndView writeform(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("qnalayout");
 		mav.addObject("Qna",new Qna());
 		mav.addObject("BODY","QnaWriteForm.jsp");
+		// 쿠키에서 가져온 ISBN 목록을 처리
+				String recentBookIsbnStr = null;
+				Cookie[] cookies = request.getCookies();
+				if (cookies != null) {
+				    for (Cookie cookie : cookies) {
+				        if (cookie.getName().equals("recentBook")) {
+				            recentBookIsbnStr = cookie.getValue();
+				            break;
+				        }
+				    }
+				}
+
+				List<Book> recentBooks = new ArrayList<>();
+				if (recentBookIsbnStr != null) {
+				    try {
+				        // 여러 ISBN이 파이프(|)로 구분되어 있다고 가정
+				        String[] isbnList = recentBookIsbnStr.split("\\|");  // 파이프 구분자로 분리
+				        
+				        // 배열을 뒤집어서 최근에 본 책을 먼저 처리
+				        for (int i = isbnList.length - 1; i >= 0; i--) {
+				            String isbn = isbnList[i].trim();
+				            long recentBookIsbn = Long.parseLong(isbn);
+				            Book recentBook = this.fieldService.getBookDetail(recentBookIsbn);
+				            if (recentBook != null) {
+				                recentBooks.add(recentBook);
+				            }
+				        }
+
+				        // 뷰에 전달
+				        mav.addObject("recentBooks", recentBooks);
+				    } catch (NumberFormatException e) {
+				        System.out.println("❌ 잘못된 ISBN 값: " + recentBookIsbnStr);
+				    }
+				}
+
 		return mav;
 	}
 	@GetMapping(value="/qna")
-	public ModelAndView qna() {
+	public ModelAndView qna(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("qnalayout");
 		List<QnaBoard> list = this.service.getQnaBoard();
 		mav.addObject("list",list);
 		mav.addObject("BODY","qna.jsp");
+		// 쿠키에서 가져온 ISBN 목록을 처리
+				String recentBookIsbnStr = null;
+				Cookie[] cookies = request.getCookies();
+				if (cookies != null) {
+				    for (Cookie cookie : cookies) {
+				        if (cookie.getName().equals("recentBook")) {
+				            recentBookIsbnStr = cookie.getValue();
+				            break;
+				        }
+				    }
+				}
+
+				List<Book> recentBooks = new ArrayList<>();
+				if (recentBookIsbnStr != null) {
+				    try {
+				        // 여러 ISBN이 파이프(|)로 구분되어 있다고 가정
+				        String[] isbnList = recentBookIsbnStr.split("\\|");  // 파이프 구분자로 분리
+				        
+				        // 배열을 뒤집어서 최근에 본 책을 먼저 처리
+				        for (int i = isbnList.length - 1; i >= 0; i--) {
+				            String isbn = isbnList[i].trim();
+				            long recentBookIsbn = Long.parseLong(isbn);
+				            Book recentBook = this.fieldService.getBookDetail(recentBookIsbn);
+				            if (recentBook != null) {
+				                recentBooks.add(recentBook);
+				            }
+				        }
+
+				        // 뷰에 전달
+				        mav.addObject("recentBooks", recentBooks);
+				    } catch (NumberFormatException e) {
+				        System.out.println("❌ 잘못된 ISBN 값: " + recentBookIsbnStr);
+				    }
+				}
+
+
+
 		return mav;
 	}
 }

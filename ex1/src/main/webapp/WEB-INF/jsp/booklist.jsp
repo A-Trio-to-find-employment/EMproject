@@ -6,6 +6,21 @@
     <meta charset="UTF-8">
     <title>도서 목록</title>
 <style>
+   .heart-button {
+            font-size: 24px;
+            cursor: pointer;
+            color: gray;
+        }
+
+        .heart-button.liked {
+            color: pink;  /* 찜한 상태일 때 하트를 분홍색으로 변경 */
+        }
+
+        .like-count {
+            font-size: 14px;
+            color: #555;
+        }
+        
 /* 책 아이콘 버튼 스타일 */
 .book-icon-button {
     background-color: white; /* 버튼 배경색을 하얀색으로 설정 */
@@ -274,9 +289,11 @@
 							</form>
 
 							<!-- 책 이미지 -->
-							<img
-								src="${pageContext.request.contextPath}/upload/${recentBook.image_name}"
-								width="100" height="100" alt="책 이미지">
+							 <a href="${pageContext.request.contextPath}/bookdetail.html?isbn=${recentBook.isbn}">
+                            <img src="${pageContext.request.contextPath}/upload/${recentBook.image_name}"
+                                 width="100" height="100" alt="책 이미지">
+                        </a>
+                        ${recentBook.book_title}
 						</div>
 
 					</c:if>
