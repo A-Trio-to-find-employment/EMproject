@@ -17,8 +17,18 @@ public class LoginService {
 	public Users getUserById(String id) {
 		return this.loginMapper.getUserById(id);
 	}
+//	public Users getUser(Users users) {
+//		Users user = this.loginMapper.getUser(users);
+//		if(user != null) {
+//			this.loginMapper.updateCount(user.getUser_id());
+//		}
+//		return user;
+//	}
 	public Users getUser(Users users) {
 		return this.loginMapper.getUser(users);
+	}
+	public void updateCount(String user_id) {
+		this.loginMapper.updateCount(user_id);
 	}
 	
 	public void modifyUser(Users users) {

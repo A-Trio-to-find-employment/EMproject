@@ -15,7 +15,7 @@
 <div class="container">
         <!-- 중앙 상단: 환영 메시지 -->
         <div class="welcome-message">
-            <h2>환영합니다, ${ sessionScope.loginUser }님!</h2>
+            <h2>환영합니다,오늘 ${USER.count }번 방문한 ${ sessionScope.loginUser }님!</h2>
         </div>
 
         <div class="content">

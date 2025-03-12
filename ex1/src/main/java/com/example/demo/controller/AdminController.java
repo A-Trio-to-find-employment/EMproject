@@ -66,7 +66,7 @@ public class AdminController {
         }
     @GetMapping("/getCategoryPath")
     @ResponseBody   //jsp가 아닌 json으로 받아와 정상출력 위해
-    public String getCategoryPath(@RequestParam("cat_id") String catId) {
+    public List<String> getCategoryPath(@RequestParam("cat_id") List<String> catId) {
         return goodsService.getCategoryPath(catId);
     }
 	@GetMapping(value = "/adminPage")
@@ -110,8 +110,8 @@ public class AdminController {
 	public ModelAndView goodsDetail(Long isbn) {
 		ModelAndView mav = new ModelAndView("admin");
 		Book goods = this.goodsService.getGoodsDetail(isbn);
-		String catId = this.goodsService.getCategoryByIsbn(isbn);
-		String categoryPath = this.goodsService.getCategoryPath(catId);
+		List<String> catId = this.goodsService.getCategoryByIsbn(isbn);
+		List<String> categoryPath = this.goodsService.getCategoryPath(catId);
 		mav.addObject(goods);
 		mav.addObject("GOODS", goods);
 		mav.addObject("catId", catId);
@@ -219,10 +219,19 @@ public class AdminController {
 		ModelAndView mav = new ModelAndView("passwordCheck");
 		return mav;
 	}
+	@GetMapping(value = "/manageGoods/update")
+	public ModelAndView updateScreen() {
+		ModelAndView mav = new ModelAndView("admin");
+		mav.addObject(new Book());
+		mav.addObject("CAT",categories);
+		mav.addObject("BODY","goodsDetail.jsp");
+		return mav;
+	}
+	
 	@PostMapping(value = "/manageGoods/update") 
 	public ModelAndView updateGoods(@Valid Book book,
 				BindingResult br, HttpSession session, @RequestParam("cat_id")
-				String selectedCat, @RequestParam("authors")String authors) {
+				List<String> selectedCat, @RequestParam("authors")String authors) {
 	    System.out.println("수정 대상 도서: " + book);
 		ModelAndView mav = new ModelAndView("admin");
 		this.coverValidator.validate(book, br);
@@ -257,12 +266,19 @@ public class AdminController {
 		}
 		book.setImage_name(fileName);//업로드 된 파일 이름을 Book에 설정
 		if (book.getCoverImage() == null || book.getCoverImage().isEmpty()) {
-	        mav.addObject("BODY", "addGoods.jsp");
+	        mav.addObject("BODY", "goodsDetail.jsp");
 	        mav.addObject("imageError", "앞표지를 업로드해야 합니다.");
 	        return mav;
 		}
 		book.setAuthors(authors);
 		this.goodsService.updateGoods(book);
+		
+		for(String catId : selectedCat) {
+			BookCategories bookcat = new BookCategories();
+			bookcat.setIsbn(book.getIsbn());
+			bookcat.setCat_id(catId);
+			this.goodsService.updateInfoCategory(bookcat);
+			}
 		
 		mav.addObject("isbnChecked",book.getIsbn());
 		mav.addObject("book",new Book());

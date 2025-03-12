@@ -65,10 +65,14 @@ public class LoginController {
 			//로그인 성공 후 정보 가져오기
 			Users loginUser = this.loginService.getUser(users);
 			if(loginUser != null) {
+				this.loginService.updateCount(loginUser.getUser_id());
+				System.out.println("count횟수: "+loginUser.getCount());
 				if(loginUser.getGrade() == 9) {
 					ModelAndView newMav = new ModelAndView("admin");
 					return newMav;
 				}
+//				Users userInfo = this.loginService.getUserById(users.getUser_id());
+				mav.addObject("USER",loginUser);
 				mav.setViewName("welcomeZone");
 				session.setAttribute("loginUser", loginUser.getUser_id());//
 //				mav.setViewName("loginSuccess");
