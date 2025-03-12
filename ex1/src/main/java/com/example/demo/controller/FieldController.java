@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,8 @@ import jakarta.servlet.http.HttpSession;
 public class FieldController {
 	@Autowired
 	private FieldService service;
-
+	@Autowired
+	private FieldService fieldService;
 	@Autowired
 	private ReviewService reviewservice;
 
@@ -44,9 +46,42 @@ public class FieldController {
 	private JJimService jjimservice;
 
 	@RequestMapping(value = "/field.html")
-	public ModelAndView field(String cat_id) {
+	public ModelAndView field(String cat_id,HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("fieldlayout");
+		// 쿠키에서 가져온 ISBN 목록을 처리
+				String recentBookIsbnStr = null;
+				Cookie[] cookies = request.getCookies();
+				if (cookies != null) {
+				    for (Cookie cookie : cookies) {
+				        if (cookie.getName().equals("recentBook")) {
+				            recentBookIsbnStr = cookie.getValue();
+				            break;
+				        }
+				    }
+				}
 
+				List<Book> recentBooks = new ArrayList<>();
+				if (recentBookIsbnStr != null) {
+				    try {
+				        // 여러 ISBN이 파이프(|)로 구분되어 있다고 가정
+				        String[] isbnList = recentBookIsbnStr.split("\\|");  // 파이프 구분자로 분리
+				        
+				        // 배열을 뒤집어서 최근에 본 책을 먼저 처리
+				        for (int i = isbnList.length - 1; i >= 0; i--) {
+				            String isbn = isbnList[i].trim();
+				            long recentBookIsbn = Long.parseLong(isbn);
+				            Book recentBook = this.fieldService.getBookDetail(recentBookIsbn);
+				            if (recentBook != null) {
+				                recentBooks.add(recentBook);
+				            }
+				        }
+
+				        // 뷰에 전달
+				        mav.addObject("recentBooks", recentBooks);
+				    } catch (NumberFormatException e) {
+				        System.out.println("❌ 잘못된 ISBN 값: " + recentBookIsbnStr);
+				    }
+				}
 		boolean hasSubCategories = service.countSubCategories(Integer.parseInt(cat_id));
 		if (hasSubCategories) {
 			List<Category> fieldlist = service.getCategories(cat_id);
@@ -69,8 +104,45 @@ public class FieldController {
 
 	@RequestMapping(value = "/booklist.html") // 마지막 하위카테고리면 그것을 클릭했을때 상품이 보여짐
 	public ModelAndView fields(Integer PAGE_NUM, String cat_id, String sort, Long BOOKID, String action, String action1,
-			HttpSession session) {
+			HttpSession session,HttpServletRequest request) {
 		String loginUser = (String) session.getAttribute("loginUser");
+		
+		// 쿠키에서 가져온 ISBN 목록을 처리
+				String recentBookIsbnStr = null;
+				Cookie[] cookies = request.getCookies();
+				if (cookies != null) {
+				    for (Cookie cookie : cookies) {
+				        if (cookie.getName().equals("recentBook")) {
+				            recentBookIsbnStr = cookie.getValue();
+				            break;
+				        }
+				    }
+				}
+
+				List<Book> recentBooks = new ArrayList<>();
+				if (recentBookIsbnStr != null) {
+				    try {
+				        // 여러 ISBN이 파이프(|)로 구분되어 있다고 가정
+				        String[] isbnList = recentBookIsbnStr.split("\\|");  // 파이프 구분자로 분리
+				        
+				        // 배열을 뒤집어서 최근에 본 책을 먼저 처리
+				        for (int i = isbnList.length - 1; i >= 0; i--) {
+				            String isbn = isbnList[i].trim();
+				            long recentBookIsbn = Long.parseLong(isbn);
+				            Book recentBook = this.fieldService.getBookDetail(recentBookIsbn);
+				            if (recentBook != null) {
+				                recentBooks.add(recentBook);
+				            }
+				        }
+
+				        // 뷰에 전달
+				        
+				    } catch (NumberFormatException e) {
+				        System.out.println("❌ 잘못된 ISBN 값: " + recentBookIsbnStr);
+				    }
+				}
+		
+		
 		int currentPage = 1;
 		// 페이지 번호가 null이 아니면 currentPage 설정
 		if (PAGE_NUM != null) {
@@ -267,7 +339,9 @@ public class FieldController {
 		mav1.addObject("bookList", bookLists); // 도서 목록 전달
 		mav1.addObject("cat_name", categoryName); // 카테고리 이름 전달
 		mav1.addObject("loginUser", loginUser);
+		mav1.addObject("recentBooks", recentBooks);
 		mav1.addObject("BODY", "booklist.jsp"); // booklist.jsp를 BODY로 설정
+		
 		// 서버에서 isLiked 값을 모델에 추가
 		return mav1;
 	}
@@ -300,7 +374,7 @@ public class FieldController {
 
 		// 쿠키에 새로운 ISBN 값 저장
 		Cookie recentBookCookie = new Cookie("recentBook", recentBookIsbnStr);
-		recentBookCookie.setMaxAge(60 * 60 * 24 * 7); // 7일 동안 유지
+		recentBookCookie.setMaxAge(60 * 60 * 24 * 1); // 1일 동안 유지
 		recentBookCookie.setPath("/"); // 모든 경로에서 접근 가능
 		response.addCookie(recentBookCookie); // 응답에 쿠키 추가
 

@@ -32,6 +32,7 @@ import com.example.demo.service.PreferenceService;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -326,5 +327,47 @@ public class IndexController {
 		mav.addObject("bestSellerList", bestSellerList);
 		return mav;
 	}
+	@RequestMapping(value = "/deleteRecentBook", method = RequestMethod.POST)
+	public String deleteRecentBook(@RequestParam("isbn") long isbn, HttpServletRequest request, HttpServletResponse response) {
+	    // 기존 쿠키에서 ISBN 목록 가져오기
+	    String recentBookIsbnStr = null;
+	    Cookie[] cookies = request.getCookies();
+	    if (cookies != null) {
+	        for (Cookie cookie : cookies) {
+	            if (cookie.getName().equals("recentBook")) {
+	                recentBookIsbnStr = cookie.getValue();
+	                break;
+	            }
+	        }
+	    }
+
+	    if (recentBookIsbnStr != null) {
+	        // 파이프(|)로 구분된 ISBN 목록에서 삭제할 ISBN을 제거
+	        String[] isbnList = recentBookIsbnStr.split("\\|");
+	        List<String> updatedIsbnList = new ArrayList<>();
+	        for (String isbnItem : isbnList) {
+	            if (!isbnItem.equals(String.valueOf(isbn))) {
+	                updatedIsbnList.add(isbnItem); // 삭제할 ISBN 제외
+	            }
+	        }
+
+	        // 새로 갱신된 ISBN 목록을 쿠키에 다시 저장
+	        String updatedIsbnStr = String.join("|", updatedIsbnList);
+
+	        // 쿠키 갱신
+	        Cookie recentBookCookie = new Cookie("recentBook", updatedIsbnStr);
+	        recentBookCookie.setMaxAge(60 * 60 * 24 * 1); // 1일 동안 유지
+	        recentBookCookie.setPath("/"); // 모든 경로에서 접근 가능
+	        response.addCookie(recentBookCookie);
+
+	        System.out.println("📌 최근 본 책 쿠키 갱신됨: ISBN들 = " + updatedIsbnStr);
+	    }
+
+	    // 현재 페이지로 리다이렉트
+	    String referer = request.getHeader("referer");  // 현재 페이지 URL 가져오기
+	    return "redirect:" + referer;  // 그 페이지로 리다이렉트
+	}
+
+
 
 }
