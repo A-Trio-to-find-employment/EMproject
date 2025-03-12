@@ -72,6 +72,10 @@
 	<update id="updateUserGrade" parameterType="Users">
 		update users set grade = #{grade} where user_id = #{user_id}
 	</update>
+	
+	<update id="updateCount" parameterType="String">
+		update users set count = count + 1 where user_id=#{user_id}
+	</update>
 </mapper>
 
 	

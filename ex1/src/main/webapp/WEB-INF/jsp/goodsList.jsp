@@ -54,6 +54,7 @@
 <!-- 			    </td></tr> -->
 		</c:forEach>	
 		</tr></table>
+<div align="center">
 <c:set var="currentPage" value="${requestScope.currentPage }"/>
 <c:set var="startPage"
 	value="${currentPage-(currentPage%5==0 ? 5:(currentPage%5))+1 }"/>

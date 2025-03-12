@@ -43,6 +43,12 @@ public class Users {
     @NotNull(message = "전화번호는 필수 입력 항목입니다.")
     @Pattern(regexp = "^\\d{3}-\\d{3,4}-\\d{4}$", message = "전화번호 형식은 010-0000-0000 형식이어야 합니다.")
     private String phone;
-
+    
     private Integer grade;
+    //로그인 횟수관련
+    private Integer count;
+    private String last__date;
+    private Integer daily_count;
+    private Integer monthly_count;
+    private Integer continue_count;
 }

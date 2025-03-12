@@ -66,10 +66,13 @@
 	    SELECT cat_id, cat_name FROM categories 
 		where (parent_id = #{parent_id} OR (#{parent_id} IS NULL AND parent_id IS NULL))
 	</select>
-	<select id="getCategoryPath" parameterType="String" resultType="String">
+	<select id="getCategoryPath" parameterType="java.util.List" resultType="String">
 	    SELECT LISTAGG(cat_name, ' > ') WITHIN GROUP (ORDER BY LEVEL DESC) 
 	    FROM categories
-	    START WITH cat_id = #{cat_id}
+	    where cat_id in
+	    <foreach item="catId" collection="catIds" open="(" separator="," close=")">
+        #{catId}
+    	</foreach>
 	    CONNECT BY PRIOR parent_id = cat_id
 	</select>
 	<insert id="addInfoCategory" parameterType="BookCategories">

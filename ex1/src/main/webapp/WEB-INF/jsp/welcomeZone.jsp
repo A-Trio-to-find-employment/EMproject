@@ -168,6 +168,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 </head>
 <body>
+<<<<<<< HEAD
 	<div align="center">
 		<div class="container">
 			<!-- 중앙 상단: 환영 메시지 -->
@@ -187,6 +188,14 @@
             			현재 진행중인 이벤트가 없습니다.
 			        </c:if>
     				</ul>
+=======
+<div align="center">
+<div class="container">
+        <!-- 중앙 상단: 환영 메시지 -->
+        <div class="welcome-message">
+            <h2>환영합니다,오늘 ${USER.count }번 방문한 ${ sessionScope.loginUser }님!</h2>
+        </div>
+>>>>>>> mgclkoh
 
     				<h3 class="toggle-header">💰 사용 가능한 쿠폰</h3>
     				<ul class="toggle-content">
