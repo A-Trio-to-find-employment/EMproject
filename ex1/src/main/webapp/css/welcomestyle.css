@@ -31,11 +31,12 @@ body {
     grid-column: 1 / 2; /* 첫 번째 열 */
     grid-row: 1 / 5; /* 4개의 행 모두 차지 */
     background: white;
-    padding: 15px;
+    padding: 10px;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     overflow-y: auto; /* 스크롤 가능 */
     text-align: left;
+    border: 1px solid #ddd;
 }
 
 /* 맞춤 도서 추천 (2, 3열 - 첫 번째 및 두 번째 행) */
@@ -49,16 +50,33 @@ body {
     overflow-y: auto; /* 스크롤 가능 */
 }
 
-/* 최근 본 도서 및 쿠폰 사용 가능 도서 (2, 3열 - 세 번째 및 네 번째 행) */
+/* 기존 자리 그대로 유지 */
 .bottom-section {
-    grid-column: 2 / 4; /* 2, 3 열 모두 차지 */
-    grid-row: 3 / 5; /* 세 번째와 네 번째 행 차지 */
+    grid-column: 2 / 4; /* 기존 자리 유지 */
+    grid-row: 3 / 5; /* 기존 높이 유지 */
+    
+    display: flex; /* 내부 요소를 가로로 정렬 */
+    justify-content: space-between; /* 좌우 균등 정렬 */
+    gap: 20px;
+    
     background: white;
     padding: 15px;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
+    
+    min-height: 300px; /* 최소 높이 설정 (기존 높이 유지) */
     overflow-y: auto; /* 스크롤 가능 */
 }
+
+/* 각 차트 영역이 동일한 크기를 가지도록 설정 */
+.chart-container {
+    flex: 1; /* 동일한 너비 차지 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
 
 
 .book-slider {
@@ -145,4 +163,15 @@ input[type="submit"] {
 .large-btn:hover {
     background-color: #1a252f; /* 더 깊은 네이비 */
     transform: scale(1.05); /* 약간 확대 */
+}
+.toggle-content {
+    display: none;  /* 처음에는 숨김 */
+	margin-left: 15px;
+}
+.toggle-header {
+	cursor: pointer;
+    color: #007bff;
+}
+.toggle-header:hover {
+	text-decoration: underline;
 }
