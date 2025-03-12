@@ -31,4 +31,5 @@ public interface FieldMapper {
 	 Integer getBookCount();
 	 Integer getBookCountSearch(String SEARCH);
 	 Integer getBookCategoriesCount(String cat_id);
+	 String getCategoryPathByCatId(String cat_id);
 }
