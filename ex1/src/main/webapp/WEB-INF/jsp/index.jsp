@@ -362,11 +362,6 @@
 	</c:if>
 
 
-
-
-
-
-
 	<script>
 function toggleDropdown() {
 	var dropdown = document.getElementById("categoryDropdown");
