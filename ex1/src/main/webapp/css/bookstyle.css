@@ -32,10 +32,9 @@ body {
 .book-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 10px;  /* 간격을 줄여서 넓어지지 않도록 */
 }
 
-/* 개별 도서 항목 */
 .book-item {
     display: flex;
     align-items: center;
@@ -44,7 +43,9 @@ body {
     padding: 15px;
     border-radius: 10px;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
+    width: 50%;  /* 50% 너비로 설정 */
+    margin: 10px auto;  /* 가로 중앙 정렬 */
+    box-sizing: border-box;
 }
 
 /* 책 이미지 */

@@ -83,7 +83,7 @@ FROM (
     </choose>
 ) a
 WHERE a.rn > #{start} AND a.rn <![CDATA[<=]]> #{end} 
-ORDER BY a.rn
+
 
 </select>
 
@@ -315,6 +315,88 @@ ORDER BY a.rn
         WHERE
             b.isbn = #{isbn}
     </select>
+
+
+<select id="getorderByBookBook" parameterType="StartEnd" resultType="Book">
+WITH Category_Hierarchy (cat_id) AS (  
+    SELECT cat_id
+    FROM categories
+    WHERE parent_id = #{parent_id}  
+    UNION ALL
+    SELECT c.cat_id
+    FROM categories c
+    JOIN Category_Hierarchy ch ON c.parent_id = ch.cat_id  
+),
+Author_List AS (
+    SELECT ba.isbn, LISTAGG(ba.author, ', ') WITHIN GROUP (ORDER BY ba.author) AS authors
+    FROM book_author ba
+    GROUP BY ba.isbn
+)
+SELECT *
+FROM (
+    SELECT 
+           ROW_NUMBER() OVER (PARTITION BY b.isbn ORDER BY b.pub_date DESC) AS rn,  
+           ROW_NUMBER() OVER (ORDER BY b.pub_date DESC) AS row_num, 
+           b.isbn,
+           b.book_title,
+           al.authors, 
+           b.price,
+           b.publisher,
+           b.pub_date,
+           b.image_name,
+           NVL(s.sales_count, 0) AS sales_count,
+           NVL(r.review_count, 0) AS review_count,
+           NVL(b.total_rating, 0) AS total_rating,
+           bc.cat_id
+    FROM book b
+    LEFT JOIN book_categories bc ON b.isbn = bc.isbn
+    LEFT JOIN Category_Hierarchy ch ON bc.cat_id = ch.cat_id
+    LEFT JOIN Author_List al ON b.isbn = al.isbn
+    LEFT JOIN (SELECT od.isbn, SUM(od.quantity) AS sales_count
+               FROM orders_detail od
+               GROUP BY od.isbn) s ON b.isbn = s.isbn
+    LEFT JOIN (SELECT r.isbn, COUNT(r.review_id) AS review_count
+               FROM review r
+               GROUP BY r.isbn) r ON b.isbn = r.isbn
+    WHERE (bc.cat_id IN (SELECT cat_id FROM Category_Hierarchy) 
+           OR bc.cat_id = #{parent_id})
+           <choose>
+        <when test="sort == 'sales'">
+            ORDER BY sales_count DESC
+        </when>
+        <when test="sort == 'review'">
+            ORDER BY review_count DESC
+        </when>
+        <when test="sort == 'rating'">
+            ORDER BY total_rating DESC
+        </when>
+        <otherwise>
+            ORDER BY b.pub_date DESC
+        </otherwise>
+    </choose>
+) a
+WHERE a.rn = 1 
+AND a.row_num > #{start} AND a.row_num <![CDATA[<=]]> #{end} 
+
+
+</select>
+<select id="getbooklistcount" parameterType="String" resultType="Integer">
+WITH Category_Hierarchy (cat_id) AS (  
+    SELECT cat_id
+    FROM categories
+    WHERE parent_id = #{parent_id} 
+    UNION ALL
+    SELECT c.cat_id
+    FROM categories c
+    JOIN Category_Hierarchy ch ON c.parent_id = ch.cat_id  
+)
+SELECT COUNT(b.isbn)
+FROM book b
+LEFT JOIN book_categories bc ON b.isbn = bc.isbn
+LEFT JOIN Category_Hierarchy ch ON bc.cat_id = ch.cat_id
+WHERE bc.cat_id IN (SELECT cat_id FROM Category_Hierarchy)
+
+</select>
 
 
 </mapper>

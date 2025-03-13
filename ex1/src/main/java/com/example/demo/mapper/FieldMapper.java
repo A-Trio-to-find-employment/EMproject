@@ -35,5 +35,6 @@ public interface FieldMapper {
 	 String getCategoryPathByCatId(String cat_id);
 
 	 Book getBookDetaill(Long isbn);
-
+	 List<Book>getorderByBookBook(StartEnd se);	 
+	 Integer getbooklistcount(String parent_id);
 }

@@ -13,5 +13,6 @@ public class StartEnd {
 	private String title;
 	private String sort;
 	private String cat_id;
+	private String parent_id;
 
 }
