@@ -61,13 +61,13 @@ public class GoodsService {
 	public List<Category> getCategoriesByParentId(String parnetId){
 		return this.goodsMapper.getCategoriesByParentId(parnetId);
 	}
-	public List<String> getCategoryPath(List<String> catIds) {
+	public String getCategoryPath(String catIds) {
 		return this.goodsMapper.getCategoryPath(catIds);
 	}
 	public void addInfoCategory(BookCategories bookcat) {
 		this.goodsMapper.addInfoCategory(bookcat);
 	}
-	public List<String> getCategoryByIsbn(Long isbn) {
+	public String getCategoryByIsbn(Long isbn) {
 		return this.goodsMapper.getCategoryByIsbn(isbn);
 	}
 	public String getGoodsTitle(Long isbn) {

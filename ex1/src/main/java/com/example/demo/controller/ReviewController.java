@@ -60,10 +60,11 @@ public class ReviewController {
 	}
 	
 	
-	@GetMapping("review/writeReview")
+	@GetMapping("/review/writeReview")
 	public ModelAndView writeReview(Long ISBN, HttpSession session) {
 		ModelAndView mav = new ModelAndView("index");
 		String id = (String)session.getAttribute("loginUser");  
+		
 		if (id == null) {
 		    mav.addObject("error", "로그인이 필요합니다.");
 		    mav.setViewName("redirect:/login");  

@@ -236,7 +236,7 @@
 
 	<!-- 컨텐츠 영역 (추천 도서 등) -->
 	<c:choose>
-		<c:when test="${empty body}">
+		<c:when test="${empty BODY}">
 			<div class="container">
 				<!-- 추천 도서 영역 -->
 				<div class="book-section">
@@ -319,7 +319,7 @@
 		</c:when>
 		<c:otherwise>
 			<div class="content">
-				<jsp:include page="${body}"></jsp:include>
+				<jsp:include page="${BODY}"></jsp:include>
 			</div>
 		</c:otherwise>
 </c:choose>
@@ -360,11 +360,6 @@
 			</div>
 		</div>
 	</c:if>
-
-
-
-
-
 
 
 	<script>
