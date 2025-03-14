@@ -66,7 +66,7 @@ public class AdminController {
         }
     @GetMapping("/getCategoryPath")
     @ResponseBody   //jsp가 아닌 json으로 받아와 정상출력 위해
-    public List<String> getCategoryPath(@RequestParam("cat_id") List<String> catId) {
+    public String getCategoryPath(@RequestParam("cat_id") String catId) {
         return goodsService.getCategoryPath(catId);
     }
 	@GetMapping(value = "/adminPage")
@@ -110,8 +110,8 @@ public class AdminController {
 	public ModelAndView goodsDetail(Long isbn) {
 		ModelAndView mav = new ModelAndView("admin");
 		Book goods = this.goodsService.getGoodsDetail(isbn);
-		List<String> catId = this.goodsService.getCategoryByIsbn(isbn);
-		List<String> categoryPath = this.goodsService.getCategoryPath(catId);
+		 String catId = this.goodsService.getCategoryByIsbn(isbn);
+		String categoryPath = this.goodsService.getCategoryPath(catId);
 		mav.addObject(goods);
 		mav.addObject("GOODS", goods);
 		mav.addObject("catId", catId);
@@ -458,4 +458,3 @@ public class AdminController {
 		return mav;
 	}
 }
-
