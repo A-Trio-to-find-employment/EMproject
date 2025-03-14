@@ -1,31 +1,72 @@
 @charset "UTF-8";
 
-
-.nav { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center;
-    background: #f8f8f8; 
-    padding: 10px; 
-    width: 100%; 
-    box-sizing: border-box; 
+body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	max-width: 100%;
+	display: flex;
+	flex-direction: column;
 }
 
-.nav > div, .nav a { 
-    width: 100px;  /* 모든 메뉴 크기 통일 */
-    text-align: center; 
-    text-decoration: none; 
-    font-weight: bold; 
-    color: black; 
-    padding: 10px 0; 
-    border-right: 1px solid #ccc; 
-    cursor: pointer; 
+.nav {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background: #f8f8f8;
+	padding: 10px;
+	width: 100%;
+	box-sizing: border-box;
 }
 
-.nav a:last-child { 
-    border-right: none; 
+.nav>div, .nav a {
+	width: 100px;
+	text-align: center;
+	text-decoration: none;
+	font-weight: bold;
+	color: black;
+	padding: 10px 0;
+	border-right: 1px solid #ccc;
+	cursor: pointer;
 }
 
+.nav a:last-child {
+	border-right: none;
+}
+.category-link {
+	cursor: pointer;
+	color: blue;
+	text-decoration: underline;
+}
+
+.sub-category {
+	display: none;
+} /* 초기에는 하위 카테고리 숨기기 */
+
+/* fieldlist css */
+.container {
+	display: flex; /* 사이드바와 콘텐츠 영역을 나란히 배치 */
+}
+
+.sidebar {
+	width: 200px; /* 사이드바 너비 */
+	background-color: #f8f8f8; /* 배경색 */
+	padding: 20px;
+	position: absolute; /* 화면 왼쪽에 고정 */
+	left: 20px; /* 왼쪽 여백 */
+	top: 120px; /* 상단 여백 */
+}
+.book-list {
+	margin-top: 20px;
+}
+
+.filters {
+	margin-top: 10px;
+} /* fieldlist css */
+.content {
+	flex: 1;
+	padding: 10px;
+}
 /* 분야보기 드롭다운 스타일 */
 .dropdown { 
     display: none; 
@@ -58,34 +99,9 @@
     justify-content: center; 
     margin-top: 20px; 
 }
-
 .search-bar { 
     margin: 20px; 
 }
-
-
-
-.category-link {
-	cursor: pointer;
-	color: blue;
-	text-decoration: underline;
-}
-
-.sub-category {
-	display: none;
-} /* 초기에는 하위 카테고리 숨기기 */
-
-
-
-.sidebar {
-	width: 200px; /* 사이드바 너비 */
-	background-color: #f8f8f8; /* 배경색 */
-	padding: 20px;
-	position: absolute; /* 화면 왼쪽에 고정 */
-	left: 20px; /* 왼쪽 여백 */
-	top: 120px; /* 상단 여백 */
-}
-
 
 .category {
 	padding: 10px;
@@ -96,6 +112,3 @@
 .category:hover {
 	background-color: #e0e0e0; /* 마우스 오버 효과 */
 }
-
-
-

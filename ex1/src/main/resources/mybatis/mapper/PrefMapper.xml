@@ -53,7 +53,7 @@
             WHERE o.user_id = #{userId}
         )
     )
-    WHERE ROWNUM <![CDATA[<=]]> 4
+    WHERE ROWNUM <![CDATA[<=]]> 8
 	</select>
 	<select id="getRecommendedBookList" parameterType="map" resultType="java.lang.Long">
     SELECT isbn
