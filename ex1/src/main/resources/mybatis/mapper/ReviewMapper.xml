@@ -41,7 +41,7 @@
 			     	from review where isbn=#{isbn} 
 			     	order by rating desc 
 			     	) a)
-		where rank > #{start} and rank <![CDATA[<]]> #{end}	
+		where rank > #{start} and rank <![CDATA[<=]]> #{end}	
 	</select>
 	<select id="getTotal" resultType="Integer" parameterType="java.lang.Long">
 		select count(*) from review where isbn=#{isbn}
@@ -66,7 +66,7 @@
 								and od.isbn = b.isbn and od.isbn = r.isbn and o.user_id = r.user_id
 					) a
 				)
-				where rank > #{start} AND rank <![CDATA[<]]> #{end}
+				where rank > #{start} AND rank <![CDATA[<=]]> #{end}
 	</select>
 	<select id="GetAvgReview" parameterType="java.lang.Long" resultType="java.lang.Double">
 	SELECT    

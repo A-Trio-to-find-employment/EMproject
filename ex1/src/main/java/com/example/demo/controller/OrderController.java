@@ -85,26 +85,35 @@ public class OrderController {
      		    }
      		}
         // 로그인된 사용자 정보 가져오기
-        String user = (String) session.getAttribute("loginUser");
-        
+        String user = (String) session.getAttribute("loginUser");     
         int currentPage = 1;
-        // 페이지 번호가 null이 아니면 currentPage 설정
-        if (PAGE_NUM != null) currentPage = PAGE_NUM;
+		// 페이지 번호가 null이 아니면 currentPage 설정
+		if (PAGE_NUM != null) {
+			currentPage = PAGE_NUM;
+		}
+		
+		int count1 = this.orderservice.getTotal(user);
+		int startRow = 0;
+		int endRow = 0;
+		int totalPageCount = 0;
 
-        // 사용자의 주문 갯수 조회                      		
-        int count = this.orderservice.getTotal(user);  // 갯수를 검색
-        int startRow = 0; 
-        int endRow = 0; 
-        int totalPageCount = 0;
+		if (count1 > 0) {
+			totalPageCount = count1 / 5; // 페이지 수 계산
+			if (count1 % 5 != 0)
+				totalPageCount++; // 나머지가 있으면 페이지 수 +1
+
+			// startRow는 currentPage에 맞게 계산, 첫 페이지는 0, 두 번째 페이지는 5
+			startRow = (currentPage - 1) * 5;
+
+			// endRow는 startRow + 5로 설정, 단 endRow가 count보다 클 수 있으므로 count로 제한
+			endRow = startRow + 5;
+
+			if (endRow > count1) {
+				endRow = count1;
+			}
+		}
         
-        if (count > -1) {
-            totalPageCount = count / 5;
-            if (count % 5 != 0) totalPageCount++;
-            startRow = (currentPage - 1) * 5;
-            endRow = ((currentPage - 1) * 5) + 6;
-            if (endRow > count) endRow = count;
-        }
-
+       
         // 주문 목록을 페이지 범위에 맞게 설정
         StartEnd se = new StartEnd();
         se.setStart(startRow);
@@ -118,7 +127,7 @@ public class OrderController {
         // ModelAndView에 데이터 추가        
         mav.addObject("START", startRow);
         mav.addObject("END", endRow);
-        mav.addObject("TOTAL", count);
+        mav.addObject("TOTAL", count1);
         mav.addObject("currentPage", currentPage);
         mav.addObject("LIST", myorderlist);  // 주문 목록을 JSP로 전달
         mav.addObject("pageCount", totalPageCount);

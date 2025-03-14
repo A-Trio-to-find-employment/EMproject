@@ -113,9 +113,7 @@ public class ReviewController {
 		else System.out.println("pageNo:"+pageNo);
 		if(pageNo != null)currentPage = pageNo;
 		String id = (String)session.getAttribute("loginUser");
-		List<MyReview> mineReview = this.service.listReview(pageNo, id);
 		
-		System.out.println("건 수 : "+mineReview.size());
 		
 		ModelAndView mav = new ModelAndView("myArea");
 		// 쿠키에서 가져온 ISBN 목록을 처리
@@ -152,11 +150,36 @@ public class ReviewController {
 				        System.out.println("❌ 잘못된 ISBN 값: " + recentBookIsbnStr);
 				    }
 				}
-		Integer totalCount  = this.service.getTotalMine(id);
-		int pageCount = totalCount / 5;
-		if(totalCount % 5 != 0)pageCount++;
+		
+		
+		
+		
+		int count = this.service.getTotalMine(id);
+		int startRow = 0;
+		int endRow = 0;
+		int PageCount = 0;
+
+		if (count > 0) {
+			PageCount = count / 5; // 페이지 수 계산
+			if (count % 5 != 0)
+				PageCount++; // 나머지가 있으면 페이지 수 +1
+
+			// startRow는 currentPage에 맞게 계산, 첫 페이지는 0, 두 번째 페이지는 5
+			startRow = (currentPage - 1) * 5;
+
+			// endRow는 startRow + 5로 설정, 단 endRow가 count보다 클 수 있으므로 count로 제한
+			endRow = startRow + 5;
+
+			if (endRow > count) {
+				endRow = count;
+			}
+		}
+		List<MyReview> mineReview = this.service.listReview(pageNo, id);
+		
+		
+		
 		mav.addObject("mine",mineReview);
-		mav.addObject("PAGES",pageCount);mav.addObject("currentPage",currentPage);
+		mav.addObject("PAGES",PageCount);mav.addObject("currentPage",currentPage);
 		mav.addObject("BODY","listReview.jsp");
 		return mav;
 	}
