@@ -47,26 +47,44 @@
 		select count(*) from review where isbn=#{isbn}
 	</select>
 	<select id="getTotalMine" parameterType="String" resultType="Integer">
-		select count(*) 
-			from orders o, orders_detail od, review r, book b
-			where o.order_id = od.order_id and o.user_id = #{user_id} 
-			and od.isbn = b.isbn and od.isbn = r.isbn and o.user_id = r.user_id
+			SELECT COUNT(DISTINCT r.review_id) 
+			FROM review r 
+			JOIN book b ON r.isbn = b.isbn
+			JOIN orders_detail od ON b.isbn = od.isbn
+			JOIN orders o ON od.order_id = o.order_id
+			WHERE r.user_id = #{user_id}
 
 	</select>
 	<select id="getMaxReview" resultType="Integer">
 		select max(review_id) from review
 	</select> 
 	<select id="listReview" parameterType="StartEnd" resultType="MyReview">
-		select order_id, to_char(created_at, 'YYYY-MM-DD') as created_at, book_title,
-				content, to_char(reg_date, 'YYYY-MM-DD') as reg_date, review_id
-				from (select rownum as rank, a. *
-					from (select o.order_id, o.created_at, b.book_title, r.content, r.reg_date, r.review_id
-						from orders o, orders_detail od, review r, book b
-						where o.order_id = od.order_id and o.user_id = #{user_id} 
-								and od.isbn = b.isbn and od.isbn = r.isbn and o.user_id = r.user_id
-					) a
-				)
-				where rank > #{start} AND rank <![CDATA[<=]]> #{end}
+		SELECT order_id, 
+       TO_CHAR(created_at, 'YYYY-MM-DD') AS created_at, 
+       book_title,
+       content, 
+       TO_CHAR(reg_date, 'YYYY-MM-DD') AS reg_date, 
+       review_id
+FROM (
+    SELECT ROWNUM AS rank, a.*
+    FROM (
+        SELECT MIN(o.order_id) AS order_id, 
+               MIN(o.created_at) AS created_at, 
+               b.book_title, 
+               r.content, 
+               r.reg_date, 
+               r.review_id
+        FROM orders o
+        JOIN orders_detail od ON o.order_id = od.order_id
+        JOIN book b ON od.isbn = b.isbn
+        JOIN review r ON od.isbn = r.isbn AND o.user_id = r.user_id
+        WHERE o.user_id = #{user_id} 
+        GROUP BY b.book_title, r.content, r.reg_date, r.review_id
+        ORDER BY MIN(o.order_id) ASC
+    ) a
+)
+WHERE rank > #{start} AND rank <![CDATA[<]]> #{end}
+
 	</select>
 	<select id="GetAvgReview" parameterType="java.lang.Long" resultType="java.lang.Double">
 	SELECT    
