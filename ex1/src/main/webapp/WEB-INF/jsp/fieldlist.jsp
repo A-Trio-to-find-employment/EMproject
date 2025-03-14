@@ -173,7 +173,7 @@
 }
 
 </style>
-    <link rel="stylesheet" type="text/css" href="/css/bookstyle.css">
+    <link rel="stylesheet" type="text/css" href="/css/bookstyle2.css">
 </head>
 <body>
 

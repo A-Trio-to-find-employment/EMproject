@@ -91,7 +91,13 @@
     		and c.valid_from >= sysdate  
     		order by c.valid_until asc
 	</select>
-
+	<insert id="insertCatCoupon" parameterType="Coupon">
+	 	insert into coupon values(#{coupon_id}, #{discount_percentage}, sysdate, sysdate+30, #{coupon_code}, #{cat_id})
+	</insert>
+	<select id="getCouponByCode" parameterType="String" resultType="Coupon">
+		select * from coupon where coupon_code = #{coupon_code} and valid_until > sysdate 
+			and valid_from <![CDATA[<]]> sysdate
+	</select>
 </mapper>
 
 	

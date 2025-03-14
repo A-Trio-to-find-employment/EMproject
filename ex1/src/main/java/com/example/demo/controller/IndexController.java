@@ -169,11 +169,10 @@ public class IndexController {
 		se.setEnd(end);
 		List<Long> isbnList = this.indexService.getTop20Books(se);
 		List<Book> bestSellerList = new ArrayList<Book>();
-	
-			for (Long bestIsbn : isbnList) {
-				Book bestBook = this.fieldService.getBookDetail(bestIsbn);
-				bestSellerList.add(bestBook);
-			}
+		for (Long bestIsbn : isbnList) {
+			Book bestBook = this.fieldService.getBookDetail(bestIsbn);
+			bestSellerList.add(bestBook);
+		}
 		if (action1 != null) {
 			// 로그인한 사용자가 없으면 로그인 페이지로 리다이렉트
 			if (loginUser == null) {
@@ -323,9 +322,7 @@ public class IndexController {
 				return mav;
 			}
 		}
-		
-		
-		
+
 		int totalCount = this.indexService.getTopCount();
 		int pageCount = totalCount / 5;
 		if(totalCount % 5 != 0) pageCount++;

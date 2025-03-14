@@ -37,4 +37,8 @@ public class PrefService {
 		List<String> catList = this.prefMapper.getUserTopCat(user_id);
 		return catList;
 	}
+	public String getPrefTop(String user_id) {
+		String cat_id = this.prefMapper.getPrefTop(user_id);
+		return cat_id;
+	}
 }
