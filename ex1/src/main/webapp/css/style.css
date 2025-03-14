@@ -1,5 +1,12 @@
 @charset "UTF-8";
-
+body {
+    margin: 0;
+    padding: 00;
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+}
 /* 네비게이션 바 스타일 */
 .nav {
     display: flex;
@@ -87,23 +94,6 @@
     position: relative;
 }
 
-
-
-/* 검색 바 및 컨테이너 */
-.container { 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    justify-content: center; 
-    margin-top: 20px; 
-}
-
-.search-bar { 
-    margin: 20px; 
-}
-
-
-
 .category-link {
 	cursor: pointer;
 	color: blue;
@@ -114,7 +104,10 @@
 	display: none;
 } /* 초기에는 하위 카테고리 숨기기 */
 
-
+/* fieldlist css */
+.container {
+	display: flex; /* 사이드바와 콘텐츠 영역을 나란히 배치 */
+}
 
 .sidebar {
 	width: 200px; /* 사이드바 너비 */
@@ -124,7 +117,31 @@
 	left: 20px; /* 왼쪽 여백 */
 	top: 120px; /* 상단 여백 */
 }
+.book-list {
+	margin-top: 20px;
+}
 
+.filters {
+	margin-top: 10px;
+} /* fieldlist css */
+.content {
+	flex: 1;
+	padding: 10px;
+}
+/* 분야보기 드롭다운 스타일 */
+
+
+/* 검색 바 및 컨테이너 */
+.container { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    margin-top: 20px; 
+}
+.search-bar { 
+    margin: 20px; 
+}
 
 .category {
 	padding: 10px;
@@ -135,6 +152,3 @@
 .category:hover {
 	background-color: #e0e0e0; /* 마우스 오버 효과 */
 }
-
-
-
