@@ -99,6 +99,32 @@
 			<artifactId>tomcat-embed-jasper</artifactId>
 		</dependency>
 		
+		<!-- Spring Boot Security 의존성 -->
+<!-- 
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+-->
+
+<!-- Spring Security 테스트 의존성 -->
+<!-- 
+<dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-test</artifactId>
+    <scope>test</scope>
+</dependency>
+-->
+
+<!-- Spring Security 태그 라이브러리 의존성 -->
+<!-- 
+<dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-taglibs</artifactId>
+    <version>6.4.2</version>
+</dependency>
+-->
+
 	</dependencies>
 
 	<build>
