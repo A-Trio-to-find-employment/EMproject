@@ -95,17 +95,20 @@
 <body>
     <!-- 네비게이션 바 -->
     <div class="nav">
-        <a href="/index">HOME</a>
-        <div style="position: relative;">
-            <a onclick="toggleDropdown()">분야보기</a>
-            <div id="categoryDropdown" class="dropdown">
-                <a href="/field.html?cat_id=0">국내도서</a>
-                <a href="/field.html?cat_id=1">외국도서</a>
-            </div>
+    <!-- HOME 항목 -->
+    <a href="/index">HOME</a>
+
+    <div class="nav-right">
+    	<div style="position: relative;">
+        <a onclick="toggleDropdown()">분야보기</a>
+        <div id="categoryDropdown" class="dropdown">
+            <a href="/field.html?cat_id=0">국내도서</a>
+            <a href="/field.html?cat_id=1">외국도서</a>
         </div>
-        <a href="#">이벤트</a>
+    </div>
+        <a href="/eventlist">이벤트</a>
         <c:if test="${sessionScope.loginUser != null}">
-            <p>사용자 : ${ sessionScope.loginUser }</p>
+            <p>사용자 : ${sessionScope.loginUser}</p>
             <a href="/logout">로그아웃</a>
         </c:if>
         <c:if test="${sessionScope.loginUser == null}">
@@ -115,6 +118,7 @@
         <a href="/secondfa">마이페이지</a>
         <a href="/qna">고객센터</a>
     </div>
+</div>
 
     <h2 align="center">카테고리 선택</h2>
     <div class="main-container">

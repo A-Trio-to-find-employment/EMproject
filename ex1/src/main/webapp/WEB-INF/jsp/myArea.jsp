@@ -5,7 +5,6 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <!DOCTYPE html>
 <html>
-<html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -184,26 +183,30 @@
 	<c:when test="${empty BODY }">
 
     <div class="nav">
-        <a href="/index">HOME</a>     
-        <div style="position: relative;">
-            <a onclick="toggleDropdown()">분야보기</a>
-            <div id="categoryDropdown" class="dropdown">
-                <a href="/field.html?cat_id=0">국내도서</a>
-                <a href="/field.html?cat_id=1">외국도서</a>
-            </div>
+    <!-- HOME 항목 -->
+    <a href="/index">HOME</a>
+
+    <div class="nav-right">
+    	<div style="position: relative;">
+        <a onclick="toggleDropdown()">분야보기</a>
+        <div id="categoryDropdown" class="dropdown">
+            <a href="/field.html?cat_id=0">국내도서</a>
+            <a href="/field.html?cat_id=1">외국도서</a>
         </div>
+    </div>
         <a href="/eventlist">이벤트</a>
         <c:if test="${sessionScope.loginUser != null}">
-        	<p>사용자 : ${sessionScope.loginUser}</p>
-   			<a href="/logout">로그아웃</a>
-		</c:if>
-		<c:if test="${sessionScope.loginUser == null}">
-   			<a href="/signup">회원가입</a>
-    		<a href="/login">로그인</a>
-		</c:if>
+            <p>사용자 : ${sessionScope.loginUser}</p>
+            <a href="/logout">로그아웃</a>
+        </c:if>
+        <c:if test="${sessionScope.loginUser == null}">
+            <a href="/signup">회원가입</a>
+            <a href="/login">로그인</a>
+        </c:if>
         <a href="/secondfa">마이페이지</a>
-        <a href="/qnalist">고객센터</a>
+        <a href="/qna">고객센터</a>
     </div>
+</div>
 
     <div class="sidebar">
         <h3>나의 등급 <span style="float: right;">일반 회원</span></h3>

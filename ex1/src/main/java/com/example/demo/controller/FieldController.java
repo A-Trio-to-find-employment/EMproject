@@ -804,7 +804,8 @@ public class FieldController {
 				    }
 				}
 		
-		
+		Double avg = this.reviewservice.GetAvgReview(isbn);
+		mav.addObject("avg",avg);
 		mav.addObject("START", startRow);
 		mav.addObject("END", endRow);
 		mav.addObject("TOTAL", count);
