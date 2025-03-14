@@ -40,7 +40,7 @@
 	</select>
 	<select id="findCouponIdFromCart" parameterType="Cart" resultType="Integer">
 		select coupon_id from user_coupon where coupon_id in (
-        	select coupon_id from coupon where cat_id = (
+        	select coupon_id from coupon where cat_id in (
             	select cat_id from book_categories where isbn = (
                 	select isbn from cart where cart_id = #{cart_id}
             		)
