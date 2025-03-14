@@ -1,38 +1,92 @@
 @charset "UTF-8";
 
-body {
-	margin: 0;
-	padding: 0;
-	width: 100%;
-	max-width: 100%;
-	display: flex;
-	flex-direction: column;
-}
-
+/* 네비게이션 바 스타일 */
 .nav {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	background: #f8f8f8;
-	padding: 10px;
-	width: 100%;
-	box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #007bff; /* 배경색을 파란색으로 변경 */
+    padding: 5px 15px; /* 위아래 패딩을 줄여서 크기 축소 */
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.nav>div, .nav a {
-	width: 100px;
-	text-align: center;
-	text-decoration: none;
-	font-weight: bold;
-	color: black;
-	padding: 10px 0;
-	border-right: 1px solid #ccc;
-	cursor: pointer;
+/* "HOME" 항목 스타일 */
+.nav-home {
+    margin-right: 10px; /* HOME과 분야보기 간격을 줄임 */
 }
 
+/* "분야보기" 항목 스타일 */
+.nav-category {
+    position: relative;
+    margin-right: 15px; /* 분야보기와 다른 항목들 간격을 조정 */
+}
+
+/* 오른쪽 메뉴 영역 (기타 링크들) */
+.nav-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+/* 모든 메뉴 항목 스타일 */
+.nav > div, .nav a {
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    color: #ffffff; /* 텍스트 색을 흰색으로 변경 */
+    padding: 8px 15px; /* 패딩을 줄여서 크기 축소 */
+    font-size: 14px; /* 폰트 크기를 줄여서 메뉴 크기 축소 */
+    border-right: 1px solid #ccc;
+    cursor: pointer;
+}
+
+/* 마지막 항목의 border-right 제거 */
 .nav a:last-child {
-	border-right: none;
+    border-right: none;
 }
+
+/* "분야보기" 드롭다운 관련 스타일 */
+.dropdown {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    top: 30px;
+    left: 0;
+    width: 180px; /* 드롭다운 너비를 줄여서 크기 축소 */
+}
+
+.dropdown a {
+    padding: 8px 12px; /* 드롭다운 메뉴 항목 크기 축소 */
+    display: block;
+    text-decoration: none;
+    color: black;
+}
+
+/* 드롭다운 보이게 하기 */
+.nav-category:hover .dropdown {
+    display: block;
+}
+
+/* 메뉴 항목 hover 효과 */
+.nav a:hover, .dropdown a:hover {
+    background-color: #ff5c8d;
+    color: white;
+}
+
+/* 로그인/회원가입 스타일 */
+.nav > c:if {
+    display: flex;
+    align-items: center;
+}
+
+/* 드롭다운 메뉴 아이템의 스타일 */
+.nav-category > a {
+    position: relative;
+}
+
 .category-link {
 	cursor: pointer;
 	color: blue;
@@ -68,28 +122,7 @@ body {
 	padding: 10px;
 }
 /* 분야보기 드롭다운 스타일 */
-.dropdown { 
-    display: none; 
-    position: absolute; 
-    top: 100%; 
-    left: 50%;
-    transform: translateX(-50%);
-    background: white; 
-    border: 1px solid #ccc; 
-    padding: 5px; 
-    width: 150px; 
-}
 
-.dropdown a { 
-    display: block; 
-    padding: 5px; 
-    text-decoration: none; 
-    color: black; 
-}
-
-.dropdown a:hover { 
-    background: #ddd; 
-}
 
 /* 검색 바 및 컨테이너 */
 .container { 
