@@ -103,9 +103,9 @@
             <!-- 맞춤 도서 슬라이드 -->
             <c:choose>
                 <c:when test="${empty recommendedBooks}">
-                    <div class="swiper-slide book-slide" data-category="맞춤 도서" data-url="">
-                        <p class="no-books">사용자의 로그인 또는 선호도 조사가 완료되지 않아 맞춤 도서를 불러올 수 없습니다.</p>
-                    </div>
+                    <div class="swiper-slide book-slide empty-slide" data-category="맞춤 도서" data-url="">
+        				<b class="no-books">사용자의 로그인 또는 선호도 조사가 완료되지 않아 맞춤 도서를 불러올 수 없습니다.</b>
+    				</div>
                 </c:when>
                 <c:otherwise>
                     <c:forEach var="chunk" items="${recommendedBooks}" varStatus="status">
