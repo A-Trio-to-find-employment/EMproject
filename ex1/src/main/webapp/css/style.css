@@ -1,38 +1,72 @@
 @charset "UTF-8";
+
 body {
-    margin: 0;
-    padding: 00;
-    width: 100%;
-    max-width: 100%;
-    display: flex;
-    flex-direction: column;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	max-width: 100%;
+	display: flex;
+	flex-direction: column;
 }
 
-.nav { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center;
-    background: #f8f8f8; 
-    padding: 10px; 
-    width: 100%; 
-    box-sizing: border-box; 
+.nav {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background: #f8f8f8;
+	padding: 10px;
+	width: 100%;
+	box-sizing: border-box;
 }
 
-.nav > div, .nav a { 
-    width: 100px;  /* 모든 메뉴 크기 통일 */
-    text-align: center; 
-    text-decoration: none; 
-    font-weight: bold; 
-    color: black; 
-    padding: 10px 0; 
-    border-right: 1px solid #ccc; 
-    cursor: pointer; 
+.nav>div, .nav a {
+	width: 100px;
+	text-align: center;
+	text-decoration: none;
+	font-weight: bold;
+	color: black;
+	padding: 10px 0;
+	border-right: 1px solid #ccc;
+	cursor: pointer;
 }
 
-.nav a:last-child { 
-    border-right: none; 
+.nav a:last-child {
+	border-right: none;
+}
+.category-link {
+	cursor: pointer;
+	color: blue;
+	text-decoration: underline;
 }
 
+.sub-category {
+	display: none;
+} /* 초기에는 하위 카테고리 숨기기 */
+
+/* fieldlist css */
+.container {
+	display: flex; /* 사이드바와 콘텐츠 영역을 나란히 배치 */
+}
+
+.sidebar {
+	width: 200px; /* 사이드바 너비 */
+	background-color: #f8f8f8; /* 배경색 */
+	padding: 20px;
+	position: absolute; /* 화면 왼쪽에 고정 */
+	left: 20px; /* 왼쪽 여백 */
+	top: 120px; /* 상단 여백 */
+}
+.book-list {
+	margin-top: 20px;
+}
+
+.filters {
+	margin-top: 10px;
+} /* fieldlist css */
+.content {
+	flex: 1;
+	padding: 10px;
+}
 /* 분야보기 드롭다운 스타일 */
 .dropdown { 
     display: none; 
@@ -65,66 +99,6 @@ body {
     justify-content: center; 
     margin-top: 20px; 
 }
-
-.search-bar { 
-    margin: 20px; 
-}
-
-.book-section { 
-    width: 50%; 
-    padding: 15px; 
-    border: 1px solid #ddd; 
-    margin: 10px 0; 
-}
-.book-section table {
-    width: 100%; /* 부모 요소(.book-section)의 너비를 100% 활용 */
-    border-collapse: collapse;
-    table-layout: fixed; /* 테이블 셀 크기를 균등하게 조정 */
-}
-
-.book-section td {
-    width: 25%; /* 한 줄에 4개의 책을 배치 */
-    text-align: center;
-    padding: 10px;
-}
-
-.book-section img {
-    width: 100%; /* 이미지가 셀 크기에 맞게 조정됨 */
-    height: auto;
-    max-height: 200px; /* 최대 높이 설정 */
-    object-fit: contain; /* 비율을 유지하며 이미지가 잘리거나 찌그러지지 않도록 함 */
-}
- ul { list-style-type: none; padding-left: 20px; }
-
-.category-link {
-	cursor: pointer;
-	color: blue;
-	text-decoration: underline;
-}
-
-.sub-category {
-	display: none;
-} /* 초기에는 하위 카테고리 숨기기 */
-
-/* fieldlist css */
-.container {
-	display: flex; /* 사이드바와 콘텐츠 영역을 나란히 배치 */
-}
-
-.sidebar {
-	width: 200px; /* 사이드바 너비 */
-	background-color: #f8f8f8; /* 배경색 */
-	padding: 20px;
-	position: absolute; /* 화면 왼쪽에 고정 */
-	left: 20px; /* 왼쪽 여백 */
-	top: 120px; /* 상단 여백 */
-}
-
-.content {
-	flex: 1;
-	padding: 10px;
-}
-
 .category {
 	padding: 10px;
 	border-bottom: 1px solid #ddd;
@@ -134,13 +108,3 @@ body {
 .category:hover {
 	background-color: #e0e0e0; /* 마우스 오버 효과 */
 }
-
-.book-list {
-	margin-top: 20px;
-}
-
-.filters {
-	margin-top: 10px;
-} /* fieldlist css */
-
-

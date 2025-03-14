@@ -11,165 +11,14 @@
 <title>도서 검색</title>
 <link rel="stylesheet" type="text/css" href="/css/style.css">
 <link rel="stylesheet" type="text/css" href="/css/filtercss.css">
+<link rel="stylesheet" type="text/css" href="/css/recentstyle.css">
+<link rel="stylesheet" type="text/css" href="/css/indexstyle.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
 
-<!-- CSS -->
-<style>
-/* 책 아이콘 버튼 스타일 */
-.book-icon-button {
-    background-color: white; /* 버튼 배경색을 하얀색으로 설정 */
-    color: #FF6F61; /* 텍스트 색상 주황색 */
-    border: none; /* 테두리 제거 */
-    border-radius: 50%; /* 원형 모양 */
-    padding: 30px; /* 크기를 키움 */
-    font-size: 32px; /* 책 아이콘 크기 키움 */
-    font-weight: bold;
-    cursor: pointer;
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* 그림자 추가 */
-    transition: all 0.3s ease-in-out;
-    z-index: 9999;
-    animation: pulse 1.5s infinite; /* 버튼에 애니메이션 효과 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* 책 아이콘 버튼 hover 상태 */
-.book-icon-button:hover {
-    transform: scale(1.2); /* 마우스 hover 시 버튼 크기 증가 */
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4); /* 버튼 그림자 더 강조 */
-    background-color: #FF6F61; /* hover 시 버튼 배경색을 주황색으로 변경 */
-    color: white; /* hover 시 텍스트 색을 하얀색으로 변경 */
-    animation: none; /* hover 시 애니메이션 비활성화 */
-}
-
-/* 책 아이콘 버튼 포커스 시 스타일 */
-.book-icon-button:focus {
-    outline: none;
-    box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.7);
-}
-
-/* 책 이미지 카드 스타일 */
-.recent-viewed-item {
-    display: inline-block;
-    margin: 10px;
-    padding: 15px;
-    background-color: #f0f0f0;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    transition: all 0.3s ease;
-    width: 180px;  /* 일정한 카드 크기 */
-    height: 240px; /* 일정한 카드 높이 */
-    position: relative; /* X 버튼을 카드 내에 위치시키기 위한 설정 */
-}
-
-/* X 버튼 스타일 */
-.recent-viewed-item .remove-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: #FF6F61;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 25px;
-    height: 25px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.recent-viewed-item .remove-btn:hover {
-    background-color: #FF3D2A;
-}
-
-/* 책 이미지 스타일 */
-.recent-viewed-item img {
-    border-radius: 10px;
-    width: 100%;
-    height: 180px; /* 이미지의 높이를 일정하게 설정 */
-    object-fit: cover; /* 이미지를 일정 비율로 맞추기 위해 cover 사용 */
-    transition: all 0.3s ease;
-}
-
-/* 모달 스타일 */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    right: 0; /* 오른쪽으로 위치 */
-    top: 0;
-    width: 40%; /* 모달 너비 */
-    height: 100%;
-     background-color: rgba(255, 255, 255, 0);  /* 배경을 투명하게 설정 */
-    overflow: auto;
-    transition: all 0.3s ease;
-}
-
-/* 모달 내용 박스 스타일 */
-.modal-content {
-    background-color: #fff;
-    margin: 15% auto;
-    padding: 30px;
-    border-radius: 10px;
-    width: 90%; /* 모달 내용 너비 */
-    max-width: 400px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-    animation: fadeIn 0.5s ease-in-out;
-}
-
-/* 모달 닫기 버튼 스타일 */
-.close-btn {
-    color: #333;
-    font-size: 30px;
-    font-weight: bold;
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.close-btn:hover {
-    color: #FF6F61;
-}
-
-/* 모달 애니메이션 */
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-        transform: translateY(-50px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    }
-    50% {
-        transform: scale(1.1);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-    }
-    100% {
-        transform: scale(1);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    }
-}
-
-</style>
-    <meta charset="UTF-8">
-    <title>도서 검색</title>
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
-    <link rel="stylesheet" type="text/css" href="/css/filtercss.css">
+<meta charset="UTF-8">
+<title>도서 검색</title>
+<link rel="stylesheet" type="text/css" href="/css/style.css">
+<link rel="stylesheet" type="text/css" href="/css/filtercss.css">
 
 </head>
 <body>
@@ -234,95 +83,160 @@
 		</div>
 	</div>
 
-	<!-- 컨텐츠 영역 (추천 도서 등) -->
-	<c:choose>
-		<c:when test="${empty body}">
-			<div class="container">
-				<!-- 추천 도서 영역 -->
-				<div class="book-section">
-					<c:if test="${sessionScope.loginUser == null}">
-						<h3>맞춤 도서</h3>
-					</c:if>
-					<c:if test="${sessionScope.loginUser != null}">
-						<h3>
-							<a href="/myPrefBookList">맞춤 도서</a>
-						</h3>
-					</c:if>
-					<c:choose>
-						<c:when test="${catList == null}">
-							<p>로그인 후 선호 도서 설문에 참여하시면 맞춤형 도서 안내 서비스를 제공합니다.</p>
-						</c:when>
-						<c:otherwise>
-							<table border="1">
-								<tr>
-									<c:forEach var="bookImage" items="${recommendedBooks}">
-										<td><a href="/bookdetail.html?isbn=${bookImage.isbn}">
-												<img
-												src="${pageContext.request.contextPath}/upload/${bookImage.image_name}"
-												width="200" height="200" />
-										</a></td>
-									</c:forEach>
-								</tr>
-								<tr>
-									<c:forEach var="bookName" items="${recommendedBooks}">
-										<td><a href="/bookdetail.html?isbn=${bookName.isbn}">제목:
-												${bookName.book_title}</a></td>
-									</c:forEach>
-								</tr>
-							</table>
-						</c:otherwise>
-					</c:choose>
-				</div>
+<div id="bookCategoryTitle">
+    <c:choose>
+        <c:when test="${not empty recommendedBooks}">
+            <a href="/myPrefBookList">맞춤 도서</a>
+        </c:when>
+        <c:otherwise>
+            <a href="">맞춤 도서</a>
+        </c:otherwise>
+    </c:choose>
+</div>
 
-				<div class="book-section">
-					<h3>
-						<a href="/goBestSeller">화제의 베스트셀러 ></a>
-					</h3>
-					<table border="1">
-						<tr>
-							<c:forEach var="bestImage" items="${ bestList }">
-								<td><a href="/bookdetail.html?isbn=${bestImage.isbn}">
-										<img
-										src="${pageContext.request.contextPath}/upload/${bestImage.image_name}"
-										width="200" height="200" />
-								</a></td>
-							</c:forEach>
-						</tr>
-						<tr>
-							<c:forEach var="bestName" items="${bestList}">
-								<td><a href="/bookdetail.html?isbn=${bestName.isbn}">제목:
-										${bestName.book_title}</a></td>
-							</c:forEach>
-						</tr>
-					</table>
-				</div>
-				<div class="book-section">
-					<h3>신간 도서</h3>
-					<table border="1">
-						<tr>
-							<c:forEach var="newImage" items="${ newList }">
-								<td><a href="/bookdetail.html?isbn=${newImage.isbn}"> <img
-										src="${pageContext.request.contextPath}/upload/${newImage.image_name}"
-										width="200" height="200" />
-								</a></td>
-							</c:forEach>
-						</tr>
-						<tr>
-							<c:forEach var="newName" items="${ newList }">
-								<td><a href="/bookdetail.html?isbn=${newName.isbn}">제목:
-										${newName.book_title}</a></td>
-							</c:forEach>
-						</tr>
-					</table>
-				</div>
-			</div>
-		</c:when>
-		<c:otherwise>
-			<div class="content">
-				<jsp:include page="${body}"></jsp:include>
-			</div>
-		</c:otherwise>
-</c:choose>
+<div class="book-slider">
+    <div class="swiper">
+        <div class="swiper-wrapper">
+            <!-- 맞춤 도서 슬라이드 -->
+            <c:choose>
+                <c:when test="${empty recommendedBooks}">
+                    <div class="swiper-slide book-slide" data-category="맞춤 도서" data-url="">
+                        <p class="no-books">사용자의 로그인 또는 선호도 조사가 완료되지 않아 맞춤 도서를 불러올 수 없습니다.</p>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <c:forEach var="chunk" items="${recommendedBooks}" varStatus="status">
+                        <c:if test="${status.index % 8 == 0}">
+                            <div class="swiper-slide book-slide" data-category="맞춤 도서" data-url="/myPrefBookList">
+                                <div class="book-grid">
+                        </c:if>
+
+                        <div class="book-item">
+                            <a href="/bookdetail.html?isbn=${chunk.isbn}">
+                                <img src="${pageContext.request.contextPath}/upload/${chunk.image_name}" alt="${chunk.book_title}" />
+                                <p>${chunk.book_title}</p>
+                            </a>
+                        </div>
+
+                        <c:if test="${status.index % 8 == 7 or status.last}">
+                            </div></div>
+                        </c:if>
+                    </c:forEach>
+                </c:otherwise>
+            </c:choose>
+
+            <!-- 베스트셀러 슬라이드 -->
+            <c:choose>
+                <c:when test="${empty bestList}">
+                    <div class="swiper-slide book-slide" data-category="베스트셀러">
+                        <p class="no-books">베스트셀러 목록이 없습니다.</p>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <c:forEach var="chunk" items="${bestList}" varStatus="status">
+                        <c:if test="${status.index % 8 == 0}">
+                            <div class="swiper-slide book-slide" data-category="베스트셀러" data-url="/goBestSeller">
+                                <div class="book-grid">
+                        </c:if>
+
+                        <div class="book-item">
+                            <a href="/bookdetail.html?isbn=${chunk.isbn}">
+                                <img src="${pageContext.request.contextPath}/upload/${chunk.image_name}" alt="${chunk.book_title}" />
+                                <p>${chunk.book_title}</p>
+                            </a>
+                        </div>
+
+                        <c:if test="${status.index % 8 == 7 or status.last}">
+                            </div></div>
+                        </c:if>
+                    </c:forEach>
+                </c:otherwise>
+            </c:choose>
+
+            <!-- 신간 도서 슬라이드 -->
+            <c:choose>
+                <c:when test="${empty newList}">
+                    <div class="swiper-slide book-slide" data-category="신간 도서">
+                        <p class="no-books">신간 도서 목록이 없습니다.</p>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <c:forEach var="chunk" items="${newList}" varStatus="status">
+                        <c:if test="${status.index % 8 == 0}">
+                            <div class="swiper-slide book-slide" data-category="신간 도서">
+                                <div class="book-grid">
+                        </c:if>
+
+                        <div class="book-item">
+                            <a href="/bookdetail.html?isbn=${chunk.isbn}">
+                                <img src="${pageContext.request.contextPath}/upload/${chunk.image_name}" alt="${chunk.book_title}" />
+                                <p>${chunk.book_title}</p>
+                            </a>
+                        </div>
+
+                        <c:if test="${status.index % 8 == 7 or status.last}">
+                            </div></div>
+                        </c:if>
+                    </c:forEach>
+                </c:otherwise>
+            </c:choose>
+        </div>
+    </div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-pagination"></div>
+</div>
+
+<!-- Swiper 스크립트 추가 -->
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+<!-- Swiper 스크립트 추가 -->
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+<script>
+    var swiper = new Swiper('.swiper', {
+        loop: true,
+        autoplay: {
+            delay: 5000,
+            disableOnInteraction: false,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        slidesPerView: 1,
+        on: {
+            slideChangeTransitionEnd: function () {
+                let activeSlide = document.querySelector('.swiper-slide-active');
+                if (activeSlide) {
+                    let categoryName = activeSlide.getAttribute('data-category');
+                    let categoryUrl = activeSlide.getAttribute('data-url');
+
+                    let categoryTitle = document.getElementById('bookCategoryTitle');
+
+                    if (categoryUrl) {
+                        // 기존 요소가 <a> 태그가 아니라면 새로 생성 후 변경
+                        if (!categoryTitle.firstChild || categoryTitle.firstChild.tagName !== "A") {
+                            let link = document.createElement("a");
+                            link.href = categoryUrl;
+                            link.textContent = categoryName;
+                            categoryTitle.innerHTML = ""; // 기존 내용 삭제
+                            categoryTitle.appendChild(link); // 새 링크 삽입
+                        } else {
+                            categoryTitle.firstChild.href = categoryUrl;
+                            categoryTitle.firstChild.textContent = categoryName;
+                        }
+                    } else {
+                        // 기존 요소를 단순 텍스트로 변경
+                        categoryTitle.textContent = categoryName;
+                    }
+                }
+            }
+        }
+    });
+</script>
 
 	<c:if test="${not empty recentBooks}">
 		<!-- 동그라미 버튼 -->
@@ -347,11 +261,12 @@
 							</form>
 
 							<!-- 책 이미지 -->
-							  <a href="${pageContext.request.contextPath}/bookdetail.html?isbn=${recentBook.isbn}">
-                            <img src="${pageContext.request.contextPath}/upload/${recentBook.image_name}"
-                                 width="100" height="100" alt="책 이미지">
-                        </a>
-                        ${recentBook.book_title}
+							<a
+								href="${pageContext.request.contextPath}/bookdetail.html?isbn=${recentBook.isbn}">
+								<img
+								src="${pageContext.request.contextPath}/upload/${recentBook.image_name}"
+								width="100" height="100" alt="책 이미지">
+							</a> ${recentBook.book_title}
 						</div>
 
 					</c:if>
@@ -523,7 +438,7 @@ function toggleDropdown() {
             document.getElementById("filterModal").style.display = "none";
         }
     </script>
-    <script type="text/javascript">
+	<script type="text/javascript">
  // 팝업 모달 열기
     function openModal() {
         document.getElementById("recentBooksModal").style.display = "block";
@@ -542,7 +457,7 @@ function toggleDropdown() {
         }
     }
     </script>
-    
+
 
 </body>
 </html>

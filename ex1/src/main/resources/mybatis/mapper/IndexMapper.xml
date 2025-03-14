@@ -17,7 +17,7 @@
 		total_quantity DESC
 		) sub
 		WHERE ROWNUM <![CDATA[<=]]>
-		4
+		8
 	</select>
 	<select id="getTop20Books" parameterType="StartEnd"
 		resultType="java.lang.Long">
@@ -58,7 +58,7 @@
 		FROM book b
 		ORDER BY b.reg_date DESC
 		) sub
-		WHERE ROWNUM <![CDATA[<=]]> 4
+		WHERE ROWNUM <![CDATA[<=]]> 8
 	</select>
 </mapper>
 
