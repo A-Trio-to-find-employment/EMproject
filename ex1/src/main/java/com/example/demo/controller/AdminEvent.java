@@ -136,21 +136,30 @@ public class AdminEvent {
 		mav.addObject("BODY", "admincouponlist.jsp");
 
 		int currentPage = 1;
-		if (PAGE_NUM != null)
+		if (PAGE_NUM != null) {
 			currentPage = PAGE_NUM;
+		}
 		int count = this.couponService.getTotalcoupon();
 		int startRow = 0;
 		int endRow = 0;
 		int totalPageCount = 0;
+
 		if (count > 0) {
-			totalPageCount = count / 5;
+			totalPageCount = count / 5; // 페이지 수 계산
 			if (count % 5 != 0)
-				totalPageCount++;
+				totalPageCount++; // 나머지가 있으면 페이지 수 +1
+
+			// startRow는 currentPage에 맞게 계산, 첫 페이지는 0, 두 번째 페이지는 5
 			startRow = (currentPage - 1) * 5;
-			endRow = ((currentPage - 1) * 5) + 6;
-			if (endRow > count)
+
+			// endRow는 startRow + 5로 설정, 단 endRow가 count보다 클 수 있으므로 count로 제한
+			endRow = startRow + 5;
+
+			if (endRow > count) {
 				endRow = count;
+			}
 		}
+	
 		StartEnd se = new StartEnd();
 		se.setStart(startRow);
 		se.setEnd(endRow);
