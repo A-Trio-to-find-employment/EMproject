@@ -235,7 +235,7 @@ public class FieldController {
 					this.cartService.insertCart(cart);
 				}
 				if (action.equals("add")) {
-					ModelAndView mav1 = new ModelAndView("cartAlert");
+					ModelAndView mav1 = new ModelAndView("cartAlert1");
 					mav1.addObject("cat_id", cat_id);
 					mav1.addObject("sort", sort);
 					List<String> catList = this.categoryService.getCatIdFromIsbn(BOOKID);

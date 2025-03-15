@@ -17,7 +17,7 @@
 						or event_content LIKE '%' || #{key} || '%')
 					</if>
 				order by event_start ASC) a
-            where rownum <![CDATA[<=]]> #{end}) where rn > #{start}
+            where rownum <![CDATA[<]]> #{end}) where rn > #{start}
     </select>
     <select id="getTotalCount" resultType="Integer">
     	select count(*) from event
