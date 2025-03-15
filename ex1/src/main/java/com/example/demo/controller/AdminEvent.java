@@ -248,16 +248,21 @@ public class AdminEvent {
 			String month = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM")); // 현재 연월
 			String couponName = catName + month;
 			String[] nameArray = { couponName, couponName + "VIP", couponName + "VVIP" };
-
-			for (int i = 0; i < 3; i++) {
-				Integer cid = this.couponService.MaxCouponid() + 1;
-				Coupon c = new Coupon(); // 새로운 객체 생성 (재사용 방지)
-				c.setCoupon_id(cid);
-				c.setDiscount_percentage(dcArray[i]);
-				c.setCoupon_code(nameArray[i]);
-				c.setCat_id(cat.getCat_id());
-
-				this.couponService.insertCatCoupon(c);
+			List<Coupon> testList = this.couponService.getCouponByCode(couponName);
+			if(testList == null || testList.isEmpty()) {
+				for (int i = 0; i < 3; i++) {
+					Integer cid = this.couponService.MaxCouponid() + 1;
+					Coupon c = new Coupon(); // 새로운 객체 생성 (재사용 방지)
+					c.setCoupon_id(cid);
+					c.setDiscount_percentage(dcArray[i]);
+					c.setCoupon_code(nameArray[i]);
+					c.setCat_id(cat.getCat_id());
+					
+					this.couponService.insertCatCoupon(c);
+				}
+			} else {
+				ModelAndView mav1 = new ModelAndView("insertAllCouponFalse");
+				return mav1;
 			}
 		}
 
