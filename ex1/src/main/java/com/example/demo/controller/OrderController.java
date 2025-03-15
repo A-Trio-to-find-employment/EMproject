@@ -261,12 +261,14 @@ public class OrderController {
         	User_pref up = new User_pref();
         	up.setUser_id(loginUser); up.setCat_id(catId);
         	up = this.prefService.getUserCatIdByCat(up);
-        	int score = up.getPref_score() - 5;
-        	if(score < 1) {
-        		this.prefService.DeleteUserPref(up);
-        	} else {
-        		up.setPref_score(score);
-        		this.prefService.updateScore(up);
+        	if(up != null) {
+        		int score = up.getPref_score() - 5;
+            	if(score < 1) {
+            		this.prefService.DeleteUserPref(up);
+            	} else {
+            		up.setPref_score(score);
+            		this.prefService.updateScore(up);
+            	}
         	}
         }
         Integer totalSum = this.cartService.getUserTotalPriceSum(loginUser); // 최근 3개월의 결제 금액 확인
