@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,4 +61,38 @@ public class LoginService {
 	public void updateUserGrade(Users users) {
 		this.loginMapper.updateUserGrade(users);
 	}
+	
+	public void updateLoginStats(Users user) {
+        LocalDate today = LocalDate.now();
+
+        if (user.getLast_date() != null) {
+            LocalDate lastLoginDate = user.getLast_date().toLocalDate();
+
+            if (lastLoginDate.plusDays(1).isEqual(today)) {
+                user.setContinue_count(user.getContinue_count() + 1);
+            } else {
+                user.setContinue_count(1);
+            }
+
+            if (lastLoginDate.isEqual(today)) {
+                user.setDaily_count(user.getDaily_count() + 1);
+            } else {
+                user.setDaily_count(1);
+            }
+
+            if (lastLoginDate.getYear() == today.getYear() && lastLoginDate.getMonth() == today.getMonth()) {
+                user.setMonthly_count(user.getMonthly_count() + 1);
+            } else {
+                user.setMonthly_count(1);
+            }
+        } else {
+            user.setContinue_count(1);
+            user.setDaily_count(1);
+            user.setMonthly_count(1);
+        }
+        user.setCount(user.getCount() + 1);
+        user.setLast_date(Date.valueOf(today));
+
+        this.loginMapper.updateUserStats(user);  // XML에서 실행될 updateUserStats 호출
+    }
 }

@@ -19,6 +19,16 @@
 	<update id="updateCount" parameterType="String">
 		update users set count = count + 1 where user_id=#{user_id}
 	</update>
+	<update id="updateUserStats" parameterType="com.example.demo.model.Users">
+        UPDATE users 
+        SET 
+            count = #{count}, 
+            daily_count = #{daily_count},
+            monthly_count = #{monthly_count},
+            continue_count = #{continue_count},
+            last_date = #{last_date}
+        WHERE user_id = #{user_id}
+    </update>
 	<update id="modifyUser" parameterType="Users">
 		update users set password = #{password}, user_name = #{user_name}, 
 		address = #{address}, address_detail = #{address_detail}, zipcode =  #{zipcode},
