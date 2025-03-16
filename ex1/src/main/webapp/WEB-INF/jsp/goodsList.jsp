@@ -35,7 +35,7 @@
 		<tr><th>ISBN</th><th>제목</th><th>저자</th><th>출판사</th><th>가격</th><th>재고</th><th></th>
 		<c:forEach var="goods" items="${GOODS }">
 			<tr><td>${goods.isbn }</td>
-				<td><a href="/manageGoods/detail?isbn=${goods.isbn }">
+				<td><a href="/manageGoods/update?isbn=${goods.isbn }">
 										${goods.book_title }</a></td>
 				<td>${goods.authors }</td><td>${goods.publisher }</td>
 				<td><fmt:formatNumber value="${goods.price }" groupingUsed="true" currencySymbol="￦"/></td>
@@ -43,15 +43,9 @@
 				<td><form id="otherGoods_${goods.isbn}" action="/manageGoods/insertStock" method="post"style="display: inline;">
             		<input type="hidden" name="isbn" value="${goods.isbn}"/>	
 			        <input type="number" id="amount_${goods.isbn}" name="amount" min="1" />
-<!-- 			        required placeholder="수량 입력"/> -->
 			        <input type="submit" onclick="theOtherGoods('${goods.isbn}',event)" value="재고 추가"/>
 			    </form></td></tr>
-<!-- 			    <td><form action="/manageGoods/insertStock" method="post"style="display: inline;"> -->
-<%--             		<input type="hidden" name="isbn" value="${goods.isbn}"/>	 --%>
-<!-- 			        <input type="number" id=amount name="amount" min="1"/> -->
-<!-- 			         required placeholder="수량 입력" -->
-<!-- 			        <input type="submit" value="재고 추가"/> -->
-<!-- 			    </td></tr> -->
+
 		</c:forEach>	
 		</tr></table>
 <div align="center">

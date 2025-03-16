@@ -25,7 +25,8 @@ public interface GoodsMapper {
 	void addBookAuthors(Long isbn, String author);
     List<String> getBookAuthors(Long isbn);
     List<Category> getCategoriesByParentId(String parentId);
-	List<Map<String, String>> getCategoryPath(@Param("catIds") List<String> catIds);
+    String getCategoryPath(@Param("cat_id") String catId);
+	String findCategoryPathsById(@Param("catId") String catId);
 	void addInfoCategory(BookCategories bookcat);
 	String getGoodsTitle(Long isbn);
 	
@@ -36,4 +37,7 @@ public interface GoodsMapper {
 	void deleteCatInfo(Long isbn);
 	void deleteGoods(Long isbn);
 	Integer getReplyCount(Integer review_id);
+	
+	void deleteCategoriesByIsbn(@Param("isbn") Long isbn, 
+			@Param("categoriesToDelete") List<String> categoriesToDelete);
 }

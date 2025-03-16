@@ -13,7 +13,10 @@ import com.example.demo.model.BookCategories;
 import com.example.demo.model.Category;
 import com.example.demo.model.StartEnd;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class GoodsService {
 	@Autowired
 	private GoodsMapper goodsMapper;
@@ -62,14 +65,8 @@ public class GoodsService {
 	public List<Category> getCategoriesByParentId(String parnetId){
 		return this.goodsMapper.getCategoriesByParentId(parnetId);
 	}
-	public List<String> getCategoryPath(List<String> catIds, Book book) {
-	    List<String> result = new ArrayList<>();
-	    
-	    if (book != null && book.getCategoryPath() != null) {
-	        result.addAll(book.getCategoryPath());
-	    }
-	    
-	    return result;
+	public String getCategoryPath(String catId) {
+	    return goodsMapper.getCategoryPath(catId);
 	}
 	public void addInfoCategory(BookCategories bookcat) {
 		this.goodsMapper.addInfoCategory(bookcat);
@@ -80,8 +77,14 @@ public class GoodsService {
 	public String getGoodsTitle(Long isbn) {
 		return this.goodsMapper.getGoodsTitle(isbn);
 	}
-	public void updateInfoCategory(BookCategories bookcat) {
-		this.goodsMapper.updateInfoCategory(bookcat);
+	public void updateInfoCategory(Long isbn, List<String> catIds) {
+		this.goodsMapper.deleteCatInfo(isbn);
+		for(String catId : catIds) {
+			BookCategories bookcat = new BookCategories();
+			bookcat.setIsbn(isbn);
+			bookcat.setCat_id(catId);
+			this.goodsMapper.addInfoCategory(bookcat);
+		}
 	}
 	public void updateGoods(Book book) {
 	    this.goodsMapper.updateGoods(book);
@@ -109,4 +112,11 @@ public class GoodsService {
 	public void deleteCatInfo(Long isbn) {
 		this.goodsMapper.deleteCatInfo(isbn);
 	}
+	
+	public void deleteCategoriesByIsbn(Long isbn, List<String> categoriesToDelete) {
+        if (categoriesToDelete == null || categoriesToDelete.isEmpty()) {
+            return; // 삭제할 것이 없으면 실행하지 않음
+        }
+        goodsMapper.deleteCategoriesByIsbn(isbn, categoriesToDelete);
+    }
 }

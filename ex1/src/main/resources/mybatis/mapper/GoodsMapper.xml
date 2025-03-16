@@ -60,49 +60,46 @@
 	<select id="getBookAuthors" parameterType="Long" resultType="String">
         select author from book_author where isbn = #{isbn, jdbcType=BIGINT}
     </select>
-	
-	
 	<select id="getCategoriesByParentId" parameterType="String" resultType="Category">
 	    SELECT cat_id, cat_name FROM categories 
 		where (parent_id = #{parent_id} OR (#{parent_id} IS NULL AND parent_id IS NULL))
 	</select>
-<!-- 	<select id="getCategoryPath" parameterType="java.util.List" resultType="String"> -->
-<!-- 	    SELECT LISTAGG(cat_name, ' > ') WITHIN GROUP (ORDER BY LEVEL DESC)  -->
-<!-- 	    FROM categories -->
-<!-- 	    where cat_id in -->
-<!-- 	    <foreach item="catId" collection="catIds" open="(" separator="," close=")"> -->
-<!--         #{catId} -->
-<!--     	</foreach> -->
-<!-- 	    CONNECT BY PRIOR parent_id = cat_id -->
-<!-- 	</select> -->
-	<select id="getCategoryPath" parameterType="java.util.List" resultType="java.util.Map">
-    SELECT cat_id, 
-           LISTAGG(cat_name, ' > ') WITHIN GROUP (ORDER BY LEVEL DESC) AS cat_path
-    FROM categories
-    START WITH cat_id IN 
-    <foreach item="catId" collection="catIds" open="(" separator="," close=")">
-        #{catId}
-    </foreach>
-    CONNECT BY PRIOR parent_id = cat_id
-    GROUP BY cat_id
-</select>
+	<select id="getCategoryPath" parameterType="String" resultType="String">
+	    SELECT LISTAGG(cat_name, ' > ') WITHIN GROUP (ORDER BY LEVEL DESC) AS cat_path
+	    FROM categories
+	    START WITH cat_id = #{cat_id}
+	    CONNECT BY PRIOR parent_id = cat_id
+	</select>
+	<select id="findCategoryPathsById" parameterType="java.util.List" resultType="String">
+	    SELECT LISTAGG(cat_name, ' > ') WITHIN GROUP (ORDER BY LEVEL DESC) AS cat_path
+	    FROM categories
+	    WHERE cat_id IN 
+	    <foreach item="catId" collection="catIds" open="(" separator="," close=")">
+	        #{catId}
+	    </foreach>
+	    CONNECT BY PRIOR parent_id = cat_id
+	    START WITH cat_id IN 
+	    <foreach item="catId" collection="catIds" open="(" separator="," close=")">
+	        #{catId}
+	    </foreach>
+	</select>
+	<delete id="deleteCatInfo" parameterType="java.lang.Long">
+    	delete from book_categories where isbn=#{isbn}
+    </delete>
 	<insert id="addInfoCategory" parameterType="BookCategories">
 		insert into book_categories (isbn, cat_id) values (#{isbn}, #{cat_id}) 
 	</insert>
 	<select id="getCategoryByIsbn" parameterType="java.lang.Long" resultType="String">
     	select cat_id from book_categories where isbn = #{isbn}
 	</select>
-	<update id="updateInfoCategory" parameterType="BookCategories">
-		update book_categories set cat_id=#{cat_id} where isbn=#{isbn} 
-	</update>
+<!-- 	<update id="updateInfoCategory" parameterType="BookCategories"> -->
+<!-- 		update book_categories set cat_id=#{cat_id} where isbn=#{isbn}  -->
+<!-- 	</update> -->
 	<update id="updateBookAuthors" parameterType="map">
         update book_author set author=#{author} where isbn=#{isbn}
     </update>
     <delete id="deleteBookAuthors" parameterType="java.lang.Long">
     	delete from book_author where isbn=#{isbn}
-    </delete>
-    <delete id="deleteCatInfo" parameterType="java.lang.Long">
-    	delete from book_categories where isbn=#{isbn}
     </delete>
     <delete id="deleteGoods" parameterType="java.lang.Long">
     	delete from book where isbn=#{isbn}
@@ -113,6 +110,17 @@
 	<select id="getGoodsTitle" parameterType="java.lang.Long" resultType="String">
 	 select book_title from book where isbn =#{isbn, jdbcType=BIGINT}
 	</select>
+	
+	<delete id="deleteCategoriesByIsbn">
+    DELETE FROM book_categories 
+    WHERE isbn = #{isbn}
+    <if test="categoriesToDelete != null and categoriesToDelete.size() > 0">
+        AND cat_id IN 
+        <foreach item="catId" collection="categoriesToDelete" open="(" separator="," close=")">
+            #{catId}
+        </foreach>
+    </if>
+	</delete>
 </mapper>
 
 	

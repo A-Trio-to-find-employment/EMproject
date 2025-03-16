@@ -95,48 +95,33 @@ enctype="multipart/form-data" onsubmit="return validate(this)" >
         </tr>
         </table>
         <table id="categoryTable">
-		    <tr>
-		        <th>카테고리</th>
-		        <td>
-<%-- 		            <c:forEach var="catPath" items="${categoryPath}" varStatus="status"> --%>
-<%-- 		                <c:if test="${status.first}"> --%>
-<%-- 		                    <button type="button" onclick="openCategoryModal('selectedCategory${status.index}', 'cat_id${status.index}')">카테고리 선택</button> --%>
-<%-- 		                    <input type="hidden" class="cat_id" name="cat_id[]" id="cat_id${status.index}" value="0" /> --%>
-<%-- 		                    <span id="selectedCategory${status.index}">${catPath}</span> --%>
-<!-- 		                    <button type="button" onclick="addSelection()">+</button> -->
-<!-- 		                    <button type="button" onclick="removeSelection(this)">-</button> -->
-<%-- 		                </c:if> --%>
-<%-- 		            </c:forEach> --%>
-<c:forEach var="catPath" items="${categoryPath}" varStatus="status">
-    <tr>
-        <th>카테고리 ${status.index + 1}</th>
-        <td>
-            <button type="button" onclick="openCategoryModal('selectedCategory${status.index}', 'cat_id${status.index}')">카테고리 선택</button>
-            <input type="hidden" class="cat_id" name="cat_id[]" id="cat_id${status.index}" value="0" />
-            <span id="selectedCategory${status.index}">${catPath}</span>
-            <button type="button" onclick="addSelection()">+</button>
-            <button type="button" onclick="removeSelection(this)">-</button>
-        </td>
-    </tr>
+<%-- 		<c:forEach var="catPath" items="${categoryPath}" varStatus="status"> --%>
+<!-- 		    <tr> -->
+<%-- 		        <th>카테고리 ${status.index + 1}</th> --%>
+<!-- 		        <td> -->
+<%-- 		            <button type="button" onclick="openCategoryModal('selectedCategory${status.index}', --%>
+<%-- 		             									'cat_id${status.index}')">카테고리 선택</button> --%>
+<%-- 		            <input type="hidden" class="cat_id" name="cat_id[]" id="cat_id${status.index}"  --%>
+<%-- 		            									value="${catIds[status.index]}" /> --%>
+<%-- 		            <span id="selectedCategory${status.index}">${catPath}</span> --%>
+<!-- 		            <button type="button" onclick="addSelection()">+</button> -->
+<!-- 		            <button type="button" onclick="removeSelection(this)">-</button> -->
+<!-- 		        </td> -->
+<!-- 		    </tr> -->
+<%-- 		</c:forEach> --%>
+		<c:forEach var="catPath" items="${categoryPath}" varStatus="status">
+<tr>
+<th>카테고리 ${status.index + 1}</th>
+<td>
+    <button type="button" onclick="openCategoryModal('selectedCategory${status.index}','cat_id${status.index}')">카테고리 선택</button>
+    <!-- 기존 카테고리를 정확히 전달 -->
+    <input type="hidden" class="cat_id" name="cat_id[]" id="cat_id${status.index}" value="${catIds[status.index]}" />
+    <span id="selectedCategory${status.index}">${catPath}</span>
+    <button type="button" onclick="addSelection()">+</button>
+    <button type="button" onclick="removeSelection(this)">-</button>
+</td>
+</tr>
 </c:forEach>
-		        </td>
-		    </tr>
-		
-		    <!-- 첫 번째 카테고리를 제외한 나머지는 새로운 <tr>에 추가 -->
-		    <c:forEach var="catPath" items="${categoryPath}" varStatus="status">
-		        <c:if test="${!status.first}">
-		            <tr>
-		                <th>카테고리</th>
-		                <td>
-		                    <button type="button" onclick="openCategoryModal('selectedCategory${status.index}', 'cat_id${status.index}')">카테고리 선택</button>
-		                    <input type="hidden" class="cat_id" name="cat_id[]" id="cat_id${status.index}" value="0" />
-		                    <span id="selectedCategory${status.index}">${catPath}</span>
-		                    <button type="button" onclick="addSelection()">+</button>
-		                    <button type="button" onclick="removeSelection(this)">-</button>
-		                </td>
-		            </tr>
-		        </c:if>
-		    </c:forEach>
     	<div id="categoryModal" 
 			style="display:none; position:fixed; top:20%; left:30%; width:40%; 
 			height:50%; background:#fff; border:1px solid #ccc; padding:20px;">
@@ -167,7 +152,7 @@ enctype="multipart/form-data" onsubmit="return validate(this)" >
         </tr>
     </table>
 </form:form>
-<form action="/manageGoods/delete" method="post">
+<form action="/manageGoods/delete" method="post" onsubmit="return validater(this)">
     <input type="hidden" name="isbn" value="${book.isbn}">
     <table border="1">
      <tr>
@@ -177,7 +162,6 @@ enctype="multipart/form-data" onsubmit="return validate(this)" >
 		</td></tr></table>
 </form>
 </div>
-
 <script>
 let categoryCount = document.querySelectorAll('.cat_id').length;
 function addSelection() {
@@ -185,62 +169,56 @@ function addSelection() {
     let newRow = table.insertRow(-1); 
     let origin = newRow.insertCell(0);
     let addCell = newRow.insertCell(1);
-    origin.innerHTML = `<b>카테고리</b>`;
+    origin.innerHTML = `<b>카테고리 ${count}</b>`;
     
     myselectedId = 'selectedCategory' + categoryCount;
     mycatId = 'cat_id' + categoryCount;
 
     let html = "<button type='button' onclick=openCategoryModal(";
     html= html + "'"+myselectedId+"','"+mycatId+"')>카테고리 선택</button>";
-    html = html + "<input type='hidden' class='cat_id' name='cat_id[]' id='"+mycatId+"' value='0' />";
+    html = html + "<input type='hidden' class='cat_id' name='cat_id[]' id='"+mycatId+"' value='' />";
     html = html + "<span id='"+myselectedId+"'>선택된 카테고리 없음</span>";
     html = html + "<button type='button' onclick='addSelection()'>+</button>";
     html = html + "<button type='button' onclick='removeSelection(this)'>-</button>";
-
-    
     addCell.innerHTML = html;   
     categoryCount++;
 }
 function removeSelection(button) {
-    let table = document.getElementById('categoryTable');
-    if (table.rows.length > 1) {
-        let row = button.parentElement.parentElement;
-        table.deleteRow(row.rowIndex);
-        categoryCount--;
-    } else {
-        alert("최소 하나의 카테고리는 선택해야 합니다!");
-    }
-}
+    var row = button.closest('tr');
+    row.remove();  
 
+    var categoryCount = document.querySelectorAll('.category-row').length;
+    console.log("삭제 후 categoryCount:", categoryCount);
+
+    var lastRow = document.querySelector('.category-row:last-child'); 
+    if (lastRow) {
+        selectedCategorySpan = lastRow.querySelector('.selected-category-span');
+        selectedCategoryInput = lastRow.querySelector('.selected-category-input');
+        console.log("선택요소 확인 -> Span:", selectedCategorySpan, " Input:", selectedCategoryInput);
+    } else {
+        selectedCategorySpan = null;
+        selectedCategoryInput = null;
+        console.log("모든 카테고리 삭제");
+    }
+
+    selectedId = selectedCategoryInput ? selectedCategoryInput.value : "";
+    catId = selectedCategorySpan ? selectedCategorySpan.innerText : "";
+
+    console.log("selectedId:", selectedId, " catId:", catId);
+}
 let selectedCategorySpan = null;
 let selectedCategoryInput = null;
 let selectedCatId = null;
 let selectedCatName = "";
 
-let originalSelectedId = null;
-let originalCatId = null;
-
 function openCategoryModal(selectedId, catId) {	
-	console.log("selectedId:",selectedId," catId:", catId, ",myselectedId:",myselectedId,",mycatId",mycatId);
+	console.log("selectedId:",selectedId," catId:", catId);
 
-	originalSelectedId = myselectedId;
-	originalCatId = mycatId;
-	
-	if(myselectedId != null){
-		selectedCategorySpan = document.getElementById(myselectedId);
-	}else {
-		selectedCategorySpan = document.getElementById(selectedId);
-	}
-	if(mycatId != null){
-		selectedCategoryInput = document.getElementById(mycatId);
-	}else {
-		selectedCategoryInput = document.getElementById(catId);
-	}
-
-
-	
 	myselectedId = selectedId;
- 	mycatId = catId;
+	mycatId = catId;
+	
+	selectedCategorySpan = document.getElementById(myselectedId);
+    selectedCategoryInput = document.getElementById(mycatId);
     
     console.log("선택된 요소 확인 -> Span:", selectedCategorySpan, " Input:", selectedCategoryInput);
     document.getElementById('categoryModal').style.display = 'block';
@@ -256,26 +234,11 @@ let mycatId = null;
 
 function confirmCategory() {
 	console.log("### myselectedId:[",myselectedId,"],mycatId:[",mycatId);
-	console.log("### originalSelectedId:[",originalSelectedId,"],originalCatId:[",originalCatId);
-
+	
 	selectedCategorySpan = document.getElementById(myselectedId);
     selectedCategoryInput = document.getElementById(mycatId);
 	
-    if(originalSelectedId != null){
-    	selectedCategorySpan = document.getElementById(originalSelectedId);
-        selectedCategoryInput = document.getElementById(originalCatId);
-    }
-    
-    
-    
-    if (!selectedCatId) {
-        alert("카테고리를 선택해주세요.");
-        return;
-    }
-    if (!selectedCategorySpan || !selectedCategoryInput) {
-        console.error("선택된 요소를 찾을 수 없음");
-        return;
-    }
+
 
     fetch('/getCategoryPath?cat_id=' + selectedCatId)
         .then(response => response.text())
@@ -351,9 +314,7 @@ function selectedCategory(catId, catName) {
             document.getElementById('cat_id').value = catId;
  			console.log("확정된 카테고리:", path, "cat_id:", catId);
             closeCategoryModal();
-        }).catch(error => console.error("카테고리 경로 오류:", error));
-    
-   
+        }).catch(error => console.error("카테고리 경로 오류:", error)); 
 }
 
 
@@ -369,11 +330,21 @@ function validate(frm) {
 	console.log("validate() 함수 실행됨!");
     if (!confirm("정말로 추가하시겠습니까?")) {
         console.log("사용자가 취소를 선택함");
-        return false; // 제출 방지
+        return false;
     }
     console.log("사용자가 확인을 선택함");
-    return true; // 정상 제출
+    return true;
 }
+function validater(frrm) {
+	console.log("validater() 함수 실행됨!");
+    if (!confirm("정말로 소중한 책의 정보 전체를 삭제하시겠습니까?")) {
+        console.log("사용자가 취소를 선택함");
+        return false;
+    }
+    console.log("사용자가 확인을 선택함");
+    return true;
+}
+
 </script>
 </body>
 </html>
