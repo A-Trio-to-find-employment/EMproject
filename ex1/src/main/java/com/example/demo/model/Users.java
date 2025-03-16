@@ -1,5 +1,7 @@
 package com.example.demo.model;
 
+import java.sql.Date;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -47,7 +49,7 @@ public class Users {
     private Integer grade;
     //로그인 횟수관련
     private Integer count;
-    private String last__date;
+    private Date last_date;
     private Integer daily_count;
     private Integer monthly_count;
     private Integer continue_count;

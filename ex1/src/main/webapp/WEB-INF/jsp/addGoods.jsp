@@ -140,29 +140,48 @@ enctype="multipart/form-data" onsubmit="return validate(this)" name="isbnFrm">
 </form:form>
 </div>
 <script>
-let categoryCount = 1; 
-function addSelection() { 
+<<<<<<< HEAD
+// let categoryCount = 1; 
+// function addSelection() { 
+// =======
+let categoryCount = document.querySelectorAll('.cat_id').length;
+function addSelection() {
+
     let table = document.getElementById('categoryTable');
     let newRow = table.insertRow(-1); 
     let origin = newRow.insertCell(0);
     let addCell = newRow.insertCell(1);
-    origin.innerHTML = `<b>카테고리</b>`;
+// <<<<<<< HEAD
+//     origin.innerHTML = `<b>카테고리</b>`;
+    
+//     myselectedId = 'selectedCategory' + categoryCount;
+//     mycatId = 'cat_id' + categoryCount;
+    
+//     console.log("추가된 카테고리 ID -> Span:", myselectedId, " Input:", mycatId);
+
+//     let html = "<button type='button' onclick=openCategoryModal(";
+//     html= html + "'"+myselectedId+"','"+mycatId+"')>카테고리 선택</button>";
+//     html = html + "<input type='hidden' class='cat_id' name='cat_id[]' id='"+mycatId+"' value='0' />";
+//     html = html + "<span id='"+myselectedId+"'>선택된 카테고리 없음</span>";
+//     html = html + "<button type='button' onclick='addSelection()'>+</button>";
+//     html = html + "<button type='button' onclick='removeSelection(this)'>-</button>";
+    
+//     console.log(html);
+    
+//     addCell.innerHTML = html;
+    origin.innerHTML = `<b>카테고리 ${count}</b>`;
     
     myselectedId = 'selectedCategory' + categoryCount;
     mycatId = 'cat_id' + categoryCount;
-    
-    console.log("추가된 카테고리 ID -> Span:", myselectedId, " Input:", mycatId);
 
     let html = "<button type='button' onclick=openCategoryModal(";
     html= html + "'"+myselectedId+"','"+mycatId+"')>카테고리 선택</button>";
-    html = html + "<input type='hidden' class='cat_id' name='cat_id[]' id='"+mycatId+"' value='0' />";
+    html = html + "<input type='hidden' class='cat_id' name='cat_id[]' id='"+mycatId+"' value='' />";
     html = html + "<span id='"+myselectedId+"'>선택된 카테고리 없음</span>";
     html = html + "<button type='button' onclick='addSelection()'>+</button>";
     html = html + "<button type='button' onclick='removeSelection(this)'>-</button>";
-    
-    console.log(html);
-    
-    addCell.innerHTML = html;
+    addCell.innerHTML = html;   
+
     categoryCount++;
 }
 function removeSelection(button) {
@@ -227,10 +246,19 @@ function confirmCategory() {
         console.error("선택된 요소를 찾을 수 없음");
         return;
     }
+// let myselectedId = null;
+// let mycatId = null;
+
+function confirmCategory() {
+	console.log("### myselectedId:[",myselectedId,"],mycatId:[",mycatId);
+	
+	selectedCategorySpan = document.getElementById(myselectedId);
+    selectedCategoryInput = document.getElementById(mycatId);
 
     fetch('/getCategoryPath?cat_id=' + selectedCatId)
         .then(response => response.text())
         .then(path => {
+
             if (path === "경로 없음") {
                 alert("카테고리 경로를 가져올 수 없습니다.");
                 return;
@@ -244,9 +272,23 @@ function confirmCategory() {
         })
         .catch(error => console.error("카테고리 경로 로딩 오류:", error));
 }
+// function loadCategories(parentId, targetDiv) {
+//     fetch('/getCategories?parent_id=' + (parentId || ''))
+// //     		(parentId != null ? parentId : ''))
+// =======
+        	
+//         	selectedCategorySpan.innerText = path;
+//             selectedCategoryInput.value = selectedCatId;
+            
+//             console.log("선택 완료 -> Path:", path, "Cat ID:", selectedCatId);
+
+//             closeCategoryModal();
+//         }).catch(error => console.error("카테고리 경로 로딩 오류:", error));
+    
+// }
 function loadCategories(parentId, targetDiv) {
     fetch('/getCategories?parent_id=' + (parentId || ''))
-//     		(parentId != null ? parentId : ''))
+
         .then(response => response.json())
         .then(data => {
 
@@ -293,6 +335,8 @@ function selectedCategory(catId, catName) {
 	selectedCatId = catId;
     selectedCatName = catName;
     
+    console.log("###selectedCategory!!");
+    
     fetch('/getCategoryPath?cat_id=' + catId)
         .then(response => response.text())
         .then(path => {
@@ -302,9 +346,7 @@ function selectedCategory(catId, catName) {
             document.getElementById('cat_id').value = catId;
  			console.log("확정된 카테고리:", path, "cat_id:", catId);
             closeCategoryModal();
-        }).catch(error => console.error("카테고리 경로 오류:", error));
-    
-   
+        }).catch(error => console.error("카테고리 경로 오류:", error)); 
 }
 function previewImage(event) {
     var reader = new FileReader();
@@ -318,11 +360,109 @@ function validate(frm) {
 	console.log("validate() 함수 실행됨!");
     if (!confirm("정말로 추가하시겠습니까?")) {
         console.log("사용자가 취소를 선택함");
-        return false; // 제출 방지
+        return false;
     }
     console.log("사용자가 확인을 선택함");
-    return true; // 정상 제출
+    return true;
 }
+
+
+
+// function openCategoryModal() {
+//     document.getElementById('categoryModal').style.display = 'block';
+//     loadCategories("", 'main');
+// }
+
+// function closeCategoryModal() {
+//     document.getElementById('categoryModal').style.display = 'none';
+// }
+// let selectedCatId = null;  // 임시로 선택한 cat_id 저장
+// let selectedCatName = "";
+// function loadCategories(parentId, targetDiv) {
+//     fetch('/getCategories?parent_id=' + 
+//     		(parentId != null ? parentId : ''))
+//         .then(response => response.json())
+//         .then(data => {
+
+//             let container = document.getElementById(targetDiv);
+//             container.innerHTML = '';
+            
+//             if (!Array.isArray(data) || data.length === 0) {
+//                 container.innerHTML = "<p style='color: red;'>하위 카테고리가 존재하지 않습니다.</p>";
+//                 return;
+//             }
+            
+//             data.forEach(category => {
+//                 let div = document.createElement('div');
+//                 div.innerText = category.cat_name;
+//                 div.style.cursor = 'pointer';
+//                 div.style.padding = "5px";
+//                 div.style.border = "1px solid #ddd";
+//                 div.style.marginRight = "10px"; 
+//                 div.style.display = "inline-block";
+                
+// 					div.onclick = function () {
+//                     selectedCatId = category.cat_id;  // 가장 마지막으로 선택한 카테고리 ID 저장
+//                     selectedCatName = category.cat_name;
+
+//                     console.log("선택된 카테고리:", selectedCatName, "cat_id:", selectedCatId);
+
+//                     if (targetDiv === 'main') {
+//                         loadCategories(category.cat_id, 'sub');
+//                         document.getElementById('last').innerHTML = ''; 
+//                     } else if (targetDiv === 'sub') {
+//                         loadCategories(category.cat_id, 'last');
+//                     }
+//                 };
+//                 container.appendChild(div);
+//             });
+//             if (data.length > 0 && !selectedCatId) {
+//                 selectedCatId = data[0].cat_id;
+//                 selectedCatName = data[0].cat_name;
+//                 }
+//         	}).catch(error => console.error("카테고리 로드 실패:", error));
+    
+// }
+
+// function selectedCategory(catId, catName) {
+// 	console.log("최종 선택된 카테고리:", catName, "cat_id:", catId);
+//     let selectedText = document.getElementById('selectedCategory');
+//     let selectedCategoryDisplay = document.getElementById('selectedCategoryDisplay');
+
+//     fetch('/getCategoryPath?cat_id=' + catId)
+//         .then(response => response.text())
+//         .then(path => {
+//             selectedText.innerText = path; // 예: "국내도서 > 인문학 > 철학"
+//             selectedCategoryDisplay.innerText = catName;
+//             document.getElementById('cat_id').value = catId;
+//             closeCategoryModal();
+//         }).catch(error => console.error("카테고리 경로 로딩 오류:", error));
+// }
+// function confirmCategory() {
+//     if (!selectedCatId) {
+//         alert("카테고리를 선택해주세요.");
+//         return;
+//     }
+//     fetch('/getCategoryPath?cat_id=' + selectedCatId)
+//         .then(response => response.text())
+// 			.then(path => {
+//             document.getElementById('selectedCategory').innerText = path;
+//             document.getElementById('cat_id').value = selectedCatId;
+
+//             console.log("최종 선택된 카테고리:", path, "cat_id:", selectedCatId);
+
+//             closeCategoryModal();
+//         	}).catch(error => console.error("카테고리 경로 로딩 오류:", error));
+// }
+
+// function previewImage(event) {
+//     var reader = new FileReader();
+//     reader.onload = function() {
+//         var output = document.getElementById('imagePreview');
+//         output.innerHTML = '<img src="' + reader.result + '" width="400" height="300"/>';
+//     }
+//     reader.readAsDataURL(event.target.files[0]);
+// }	
 </script>
 </body>
 </html>
