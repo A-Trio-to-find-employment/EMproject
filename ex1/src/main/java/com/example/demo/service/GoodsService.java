@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,7 +13,10 @@ import com.example.demo.model.BookCategories;
 import com.example.demo.model.Category;
 import com.example.demo.model.StartEnd;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class GoodsService {
 	@Autowired
 	private GoodsMapper goodsMapper;
@@ -61,20 +65,26 @@ public class GoodsService {
 	public List<Category> getCategoriesByParentId(String parnetId){
 		return this.goodsMapper.getCategoriesByParentId(parnetId);
 	}
-	public String getCategoryPath(String catIds) {
-		return this.goodsMapper.getCategoryPath(catIds);
+	public String getCategoryPath(String catId) {
+	    return goodsMapper.getCategoryPath(catId);
 	}
 	public void addInfoCategory(BookCategories bookcat) {
 		this.goodsMapper.addInfoCategory(bookcat);
 	}
-	public String getCategoryByIsbn(Long isbn) {
+	public List<String> getCategoryByIsbn(Long isbn) {
 		return this.goodsMapper.getCategoryByIsbn(isbn);
 	}
 	public String getGoodsTitle(Long isbn) {
 		return this.goodsMapper.getGoodsTitle(isbn);
 	}
-	public void updateInfoCategory(BookCategories bookcat) {
-		this.goodsMapper.updateInfoCategory(bookcat);
+	public void updateInfoCategory(Long isbn, List<String> catIds) {
+		this.goodsMapper.deleteCatInfo(isbn);
+		for(String catId : catIds) {
+			BookCategories bookcat = new BookCategories();
+			bookcat.setIsbn(isbn);
+			bookcat.setCat_id(catId);
+			this.goodsMapper.addInfoCategory(bookcat);
+		}
 	}
 	public void updateGoods(Book book) {
 	    this.goodsMapper.updateGoods(book);
@@ -102,4 +112,11 @@ public class GoodsService {
 	public void deleteCatInfo(Long isbn) {
 		this.goodsMapper.deleteCatInfo(isbn);
 	}
+	
+	public void deleteCategoriesByIsbn(Long isbn, List<String> categoriesToDelete) {
+        if (categoriesToDelete == null || categoriesToDelete.isEmpty()) {
+            return; // 삭제할 것이 없으면 실행하지 않음
+        }
+        goodsMapper.deleteCategoriesByIsbn(isbn, categoriesToDelete);
+    }
 }

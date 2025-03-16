@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -65,9 +66,17 @@ public class AdminController {
         return ResponseEntity.ok(categories);  
         }
     @GetMapping("/getCategoryPath")
-    @ResponseBody   //jsp가 아닌 json으로 받아와 정상출력 위해
-    public String getCategoryPath(@RequestParam("cat_id") String catId) {
-        return goodsService.getCategoryPath(catId);
+    @ResponseBody
+    public ResponseEntity<?> getCategoryPath(@RequestParam(value = "cat_id", required = false) String catId) {
+        if (catId == null || catId.isEmpty()) {
+            return ResponseEntity.badRequest().body("카테고리 ID가 없습니다.");
+        }
+        String path = goodsService.getCategoryPath(catId);
+        if(path == null || path.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("경로 없음");
+        }
+        return ResponseEntity.ok(path);
+
     }
 	@GetMapping(value = "/adminPage")
 	public ModelAndView adminPage() {
@@ -104,19 +113,6 @@ public class AdminController {
 		model.addAttribute("BOOK",book);
 		model.addAttribute("AMOUNT", amount);
 		mav.addObject("BODY","insertStockComplete.jsp");
-		return mav;
-	}
-	@GetMapping(value = "/manageGoods/detail")   
-	public ModelAndView goodsDetail(Long isbn) {
-		ModelAndView mav = new ModelAndView("admin");
-		Book goods = this.goodsService.getGoodsDetail(isbn);
-		 String catId = this.goodsService.getCategoryByIsbn(isbn);
-		String categoryPath = this.goodsService.getCategoryPath(catId);
-		mav.addObject(goods);
-		mav.addObject("GOODS", goods);
-		mav.addObject("catId", catId);
-		mav.addObject("categoryPath", categoryPath);  // 기존 카테고리 경로
-		mav.addObject("BODY","goodsDetail.jsp");
 		return mav;
 	}
 	@PostMapping(value = "/manageGoods/search")
@@ -220,28 +216,47 @@ public class AdminController {
 		return mav;
 	}
 	@GetMapping(value = "/manageGoods/update")
-	public ModelAndView updateScreen() {
+	public ModelAndView updateScreen(Long isbn) {
 		ModelAndView mav = new ModelAndView("admin");
-		mav.addObject(new Book());
-		mav.addObject("CAT",categories);
+		Book goods = this.goodsService.getGoodsDetail(isbn);
+		
+		List<String> catIds = this.goodsService.getCategoryByIsbn(isbn);
+		List<String> categoryPath = new ArrayList<>();
+			for(String catId : catIds){
+				String path = this.goodsService.getCategoryPath(catId); // 각각 ID별 경로 조회
+				categoryPath.add(path);
+				}
+		mav.addObject(goods);
+		mav.addObject("GOODS", goods);
+		mav.addObject("catId", catIds);
+		mav.addObject("categoryPath", categoryPath);  // 기존 카테고리 경로
 		mav.addObject("BODY","goodsDetail.jsp");
 		return mav;
 	}
-	
 	@PostMapping(value = "/manageGoods/update") 
 	public ModelAndView updateGoods(@Valid Book book,
 				BindingResult br, HttpSession session, @RequestParam("cat_id")
 				List<String> selectedCat, @RequestParam("authors")String authors) {
-	    System.out.println("수정 대상 도서: " + book);
+	    System.out.println("도서: " + book);
 		ModelAndView mav = new ModelAndView("admin");
 		this.coverValidator.validate(book, br);
 		if(br.hasErrors()) {
+			List<String> exCat = this.goodsService.getCategoryByIsbn(book.getIsbn());
+			List<String> catPath = new ArrayList<>();
+			for(String catId : exCat) {
+				catPath.add(this.goodsService.getCategoryPath(catId));
+			}
+			mav.addObject("GOODS",book);
+			mav.addObject("catIds",exCat);
+			mav.addObject("categoryPath",catPath);
 			mav.addObject("BODY","goodsDetail.jsp");
-			mav.addObject("","");
 			mav.getModel().putAll(br.getModel());
 			System.out.println("검증 오류 발생: " + br.getAllErrors());
 			return mav;
 		}
+		System.out.println("수정 대상 도서: " + book);
+	    System.out.println("선택된 카테고리 ID 목록: " + selectedCat);
+	    System.out.println("저자 정보: " + authors);
 		//이미지 업로드
 		MultipartFile multipart = book.getCoverImage();//선택한 파일을 불러온다.
 		if(! multipart.getOriginalFilename().equals("")) {//파일이름이 존재하는 경우,즉 이미지 변경
@@ -270,16 +285,28 @@ public class AdminController {
 	        mav.addObject("imageError", "앞표지를 업로드해야 합니다.");
 	        return mav;
 		}
+		List<String> existingCats = this.goodsService.getCategoryByIsbn(book.getIsbn());
+
+		selectedCat = selectedCat.stream()
+                .filter(catId -> catId != null && !catId.trim().isEmpty() && !"0".equals(catId))
+                .collect(Collectors.toList());
+		List<String> categoriesToDelete = new ArrayList<>();
+		for (String catId : existingCats) {
+		    if (!selectedCat.contains(catId)) {
+		        categoriesToDelete.add(catId);
+		    }
+		}
+		List<String> categoriesToAdd = new ArrayList<>();
+		for (String catId : selectedCat) {
+		    if (!existingCats.contains(catId)) {
+		        categoriesToAdd.add(catId);
+		    }
+		}
+		this.goodsService.deleteCategoriesByIsbn(book.getIsbn(), categoriesToDelete); 
+		System.out.println("병합된 카테고리 ID 목록: " + selectedCat);
 		book.setAuthors(authors);
 		this.goodsService.updateGoods(book);
-		
-		for(String catId : selectedCat) {
-			BookCategories bookcat = new BookCategories();
-			bookcat.setIsbn(book.getIsbn());
-			bookcat.setCat_id(catId);
-			this.goodsService.updateInfoCategory(bookcat);
-			}
-		
+		this.goodsService.updateInfoCategory(book.getIsbn(), selectedCat);
 		mav.addObject("isbnChecked",book.getIsbn());
 		mav.addObject("book",new Book());
 		mav.addObject("BODY","updateComplete.jsp");
@@ -288,16 +315,27 @@ public class AdminController {
 	}
 	@PostMapping(value = "/manageGoods/delete")//구현중
 	public ModelAndView deleteGoods(Book book, Review review,
-			@RequestParam("authors")String authors) {
-		int replyCount = this.goodsService.getReplyCount(review.getReview_id());
+			 @RequestParam(value = "authors", required = false) String authors, 
+		     @RequestParam(value = "selectedCat", required = false) List<String> selectedCat) {
 		ModelAndView mav = new ModelAndView("admin");
+		Integer reviewId = review.getReview_id();
+		
+		int replyCount = this.goodsService.getReplyCount(reviewId);
+		
 		if(replyCount > 0) {//답글이 있는 글, 즉 삭제 불가
 			mav.addObject("BODY","goodsDeleteResult.jsp?R=NO");
-		}else {//답글이 없는 글, 즉 삭제 가능
+		}else if(reviewId == null || replyCount == 0) {
 			book.setAuthors(authors);
 			Long isbn = book.getIsbn();
 			this.goodsService.deleteBookAuthors(isbn);
-			this.goodsService.deleteCatInfo(isbn);
+			this.goodsService.deleteCatInfo(book.getIsbn()); // 기존 데이터 삭제
+			if (selectedCat != null) {
+				for(String catId : selectedCat) {
+			        BookCategories bookcat = new BookCategories();
+			        bookcat.setIsbn(book.getIsbn());
+			        bookcat.setCat_id(catId);
+			    }
+			}
 			this.goodsService.deleteGoods(isbn);
 			mav.addObject("book",book);
 			mav.addObject("BODY","goodsDeleteResult.jsp");

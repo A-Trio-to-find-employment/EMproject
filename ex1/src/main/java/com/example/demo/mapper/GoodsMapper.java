@@ -1,8 +1,10 @@
 package com.example.demo.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.example.demo.model.Book;
 import com.example.demo.model.BookCategories;
@@ -23,15 +25,20 @@ public interface GoodsMapper {
 	void addBookAuthors(Long isbn, String author);
     List<String> getBookAuthors(Long isbn);
     List<Category> getCategoriesByParentId(String parentId);
-	String getCategoryPath(String catIds);
+
+    String getCategoryPath(@Param("cat_id") String catId);
+	String findCategoryPathsById(@Param("catId") String catId);
 	void addInfoCategory(BookCategories bookcat);
 	String getGoodsTitle(Long isbn);
 	
-	String getCategoryByIsbn(Long isbn);
+	List<String> getCategoryByIsbn(Long isbn);
 	void updateInfoCategory(BookCategories bookcat);
 	void updateBookAuthors(Long isbn, String author);
 	void deleteBookAuthors(Long isbn);
 	void deleteCatInfo(Long isbn);
 	void deleteGoods(Long isbn);
 	Integer getReplyCount(Integer review_id);
+	
+	void deleteCategoriesByIsbn(@Param("isbn") Long isbn, 
+			@Param("categoriesToDelete") List<String> categoriesToDelete);
 }
