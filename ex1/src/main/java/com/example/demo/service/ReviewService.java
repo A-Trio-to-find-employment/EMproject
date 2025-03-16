@@ -58,4 +58,7 @@ public class ReviewService {
 	 public void deleteReview(Integer review_id) {
 		 this.mapper.deleteReview(review_id);
 	 }
+	 public Double GetAvgReview(Long isbn) {
+		 return this.mapper.GetAvgReview(isbn);
+	 }
 }

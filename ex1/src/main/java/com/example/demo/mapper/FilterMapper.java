@@ -13,4 +13,5 @@ public interface FilterMapper {
 	List<Category> getSubCategories();
 	List<Category> getMidCategoriesByParentId(String parent_id);
 	List<Category> getSubCategoriesByParentId(String parent_id);
+	
 }

@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <title>리뷰 관리</title>
+
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -39,7 +40,9 @@
 </style>
 </head>
 <body>
+
 <div class="container">
+	
     <div class="review">리뷰 관리</div>
     
     <table class="table">

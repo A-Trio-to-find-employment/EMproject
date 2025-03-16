@@ -226,6 +226,17 @@
         <!-- 도서 상세 정보 -->
         <div class="book-extra">
             <h3>도서 정보</h3>
+             <p><strong class="average-rating-label">평균 리뷰 점수:</strong> 
+    <c:choose>
+        <c:when test="${avg != null}">
+            <span class="average-rating">${avg} 점</span>
+        </c:when>
+        <c:otherwise>
+            <span class="average-rating no-reviews">0 점</span>
+        </c:otherwise>
+    </c:choose>
+</p>
+</div>
             <table class="info-table">
 					<tr>
 						<th>카테고리</th>
@@ -246,7 +257,7 @@
             <!-- 리뷰 섹션 -->
 <h3>리뷰 &nbsp&nbsp&nbsp&nbsp<input type="button" onclick="checkPurchaseBeforeReview(${book.isbn});"
 <%-- 	onclick="location.href='/review/writeReview?ISBN=${book.isbn}';" --%>
-	 value="리뷰 작성"/></h3>
+	 value="리뷰 작성"/></h3>   
 <div class="reviews">
     <c:choose>
         <c:when test="${empty LIST}">

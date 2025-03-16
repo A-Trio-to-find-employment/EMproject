@@ -15,4 +15,5 @@ public interface PrefMapper {
 	void DeleteUserPref(User_pref up);
 	void InitializationPref(String user_id);
 	List<String> getUserTopCat(String user_id);
+	String getPrefTop(String user_id);
 }

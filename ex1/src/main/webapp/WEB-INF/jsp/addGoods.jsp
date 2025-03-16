@@ -141,7 +141,7 @@ enctype="multipart/form-data" onsubmit="return validate(this)" name="isbnFrm">
 </div>
 <script>
 let categoryCount = 1; 
-function addSelection() {
+function addSelection() { 
     let table = document.getElementById('categoryTable');
     let newRow = table.insertRow(-1); 
     let origin = newRow.insertCell(0);

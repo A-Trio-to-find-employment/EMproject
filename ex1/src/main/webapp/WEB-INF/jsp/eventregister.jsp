@@ -21,17 +21,21 @@
         <table border="1">            
             <tr>
                 <th>이벤트 이름</th>
-                <td><form:input path="event_title" /></td>
+                <td><form:input path="event_title" id="event_title"/>
+                
+                </td>
             </tr>
             <tr>
                 <th>이벤트 내용</th>
-                <td><form:textarea path="event_content" rows="4" cols="50" /></td>
+                <td><form:textarea path="event_content" id="event_content" rows="4" cols="50" />
+                
+                </td>
             </tr>
             <tr>
                 <th>이벤트 기간</th>
                 <td>
-                    <form:input type="date" path="event_start" /> ~ 
-                    <form:input type="date" path="event_end" />
+                    <form:input type="date" path="event_start" id="event_start"/> ~ 
+                    <form:input type="date" path="event_end" id="event_end"/>
                 </td>
             </tr>        
         </table>
@@ -55,8 +59,34 @@
 <script type="text/javascript">
     // 폼 제출 전 수정 확인
     function confirmEdit() {
-        const isConfirmed = confirm("이벤트를 등록하시겠습니까?");
+    	var content = document.getElementById("event_content").value;
+        var title = document.getElementById("event_title").value;
+        if (!title ) {
+            alert("제목을 입력해주세요.");
+            return false;
+        }
+        if (!content ) {
+            alert("내용을 입력해주세요.");
+            return false;
+        }
+       
         
+        
+        var start = document.getElementById("event_start").value;
+        var end = document.getElementById("event_end").value;
+        if (!start || !end) {
+            alert("이벤트 기간을 입력해주세요.");
+            return false;
+        }
+
+        // 시작일이 종료일보다 늦은 날짜인지 확인
+        if (new Date(start) > new Date(end)) {
+            alert("시작일이 종료일보다 늦을 수 없습니다.");
+            return false;
+        }
+        
+        const isConfirmed = confirm("이벤트를 등록하시겠습니까?");
+
         // 사용자가 '예'를 클릭하면 폼을 제출
         if (isConfirmed) {
             alert("이벤트가 성공적으로 등록되었습니다.");

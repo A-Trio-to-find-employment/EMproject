@@ -36,6 +36,7 @@
             <li><a href="/eventregister">이벤트 등록</a></li>
             <li><a href="/admincouponlist">쿠폰 목록</a></li>
        		<li><a href="/admincoupon">쿠폰 등록</a></li>
+       		<li><a href="/adminSubCoupon">이달의 쿠폰 등록</a></li>
         </ul>        
     </div>
     

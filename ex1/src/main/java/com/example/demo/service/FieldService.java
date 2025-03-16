@@ -99,4 +99,10 @@ public class FieldService {
 		 return this.mapper.getBookDetaill(isbn);
 
 	 }
+	 public List<Book>getorderByBookBook(StartEnd se){
+		 return this.mapper.getorderByBookBook(se);
+	 }
+	 public  Integer getbooklistcount(String parent_id) {
+		 return this.mapper.getbooklistcount(parent_id);
+	 }
 }

@@ -21,4 +21,5 @@ public interface ReviewMapper {
    Integer checkOrder(String user_id,Long isbn);
    List<MyReview> listReview(StartEnd se);
    Integer getTotalMine(String user_id);
+   Double GetAvgReview(Long isbn);
 }

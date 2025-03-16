@@ -1,0 +1,141 @@
+@charset "UTF-8";
+/* 검색 바 및 컨테이너 */
+.container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	margin-top: 20px;
+	text-align: center;
+}
+
+.book-slider-container {
+    position: relative;
+    max-width: 80%;
+    margin: 0 auto;
+    height: 100%;
+}
+
+/* 카테고리 제목 스타일 */
+#bookCategoryTitle {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* 링크와 일반 텍스트 스타일 */
+#bookCategoryTitle a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    transition: color 0.2s ease-in-out;
+}
+
+#bookCategoryTitle a:hover {
+    text-decoration: underline;
+    color: #007bff;
+}
+
+#bookCategoryTitle span {
+    color: #555;
+}
+
+/* 2행 4열의 슬라이드 레이아웃 유지 */
+.book-grid {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	grid-template-rows: repeat(2, auto);
+	gap: 10px;
+	justify-items: center;
+	align-items: center;
+	padding: 20px;
+}
+
+/* 슬라이드 개별 항목 */
+.swiper-slide {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	transition: transform 0.3s ease-in-out;
+	min-height: 400px;
+}
+
+.swiper-slide img {
+	width: 180px;
+	height: 220px;
+	border-radius: 10px;
+	transition: transform 0.3s ease-in-out;
+}
+/* 안내 문구가 있는 슬라이드만 중앙 정렬 */
+.swiper-slide.book-slide.empty-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+}
+
+/* 안내 문구 스타일 */
+.no-books {
+    font-size: 18px;
+    font-weight: bold;
+    color: #555;
+    max-width: 80%;
+    line-height: 1.5;
+}
+.swiper-slide img:hover {
+	transform: scale(1.1);
+}
+
+.swiper-slide p {
+	margin-top: 10px;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+/* 네비게이션 버튼 위치 조정 */
+.swiper-button-prev, .swiper-button-next {
+    color: #333;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    width: 40px;
+    height: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+.swiper-button-prev {
+    left: -60px; /* 왼쪽 버튼을 섹션 왼쪽에 고정 */
+}
+
+.swiper-button-next {
+    right: -60px; /* 오른쪽 버튼을 섹션 오른쪽에 고정 */
+}
+
+/* 페이지네이션을 슬라이드 중앙 하단에 배치 */
+.swiper-pagination {
+    position: relative;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    align-self: center;
+}
+
+/* 페이지네이션 스타일 */
+.swiper-pagination-bullet {
+    background: #555 !important;
+    opacity: 0.5;
+}
+
+.swiper-pagination-bullet-active {
+    background: #000 !important;
+    opacity: 1;
+}

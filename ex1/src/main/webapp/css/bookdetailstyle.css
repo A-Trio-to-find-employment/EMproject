@@ -22,17 +22,56 @@ body {
     align-items: flex-start;
     gap: 40px;
 }
-
 /* 도서 이미지 */
 .book-image {
     flex: 0 0 350px;
+    display: flex;
+    justify-content: center; /* 이미지를 중앙에 배치 */
 }
 
 .book-image img {
-    width: 100%;
-    height: auto;
+    width: 400px; /* 너비를 300px로 증가 */
+    height: 450px; /* 높이를 250px로 증가 */
+    object-fit: cover; /* 이미지를 비율에 맞춰 자르기 */
     border: 1px solid #ddd;
     padding: 10px;
+}
+
+/* 평균 리뷰 점수 레이블 스타일 */
+.average-rating-label {
+    font-size: 18px;  /* 크기 줄임 */
+    font-weight: 600;
+    color: #4a4a4a; 
+    margin-right: 10px;
+    display: inline-block;
+}
+
+/* 평균 리뷰 점수 스타일 */
+.average-rating {
+    font-size: 20px;  /* 크기 줄임 */
+    font-weight: 700;
+    color: #ff5c8d;
+    background-color: #fef1f4;
+    padding: 6px 12px;  /* 패딩 줄임 */
+    border-radius: 50px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);  /* 그림자 크기 줄임 */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);  /* 그림자 줄임 */
+    display: inline-block;
+    transition: all 0.3s ease-in-out;
+    margin-top: 4px;
+}
+
+/* 리뷰가 없을 때 0점 스타일 */
+.average-rating.no-reviews {
+    font-size: 20px;
+    font-weight: 700;
+    color: #d1d1d1;
+    background-color: #f4f4f4;
+    padding: 6px 12px;
+    border-radius: 50px;
+    box-shadow: none;
+    text-shadow: none;
+    display: inline-block;
 }
 
 /* 도서 정보 */

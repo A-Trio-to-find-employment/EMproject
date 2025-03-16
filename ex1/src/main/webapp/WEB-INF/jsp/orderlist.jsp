@@ -190,27 +190,30 @@
 </head>
 <body>
  <div class="nav">
-        <a href="/index">HOME</a>     
-        <div style="position: relative;">
-            <a onclick="toggleDropdown()">분야보기</a>
-            <div id="categoryDropdown" class="dropdown">
-                <a href="/field.html?cat_id=0">국내도서</a>
-                <a href="/field.html?cat_id=1">외국도서</a>
-            </div>
+    <!-- HOME 항목 -->
+    <a href="/index">HOME</a>
+
+    <div class="nav-right">
+    	<div style="position: relative;">
+        <a onclick="toggleDropdown()">분야보기</a>
+        <div id="categoryDropdown" class="dropdown">
+            <a href="/field.html?cat_id=0">국내도서</a>
+            <a href="/field.html?cat_id=1">외국도서</a>
         </div>
+    </div>
         <a href="/eventlist">이벤트</a>
-        >
         <c:if test="${sessionScope.loginUser != null}">
-        	<p>사용자 : ${ sessionScope.loginUser }</p>
-   			<a href="/logout">로그아웃</a>
-		</c:if>
-		<c:if test="${sessionScope.loginUser == null}">
-   			<a href="/signup">회원가입</a>
-    		<a href="/login">로그인</a>
-		</c:if>        
+            <p>사용자 : ${sessionScope.loginUser}</p>
+            <a href="/logout">로그아웃</a>
+        </c:if>
+        <c:if test="${sessionScope.loginUser == null}">
+            <a href="/signup">회원가입</a>
+            <a href="/login">로그인</a>
+        </c:if>
         <a href="/secondfa">마이페이지</a>
         <a href="/qna">고객센터</a>
     </div>
+</div>
     <div class="sidebar">
         <c:choose>
     		<c:when test="${ sessionScope.userGrade == 0}">
@@ -282,25 +285,28 @@
                 
                 <td>
                 <form action="/requestAction" method="post">
-                <!--딜리버리 스테이트가 3일때 반품과 교환이 뜨게 할꺼에요 아직 대기중-->    
-    			 <c:if test="${order.order_status != 1}">
-         		   <input type="submit" name="BTN" value="반품" />
-       			 </c:if>
+							<c:if test="${order.delivery_status == 3}">
+								<!-- 딜리버리 상태가 3일때 반품과 교환이 뜨게 할꺼에요 아직 대기중 -->
+								<c:if test="${order.order_status != 1}">
+									<input type="submit" name="BTN" value="반품" />
+								</c:if>
 
-        <!-- 교환 버튼: 교환 신청 또는 교환 완료 상태가 아닐 때만 표시 -->
-      			  <c:if test="${order.order_status != 1}">
-       			   <input type="submit" name="BTN" value="교환" />
-     			   </c:if>
-    			      
-    			<input type="hidden" name="orderDetailId" value="${order.order_detail_id}" />
-    			<c:choose>
-   				 <c:when test="${order.order_status == 0 && order.delivery_status == 0 }">       
-       			 <input type="button" value="취소" onclick="confirmCancel('${order.order_detail_id}')">   
-			    </c:when>
-				</c:choose>
-				</form>
+								<!-- 교환 버튼: 교환 신청 또는 교환 완료 상태가 아닐 때만 표시 -->
+								<c:if test="${order.order_status != 1}">
+									<input type="submit" name="BTN" value="교환" />
+								</c:if>
+							</c:if>
 
-                    <!-- 실제 취소 버튼에 confirm() 적용 -->
+							<input type="hidden" name="orderDetailId"
+								value="${order.order_detail_id}" />
+							<c:choose>
+								<c:when
+									test="${order.order_status == 0 && order.delivery_status == 0 }">
+									<input type="button" value="취소"
+										onclick="confirmCancel('${order.order_detail_id}')">
+								</c:when>
+							</c:choose>
+						</form> <!-- 실제 취소 버튼에 confirm() 적용 -->
 
 
                 </td>
