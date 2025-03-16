@@ -27,7 +27,7 @@
 			상품 이름 ] <input type="text" name="TITLE"/><input type="submit" value="검색하기"/> 
 			</form></td></tr>
 	</table>
-
+ 
 	<table>
 <%-- 		<tr><td align="right">${startRow + 1}~${endRow -1}/${total }</td></tr> --%>
 	</table>

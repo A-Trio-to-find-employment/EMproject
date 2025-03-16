@@ -61,7 +61,7 @@ public class GoodsService {
 	public void insertStock(Long isbn, int amount) {
 		this.goodsMapper.insertStock(isbn, amount);
 	}
-	
+	 
 	public List<Category> getCategoriesByParentId(String parnetId){
 		return this.goodsMapper.getCategoriesByParentId(parnetId);
 	}

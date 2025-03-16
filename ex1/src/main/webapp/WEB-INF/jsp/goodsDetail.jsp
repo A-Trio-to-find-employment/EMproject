@@ -151,7 +151,7 @@ enctype="multipart/form-data" onsubmit="return validate(this)" >
             </td>
         </tr>
     </table>
-</form:form>
+</form:form> 
 <form action="/manageGoods/delete" method="post" onsubmit="return validater(this)">
     <input type="hidden" name="isbn" value="${book.isbn}">
     <table border="1">

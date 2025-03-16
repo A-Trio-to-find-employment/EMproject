@@ -9,6 +9,15 @@
 <meta charset="UTF-8">
 <title>상품 정보</title>
 <style>
+	table {
+    width: 39%;
+    border-collapse: collapse;
+	border: 3px double black;
+	}
+	th, td {
+    border: 2px double black;
+    padding: 3px;
+	}
     #imagePreview {
         width: 500px;
         height: 400px;
@@ -39,14 +48,13 @@ function isbnCheck(){
 <form:form modelAttribute="book" action="/manageGoods/insert" method="post" 
 enctype="multipart/form-data" onsubmit="return validate(this)" name="isbnFrm">
     <form:hidden path="isbnChecked"/> 
-    <table border="1">
+    <table>
         <tr>
             <th>앞표지</th>
             <td>
                 <input type="file" name="coverImage" id="coverImage" onchange="previewImage(event)">
                 <font color="red"><form:errors path="coverImage"/></font>
                 <div id="imagePreview">이미지 미리보기</div>
-            	
             </td>
         </tr>
         <tr>
@@ -85,23 +93,29 @@ enctype="multipart/form-data" onsubmit="return validate(this)" name="isbnFrm">
         <tr>
             <th>ISBN</th>
             <td>
-                <form:input path="isbn"/><font color="red" size="3">
+                <form:input path="isbn" readonly="true"/><font color="red" size="3">
                 <form:errors path="isbnChecked"/></font>
                 <input type="button" value="ISBN 중복 검사" onclick="isbnCheck()">
             </td>
         </tr>
-        
-        
         <tr>
-	    <th>카테고리</th>
-	    <td>
-	        <button type="button" onclick="openCategoryModal()">카테고리 선택</button>
-	        
-<!-- 	       선택된 카테고리 저장 -->
-	        <input type="hidden" id="cat_id" name="cat_id" value="0" />
-	    	<span id="selectedCategory">선택된 카테고리 없음</span>
-	    </td>
-		</tr>
+            <th>저자</th>
+            <td>
+                <form:input path="authors"/><font color="red">
+                <form:errors path="authors"/></font>
+            </td>
+        </tr>
+        <table id="categoryTable">
+        <tr>
+        <th>카테고리</th>
+        <td>
+            <button type="button" onclick="openCategoryModal('selectedCategory0', 'cat_id0')">카테고리 선택</button>
+            <input type="hidden" class="cat_id" name="cat_id[]" id="cat_id0" value="0" />
+            <span id="selectedCategory0"> 선택된 카테고리 없음&nbsp&nbsp&nbsp</span>
+            <button type="button" onclick="addSelection()">+</button>
+            <button type="button" onclick="removeSelection(this)">-</button>
+        </td>
+    	</tr></table>
 			<div id="categoryModal" 
 			style="display:none; position:fixed; top:20%; left:30%; width:40%; 
 			height:50%; background:#fff; border:1px solid #ccc; padding:20px;">
@@ -114,38 +128,125 @@ enctype="multipart/form-data" onsubmit="return validate(this)" name="isbnFrm">
 		    <button type="button" onclick="confirmCategory()">선택</button>
 		    <button type="button" onclick="closeCategoryModal()">닫기</button>
 		</div>
-
-        <tr>
-            <th>저자</th>
-            <td>
-                <form:input path="authors"/><font color="red">
-                <form:errors path="authors"/></font>
-            </td>
-        </tr>
+		<table>
         <tr>
             <td colspan="2" align="center">
                 <input type="submit" value="추가">
                 <input type="reset" value="취소">
             </td>
         </tr>
-    </table>
+        </table>
+</table>
 </form:form>
 </div>
-
 <script>
-function openCategoryModal() {
+let categoryCount = 1; 
+function addSelection() {
+    let table = document.getElementById('categoryTable');
+    let newRow = table.insertRow(-1); 
+    let origin = newRow.insertCell(0);
+    let addCell = newRow.insertCell(1);
+    origin.innerHTML = `<b>카테고리</b>`;
+    
+    myselectedId = 'selectedCategory' + categoryCount;
+    mycatId = 'cat_id' + categoryCount;
+    
+    console.log("추가된 카테고리 ID -> Span:", myselectedId, " Input:", mycatId);
+
+    let html = "<button type='button' onclick=openCategoryModal(";
+    html= html + "'"+myselectedId+"','"+mycatId+"')>카테고리 선택</button>";
+    html = html + "<input type='hidden' class='cat_id' name='cat_id[]' id='"+mycatId+"' value='0' />";
+    html = html + "<span id='"+myselectedId+"'>선택된 카테고리 없음</span>";
+    html = html + "<button type='button' onclick='addSelection()'>+</button>";
+    html = html + "<button type='button' onclick='removeSelection(this)'>-</button>";
+    
+    console.log(html);
+    
+    addCell.innerHTML = html;
+    categoryCount++;
+}
+function removeSelection(button) {
+    var row = button.closest('tr');
+    row.remove();  
+
+    var categoryCount = document.querySelectorAll('.category-row').length;
+    console.log("삭제 후 categoryCount:", categoryCount);
+
+    var lastRow = document.querySelector('.category-row:last-child'); 
+    if (lastRow) {
+        selectedCategorySpan = lastRow.querySelector('.selected-category-span');
+        selectedCategoryInput = lastRow.querySelector('.selected-category-input');
+        console.log("선택요소 확인 -> Span:", selectedCategorySpan, " Input:", selectedCategoryInput);
+    } else {
+        selectedCategorySpan = null;
+        selectedCategoryInput = null;
+        console.log("모든 카테고리 삭제");
+    }
+
+    selectedId = selectedCategoryInput ? selectedCategoryInput.value : "";
+    catId = selectedCategorySpan ? selectedCategorySpan.innerText : "";
+
+    console.log("selectedId:", selectedId, " catId:", catId);
+}
+let selectedCategorySpan = null;
+let selectedCategoryInput = null;
+let selectedCatId = null;
+let selectedCatName = "";
+
+function openCategoryModal(selectedId, catId) {	
+	console.log("selectedId:",selectedId," catId:", catId);
+
+	myselectedId = selectedId;
+	mycatId = catId;
+	
+	selectedCategorySpan = document.getElementById(myselectedId);
+    selectedCategoryInput = document.getElementById(mycatId);
+    
+    console.log("선택된 요소 확인 -> Span:", selectedCategorySpan, " Input:", selectedCategoryInput);
     document.getElementById('categoryModal').style.display = 'block';
     loadCategories("", 'main');
 }
 
+
 function closeCategoryModal() {
     document.getElementById('categoryModal').style.display = 'none';
 }
-let selectedCatId = null;  // 임시로 선택한 cat_id 저장
-let selectedCatName = "";
+let myselectedId = null;
+let mycatId = null;
+function confirmCategory() {
+    console.log("### myselectedId:", myselectedId, ", mycatId:", mycatId);
+
+    selectedCategorySpan = document.getElementById(myselectedId);
+    selectedCategoryInput = document.getElementById(mycatId);
+
+    if (!selectedCatId) {
+        alert("카테고리를 선택해주세요.");
+        return;
+    }
+    if (!selectedCategorySpan || !selectedCategoryInput) {
+        console.error("선택된 요소를 찾을 수 없음");
+        return;
+    }
+
+    fetch('/getCategoryPath?cat_id=' + selectedCatId)
+        .then(response => response.text())
+        .then(path => {
+            if (path === "경로 없음") {
+                alert("카테고리 경로를 가져올 수 없습니다.");
+                return;
+            }
+
+            selectedCategorySpan.innerText = path; // 경로 표시
+            selectedCategoryInput.value = selectedCatId; // ID 저장
+
+            console.log("선택 완료 -> Path:", path, "Cat ID:", selectedCatId);
+            closeCategoryModal();
+        })
+        .catch(error => console.error("카테고리 경로 로딩 오류:", error));
+}
 function loadCategories(parentId, targetDiv) {
-    fetch('/getCategories?parent_id=' + 
-    		(parentId != null ? parentId : ''))
+    fetch('/getCategories?parent_id=' + (parentId || ''))
+//     		(parentId != null ? parentId : ''))
         .then(response => response.json())
         .then(data => {
 
@@ -188,38 +289,23 @@ function loadCategories(parentId, targetDiv) {
         	}).catch(error => console.error("카테고리 로드 실패:", error));
     
 }
-
 function selectedCategory(catId, catName) {
-	console.log("최종 선택된 카테고리:", catName, "cat_id:", catId);
-    let selectedText = document.getElementById('selectedCategory');
-    let selectedCategoryDisplay = document.getElementById('selectedCategoryDisplay');
-
+	selectedCatId = catId;
+    selectedCatName = catName;
+    
     fetch('/getCategoryPath?cat_id=' + catId)
         .then(response => response.text())
         .then(path => {
-            selectedText.innerText = path; // 예: "국내도서 > 인문학 > 철학"
-            selectedCategoryDisplay.innerText = catName;
+        	selectedCategorySpan.innerText = path;
+            selectedCategoryInput.value = catId;
+            
             document.getElementById('cat_id').value = catId;
+ 			console.log("확정된 카테고리:", path, "cat_id:", catId);
             closeCategoryModal();
-        }).catch(error => console.error("카테고리 경로 로딩 오류:", error));
+        }).catch(error => console.error("카테고리 경로 오류:", error));
+    
+   
 }
-function confirmCategory() {
-    if (!selectedCatId) {
-        alert("카테고리를 선택해주세요.");
-        return;
-    }
-    fetch('/getCategoryPath?cat_id=' + selectedCatId)
-        .then(response => response.text())
-			.then(path => {
-            document.getElementById('selectedCategory').innerText = path;
-            document.getElementById('cat_id').value = selectedCatId;
-
-            console.log("최종 선택된 카테고리:", path, "cat_id:", selectedCatId);
-
-            closeCategoryModal();
-        	}).catch(error => console.error("카테고리 경로 로딩 오류:", error));
-}
-
 function previewImage(event) {
     var reader = new FileReader();
     reader.onload = function() {

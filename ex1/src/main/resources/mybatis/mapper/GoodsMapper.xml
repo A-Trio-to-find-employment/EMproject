@@ -69,7 +69,7 @@
 	    FROM categories
 	    START WITH cat_id = #{cat_id}
 	    CONNECT BY PRIOR parent_id = cat_id
-	</select>
+	</select> 
 	<select id="findCategoryPathsById" parameterType="java.util.List" resultType="String">
 	    SELECT LISTAGG(cat_name, ' > ') WITHIN GROUP (ORDER BY LEVEL DESC) AS cat_path
 	    FROM categories

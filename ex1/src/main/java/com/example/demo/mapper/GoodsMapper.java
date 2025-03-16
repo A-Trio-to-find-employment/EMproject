@@ -17,7 +17,7 @@ public interface GoodsMapper {
 	Book getGoodsDetail(Long isbn); 
 	Integer getGoodsCount();
 	List<Book> getGoodsByName(StartEnd se);
-	
+	 
 	void updateGoods(Book book);
 	void addGoods(Book book);
 	Integer getIsbnDup(Long isbn);
