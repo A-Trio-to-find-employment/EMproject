@@ -46,35 +46,61 @@
 		select * from book_author where isbn = #{ISBN}
 	</select>
 
+
 	<select id="searchBookByTitleCat" parameterType="StartEndKey"
 		resultType="Book">
-		select * from (
-		select b.*, rownum rn
-		from (
-		select b.*
-		from book b
-		join book_categories bc on b.isbn = bc.isbn
-		join categories c on bc.cat_id = c.cat_id
-		where (bc.cat_id = #{cat_id} or c.parent_id = #{cat_id})
-		and b.book_title like '%' || #{book_title} || '%'
-		order by b.book_title
-		) b
-		)
-		where rn > #{start} and rn <![CDATA[<]]> #{end}
+		SELECT * FROM (
+    		SELECT b.*, rownum rn 
+    		FROM (
+        		SELECT b.isbn, b.price, b.publisher, b.book_title, b.image_name, b.authors
+        		FROM (
+            		SELECT b.isbn, b.price, b.publisher, b.book_title, b.image_name,
+                   		LISTAGG(ba.author, ', ') WITHIN GROUP (ORDER BY ba.author) AS authors
+            		FROM book b
+            		JOIN book_author ba ON b.isbn = ba.isbn
+            		WHERE b.isbn IN (
+                		SELECT DISTINCT bc.isbn
+                		FROM book_categories bc
+                		JOIN categories c ON bc.cat_id = c.cat_id
+                <choose>
+                    <when test="key == 'top'">
+                        where c.cat_id in 
+						(select cat_id from categories where parent_id in
+						(select cat_id from categories where parent_id = #{cat_id} or cat_id = #{cat_id}))
+                    </when>
+                    <when test="key == 'mid'">
+                        where c.parent_id = #{cat_id}
+                    </when>
+                    <when test="key == 'sub'">
+                        where bc.cat_id = #{cat_id}
+                    </when>
+                </choose>
+            )
+            <if test="book_title != null and book_title != ''">
+                AND b.book_title LIKE '%' || #{book_title} || '%'
+            </if>
+            GROUP BY b.isbn, b.price, b.publisher, b.book_title, b.image_name
+        ) b  
+        ORDER BY b.book_title
+    ) b )
+WHERE rn > #{start} AND rn <![CDATA[<]]> #{end}
 	</select>
 
 	<select id="searchBookByTitle" parameterType="StartEndKey"
 		resultType="Book">
 		select * from (
-		select b.*, row_number() over (order by b.book_title) as rn
+		select b.*, row_number() over (order by b.book_title)
+		as rn
 		from (
-		select distinct b.book_title, b.isbn
+		select DISTINCT b.isbn, b.book_title
 		from book b
-		where b.book_title like '%' || #{book_title} || '%'
+		where
+		b.book_title like '%' || #{book_title} || '%'
 		order by b.pub_date
 		) b
 		)
-		where rn > #{start} and rn <![CDATA[<]]> #{end}
+		where rn > #{start} and rn <![CDATA[<]]>
+		#{end}
 	</select>
 
 	<select id="getTotalCountTitle" parameterType="String"
@@ -87,15 +113,29 @@
 
 	<select id="getTotalCountTitleCat" parameterType="StartEndKey"
 		resultType="Integer">
-		select count(*)
-		from book b
-		join book_categories bc on b.isbn
-		= bc.isbn
-		join categories c on bc.cat_id = c.cat_id
-		where b.book_title
-		like '%' || #{book_title} || '%'
-		and (bc.cat_id = #{cat_id} or
-		c.parent_id = #{cat_id})
+		SELECT COUNT(*)
+		FROM book b
+		JOIN book_categories bc ON b.isbn = bc.isbn
+		JOIN categories c ON bc.cat_id = c.cat_id
+		WHERE 1=1
+
+		<choose>
+			<when test="key == 'top'">
+				AND c.cat_id in 
+						(select cat_id from categories where parent_id in
+						(select cat_id from categories where parent_id = #{cat_id} or cat_id = #{cat_id}))
+			</when>
+			<when test="key == 'mid'">
+				AND c.parent_id = #{cat_id}
+			</when>
+			<when test="key == 'sub'">
+				AND bc.cat_id = #{cat_id}
+			</when>
+		</choose>
+
+		<if test="book_title != null and book_title != ''">
+			AND b.book_title LIKE '%' || #{book_title} || '%'
+		</if>
 	</select>
 </mapper>
 
