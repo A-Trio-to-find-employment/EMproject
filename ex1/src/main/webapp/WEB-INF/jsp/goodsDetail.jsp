@@ -184,6 +184,13 @@ function addSelection() {
     categoryCount++;
 }
 function removeSelection(button) {
+	let table = document.getElementById('categoryTable');
+	var rows = document.querySelectorAll('.category-row');
+    if (table.rows.length == 1) {
+        alert("최소 하나의 카테고리는 선택해야 합니다!");
+        return false;
+    }
+    
     var row = button.closest('tr');
     row.remove();  
 
