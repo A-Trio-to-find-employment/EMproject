@@ -434,63 +434,53 @@ public class AdminController {
 		return mav;
 	}
 	@GetMapping(value="/orderStatistics")
-	public ModelAndView goOrderStatistics(Integer PAGE, String SELECT) {
-		ModelAndView mav = new ModelAndView("delivStatistics");
-		int currentPage = 1;
-		if(PAGE != null) currentPage = PAGE;
-		int start = (currentPage - 1) * 9;
-		int end = ((currentPage - 1) * 9) + 10;	
-		StartEndKey sek = new StartEndKey();
-		sek.setStart(start); sek.setEnd(end);
-		List<DeliveryModel> orderList = new ArrayList<DeliveryModel>();
-		if(SELECT == null || SELECT.isEmpty()) {
-			orderList = this.orderService.getDeliveryListWithoutStatus(sek);
-			int totalCount = this.orderService.getOrderDetailCount();
-			int pageCount = totalCount / 10;
-			if(totalCount % 10 != 0) pageCount++;
-			mav.addObject("PAGES", pageCount);
-		}else if(SELECT.equals("배송 준비중")) {
-			sek.setAns(0);
-			orderList = this.orderService.getDeliveryListWithStatus(sek);
-			int totalCount = this.orderService.getOrderDetailCountDeliv(sek.getAns());
-			int pageCount = totalCount / 10;
-			if(totalCount % 10 != 0) pageCount++;
-			mav.addObject("PAGES", pageCount);
-		}else if(SELECT.equals("배송 중")) {
-			sek.setAns(1);
-			orderList = this.orderService.getDeliveryListWithStatus(sek);
-			int totalCount = this.orderService.getOrderDetailCountDeliv(sek.getAns());
-			int pageCount = totalCount / 10;
-			if(totalCount % 10 != 0) pageCount++;
-			mav.addObject("PAGES", pageCount);
-		}else if(SELECT.equals("배송 취소")) {
-			sek.setAns(2);
-			orderList = this.orderService.getDeliveryListWithStatus(sek);
-			int totalCount = this.orderService.getOrderDetailCountDeliv(sek.getAns());
-			int pageCount = totalCount / 10;
-			if(totalCount % 10 != 0) pageCount++;
-			mav.addObject("PAGES", pageCount);
-		}else if(SELECT.equals("배송 완료")) {
-			sek.setAns(3);
-			orderList = this.orderService.getDeliveryListWithStatus(sek);
-			int totalCount = this.orderService.getOrderDetailCountDeliv(sek.getAns());
-			int pageCount = totalCount / 10;
-			if(totalCount % 10 != 0) pageCount++;
-			mav.addObject("PAGES", pageCount);
-		}
-		mav.addObject("SELECT", SELECT);
-		mav.addObject("currentPage",currentPage);
+	public ModelAndView goOrderStatistics(Integer PAGE, String SELECT, String o_id, String od_id, Integer deliveryStatus) {
+	    ModelAndView mav = new ModelAndView("delivStatistics");
+
+	    // 페이지 번호 설정
+	    int currentPage = 1;
+	    if (PAGE != null) currentPage = PAGE;
+	    int start = (currentPage - 1) * 5;
+	    int end = ((currentPage - 1) * 5) + 6;    
+	    StartEndKey sek = new StartEndKey();
+	    sek.setStart(start); sek.setEnd(end);
+
+	    // 배송 상태 수정 처리 (o_id, od_id, deliveryStatus가 있을 경우)
+	    if (o_id != null && od_id != null && deliveryStatus != null) {
+	        DeliveryModel dm = new DeliveryModel();
+	        dm.setOrder_id(o_id);
+	        dm.setOrder_detail_id(od_id);
+	        dm.setDelivery_status(deliveryStatus);
+	        this.orderService.updateDeliveryCount(dm);  // 배송 상태 업데이트
+	    }
+
+	    // SELECT 필터에 따른 주문 리스트 조회
+	    List<DeliveryModel> orderList = new ArrayList<DeliveryModel>();
+	    if (SELECT == null || SELECT.isEmpty()) {
+	        orderList = this.orderService.getDeliveryListWithoutStatus(sek);
+	        int totalCount = this.orderService.getOrderDetailCount();
+	        int pageCount = totalCount / 5;
+	        if (totalCount % 5 != 0) pageCount++;
+	        mav.addObject("PAGES", pageCount);
+	    } else {
+	        int status = 0;
+	        switch (SELECT) {
+	            case "배송 준비중": status = 0; break;
+	            case "배송 중": status = 1; break;
+	            case "배송 취소": status = 2; break;
+	            case "배송 완료": status = 3; break;
+	        }
+	        sek.setAns(status);
+	        orderList = this.orderService.getDeliveryListWithStatus(sek);
+	        int totalCount = this.orderService.getOrderDetailCountDeliv(sek.getAns());
+	        int pageCount = totalCount / 5;
+	        if (totalCount % 5 != 0) pageCount++;
+	        mav.addObject("PAGES", pageCount);
+	    }
+
+	    mav.addObject("SELECT", SELECT);  // SELECT 값을 유지
+	    mav.addObject("currentPage", currentPage);
 	    mav.addObject("orderList", orderList);
-		return mav;
-	}
-	@GetMapping(value="updateDeliveryStatus")
-	public ModelAndView updateDeliveryStatus(String o_id, String od_id, Integer deliveryStatus) {
-		ModelAndView mav = new ModelAndView("redirect:/orderStatistics");
-		DeliveryModel dm = new DeliveryModel();
-		dm.setOrder_id(o_id);
-		dm.setOrder_detail_id(od_id);
-		dm.setDelivery_status(deliveryStatus);
-		this.orderService.updateDeliveryCount(dm);
-		return mav;
+	    return mav;
 	}
 }
