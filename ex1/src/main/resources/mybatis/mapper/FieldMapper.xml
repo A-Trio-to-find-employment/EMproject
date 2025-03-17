@@ -381,7 +381,7 @@ AND a.row_num > #{start} AND a.row_num <![CDATA[<=]]> #{end}
 WITH Category_Hierarchy (cat_id) AS (  
     SELECT cat_id
     FROM categories
-    WHERE parent_id = #{parent_id} 
+    WHERE parent_id = #{parent_id}
     UNION ALL
     SELECT c.cat_id
     FROM categories c
@@ -392,6 +392,7 @@ FROM book b
 LEFT JOIN book_categories bc ON b.isbn = bc.isbn
 LEFT JOIN Category_Hierarchy ch ON bc.cat_id = ch.cat_id
 WHERE bc.cat_id IN (SELECT cat_id FROM Category_Hierarchy)
+   OR bc.cat_id = #{parent_id}
 
 </select>
 
