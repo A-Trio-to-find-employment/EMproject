@@ -350,6 +350,7 @@ public class SearchController {
 			int pageCount = totalCount / 5;
 			if (totalCount % 5 != 0)
 				pageCount++;
+			mav.addObject("cat_id", cat_id);
 			mav.addObject("currentPage", currentPage);
 			mav.addObject("PAGES", pageCount);
 			mav.addObject("totalCount", totalCount);
