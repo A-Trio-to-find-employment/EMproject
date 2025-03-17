@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
- 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +32,7 @@ import com.example.demo.service.FieldService;
 import com.example.demo.service.GoodsService;
 import com.example.demo.service.LoginService;
 import com.example.demo.service.OrderService;
+import com.example.demo.service.ReviewService;
 import com.example.demo.utils.CoverValidator;
 
 import jakarta.servlet.ServletContext;
@@ -50,6 +51,8 @@ public class AdminController {
 	private LoginService loginService;
 	@Autowired
 	private OrderService orderService;
+	@Autowired
+	private ReviewService reviewservice;
 	
 	private List<Category> categories;
 	
@@ -317,18 +320,13 @@ public class AdminController {
 	public ModelAndView deleteGoods(Book book, Review review,
 			 @RequestParam(value = "authors", required = false) String authors, 
 		     @RequestParam(value = "selectedCat", required = false) List<String> selectedCat) {
-		ModelAndView mav = new ModelAndView("admin");
-		Integer reviewId = review.getReview_id();
-		
-		int replyCount = this.goodsService.getReplyCount(reviewId);
-		
-		if(replyCount > 0) {//답글이 있는 글, 즉 삭제 불가
-			mav.addObject("BODY","goodsDeleteResult.jsp?R=NO");
-		}else if(reviewId == null || replyCount == 0) {
+		ModelAndView mav = new ModelAndView("admin");				
 			book.setAuthors(authors);
 			Long isbn = book.getIsbn();
+			this.reviewservice.deleteReviewisbn(isbn);
 			this.goodsService.deleteBookAuthors(isbn);
 			this.goodsService.deleteCatInfo(book.getIsbn()); // 기존 데이터 삭제
+			
 			if (selectedCat != null) {
 				for(String catId : selectedCat) {
 			        BookCategories bookcat = new BookCategories();
@@ -339,7 +337,7 @@ public class AdminController {
 			this.goodsService.deleteGoods(isbn);
 			mav.addObject("book",book);
 			mav.addObject("BODY","goodsDeleteResult.jsp");
-		}
+		
 		return mav;
 	}
 	@GetMapping(value = "/goStatistics")

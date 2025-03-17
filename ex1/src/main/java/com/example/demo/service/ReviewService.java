@@ -61,4 +61,7 @@ public class ReviewService {
 	 public Double GetAvgReview(Long isbn) {
 		 return this.mapper.GetAvgReview(isbn);
 	 }
+	 public void deleteReviewisbn(Long isbn) {
+		 this.mapper.deleteReviewisbn(isbn);
+	 }
 }
