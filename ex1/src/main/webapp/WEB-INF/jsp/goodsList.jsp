@@ -24,7 +24,7 @@
 	<table>
 		<tr><td align="center">
 			<form action="/manageGoods/search" method="post">
-			상품 이름 ] <input type="text" name="TITLE"/><input type="submit" value="검색하기"/> 
+			[ 상품 이름 ] <input type="text" name="TITLE"/><input type="submit" value="검색하기"/> 
 			</form></td></tr>
 	</table>
  
