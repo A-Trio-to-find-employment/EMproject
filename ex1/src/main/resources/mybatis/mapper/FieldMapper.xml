@@ -328,22 +328,21 @@ Author_List AS (
     SELECT ba.isbn, LISTAGG(ba.author, ', ') WITHIN GROUP (ORDER BY ba.author) AS authors
     FROM book_author ba
     GROUP BY ba.isbn
-)
-SELECT *
-FROM (
+),
+Book_Results AS (
     SELECT 
-           ROW_NUMBER() OVER (ORDER BY b.pub_date DESC) AS row_num,  -- PARTITION BY b.isbn 제거
-           b.isbn,
-           b.book_title,
-           al.authors, 
-           b.price,
-           b.publisher,
-           b.pub_date,
-           b.image_name,
-           NVL(s.sales_count, 0) AS sales_count,
-           NVL(r.review_count, 0) AS review_count,
-           NVL(b.total_rating, 0) AS total_rating,
-           bc.cat_id
+        b.isbn,
+        b.book_title,
+        al.authors, 
+        b.price,
+        b.publisher,
+        b.pub_date,
+        b.image_name,
+        NVL(s.sales_count, 0) AS sales_count,
+        NVL(r.review_count, 0) AS review_count,
+        NVL(b.total_rating, 0) AS total_rating,
+        bc.cat_id,
+        ROW_NUMBER() OVER (PARTITION BY b.isbn ORDER BY b.pub_date DESC) AS row_num -- isbn을 기준으로 순서 매기기
     FROM book b
     LEFT JOIN book_categories bc ON b.isbn = bc.isbn
     LEFT JOIN Category_Hierarchy ch ON bc.cat_id = ch.cat_id
@@ -356,7 +355,7 @@ FROM (
                GROUP BY r.isbn) r ON b.isbn = r.isbn
     WHERE (bc.cat_id IN (SELECT cat_id FROM Category_Hierarchy) 
            OR bc.cat_id = #{parent_id})
-           <choose>
+    <choose>
         <when test="sort == 'sales'">
             ORDER BY sales_count DESC
         </when>
@@ -370,8 +369,16 @@ FROM (
             ORDER BY b.pub_date DESC
         </otherwise>
     </choose>
+)
+SELECT *
+FROM (
+    SELECT 
+        br.*, 
+        ROW_NUMBER() OVER (ORDER BY br.pub_date DESC) AS final_row_num
+    FROM Book_Results br
+    WHERE br.row_num = 1
 ) a
-WHERE a.row_num > #{start} AND a.row_num <![CDATA[<=]]> #{end}
+WHERE a.final_row_num > #{start} AND a.final_row_num <![CDATA[<=]]> #{end} -- 페이지네이션
 
 </select>
 <select id="getbooklistcount" parameterType="String" resultType="Integer">
