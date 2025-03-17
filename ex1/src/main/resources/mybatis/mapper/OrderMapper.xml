@@ -108,7 +108,7 @@ where od.order_detail_id =#{order_detail_id}
             WHERE od.DELIVERY_STATUS = #{ans}
             ORDER BY o.CREATED_AT DESC
         ) a
-        WHERE rownum <![CDATA[<=]]> #{end}
+        WHERE rownum <![CDATA[<]]> #{end}
     )
     WHERE rn > #{start}
     ORDER BY rn
@@ -130,7 +130,7 @@ where od.order_detail_id =#{order_detail_id}
             JOIN orders o ON od.ORDER_ID = o.ORDER_ID
             ORDER BY o.CREATED_AT DESC
         ) a
-        WHERE rownum <![CDATA[<=]]> #{end}
+        WHERE rownum <![CDATA[<]]> #{end}
     )
     WHERE rn > #{start}
     ORDER BY rn

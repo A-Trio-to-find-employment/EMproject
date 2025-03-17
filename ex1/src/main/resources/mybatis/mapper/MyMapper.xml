@@ -53,6 +53,9 @@
 	WHERE c2.PARENT_ID = c.CAT_ID
 	)	
 	</select>
+	<select id="getCategoryDetail" parameterType="String" resultType="Category">
+		select * from categories where cat_id = #{cat_id}
+	</select>
 </mapper>
 
 	

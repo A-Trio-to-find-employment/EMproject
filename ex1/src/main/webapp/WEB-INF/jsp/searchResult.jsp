@@ -377,31 +377,36 @@ function toggleDropdown() {
             });
         }
 
-        // 탭 선택: 단일 클릭 시 처리
         function selectTab(tab) {
             var level = tab.getAttribute("data-level"); // "top", "mid", "sub"
             var catId = tab.getAttribute("data-cat-id");
             var catName = tab.getAttribute("data-cat-name");
             var levelIndex = (level === "top") ? 0 : (level === "mid") ? 1 : 2;
-            // 같은 레벨 동일 선택 무시
+
+            // 같은 레벨에서 동일한 항목을 선택하면 무시
             if (selectedPath[levelIndex] && selectedPath[levelIndex].cat_id === catId) return;
+
+            // 선택된 경로를 업데이트
             selectedPath = selectedPath.slice(0, levelIndex);
             selectedPath[levelIndex] = { level: level, cat_id: catId, cat_name: catName };
             updatePathDisplay();
+
+            // 현재 레벨의 모든 탭에서 'selected' 클래스 제거 후 선택된 탭에 추가
             var siblings = tab.parentNode.querySelectorAll(".filter-tab");
-            siblings.forEach(function(sib) {
+            siblings.forEach(function (sib) {
                 sib.classList.remove("selected");
             });
             tab.classList.add("selected");
 
+            // 선택한 카테고리 ID를 폼에 업데이트
+            document.getElementById("cat_id").value = catId;
+
             if (level === "top") {
-                loadNextOptions("mid", catId);
+                loadNextOptions("mid", catId); // mid 카테고리 불러오기
             } else if (level === "mid") {
-                loadNextOptions("sub", catId);
+                loadNextOptions("sub", catId); // sub 카테고리 불러오기
             } else {
-                // sub 단계이면 최종 선택
-                document.getElementById("cat_id").value = catId;
-                // 모달 선택 완료 후 닫기
+                // sub 단계 선택 시 모달 닫기
                 closeFilterModal();
             }
         }
