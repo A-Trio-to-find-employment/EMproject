@@ -78,7 +78,7 @@
 				#{cat_id}))
 			</when>
 			<when test="key == 'mid'">
-				where c.parent_id = #{cat_id}
+				where c.parent_id = #{cat_id} or c.cat_id = #{cat_id}
 			</when>
 			<when test="key == 'sub'">
 				where bc.cat_id = #{cat_id}
@@ -156,7 +156,7 @@
 				)
 			</when>
 			<when test="key == 'mid'">
-				AND c.parent_id = #{cat_id}
+				AND c.parent_id = #{cat_id} or c.cat_id = #{cat_id}
 			</when>
 			<when test="key == 'sub'">
 				AND bc.cat_id = #{cat_id}
