@@ -28,6 +28,7 @@ import com.example.demo.model.DeliveryModel;
 import com.example.demo.model.Review;
 import com.example.demo.model.StartEndKey;
 import com.example.demo.model.Users;
+import com.example.demo.service.CartService;
 import com.example.demo.service.FieldService;
 import com.example.demo.service.GoodsService;
 import com.example.demo.service.LoginService;
@@ -53,6 +54,9 @@ public class AdminController {
 	private OrderService orderService;
 	@Autowired
 	private ReviewService reviewservice;
+	
+	@Autowired
+	private CartService cartService;
 	
 	private List<Category> categories;
 	
@@ -482,5 +486,26 @@ public class AdminController {
 	    mav.addObject("currentPage", currentPage);
 	    mav.addObject("orderList", orderList);
 	    return mav;
+	}
+	@GetMapping(value="/updateUserAdmin")
+	public ModelAndView updateUserAdmin(String ID, Integer GD) {
+		ModelAndView mav = new ModelAndView("redirect:/goUserDetailAdmin");
+		Users users = new Users();
+		users.setUser_id(ID); 
+		if(GD < 3) {
+			users.setGrade(9);
+		}else {
+			Integer totalSum = this.cartService.getUserTotalPriceSum(ID);
+			if(totalSum < 150000) {
+				users.setGrade(0);
+			} else if(totalSum >= 150000 && totalSum < 300000) {
+				users.setGrade(1);
+			} else {
+				users.setGrade(2);
+			}
+		}
+		this.loginService.updateUserGrade(users);
+		mav.addObject("ID", ID);
+		return mav;
 	}
 }
