@@ -22,8 +22,12 @@
  		from book where isbn = #{isbn, jdbcType=BIGINT}
 	</select>
 	<select id="getGoodsCount" resultType="Integer">
-		select count(*) from book
+		select count(*) from book 
 	</select>
+	<select id="getGoodsCountList" resultType="Integer" parameterType="String">
+		select count(*) from book where book_title like '%'|| #{book_title, jdbcType=VARCHAR} ||'%' 
+	</select>
+	
 	<select id="getGoodsByName" parameterType="StartEnd" resultType="Book">
 		select isbn, book_title, authors, publisher, price, stock
 		from(select rownum rn, a.*
@@ -31,7 +35,7 @@
 				(SELECT LISTAGG(author, ', ') WITHIN GROUP (ORDER BY author) 
 		 		FROM book_author 
 		 		WHERE isbn = book.isbn) AS authors, publisher, price, stock
-		 		from book where book_title like '%' || #{title} || '%') a )
+		 		from book where book_title like '%' || #{title,jdbcType=VARCHAR} || '%') a )
 				where rn > #{start} and rn <![CDATA[<]]> #{end}
 	</select>
 	<update id="updateStock" parameterType="java.lang.Long">

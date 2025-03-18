@@ -119,4 +119,7 @@ public class GoodsService {
         }
         goodsMapper.deleteCategoriesByIsbn(isbn, categoriesToDelete);
     }
+	public Integer getGoodsCountList(String book_title) {
+		return this.goodsMapper.getGoodsCountList(book_title);
+	}
 }

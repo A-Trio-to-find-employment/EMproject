@@ -123,11 +123,11 @@ public class AdminController {
 		return mav;
 	}
 	@PostMapping(value = "/manageGoods/search")
-	public ModelAndView goodsSearch(String TITLE, Integer pageNo) {
+	public ModelAndView goodsSearch(String TITLE, @RequestParam(required = false) Integer pageNo) {
 		int currentPage = 1;
 		if(pageNo != null) currentPage = pageNo;
 		List<Book> goodsList = this.goodsService.getGoodsByName(TITLE, pageNo);
-		Integer totalCount = this.goodsService.getGoodsCount();
+		Integer totalCount = this.goodsService.getGoodsCountList(TITLE);
 		int pageCount = totalCount / 5;
 		if(totalCount % 5 != 0) pageCount++;
 		ModelAndView mav = new ModelAndView("admin");
@@ -137,6 +137,25 @@ public class AdminController {
 		mav.addObject("TITLE",TITLE);
 		return mav;
 	}
+	@GetMapping(value = "/manageGoods/search")
+	public ModelAndView goodsSearch1(@RequestParam(required = false) String TITLE, @RequestParam(required = false) Integer pageNo) {
+		int currentPage = 1;
+	    if (pageNo != null) currentPage = pageNo;
+	    
+	    List<Book> goodsList = this.goodsService.getGoodsByName(TITLE, pageNo);
+	    Integer totalCount = this.goodsService.getGoodsCountList(TITLE);
+	    int pageCount = totalCount / 5;
+	    if (totalCount % 5 != 0) pageCount++;
+
+	    ModelAndView mav = new ModelAndView("admin");
+	    mav.addObject("PAGES", pageCount);
+	    mav.addObject("currentPage", currentPage);
+	    mav.addObject("GOODS", goodsList);
+	    mav.addObject("BODY", "goodsByTitle.jsp");
+	    mav.addObject("TITLE", TITLE);
+	    return mav;
+	}
+
 	@GetMapping(value = "/manageGoods/add")
 	public ModelAndView goodsAdd() {
 		ModelAndView mav = new ModelAndView("admin");
