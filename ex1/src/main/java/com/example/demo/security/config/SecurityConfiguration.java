@@ -98,7 +98,7 @@ public class SecurityConfiguration {
 		.loginProcessingUrl("/securityLogin")
 //		.usernameParameter("user_id") 
 //        .passwordParameter("password") 
-		.defaultSuccessUrl("/index")
+//		.defaultSuccessUrl("/index")
 		.permitAll();
 //		http.formLogin();
 		
