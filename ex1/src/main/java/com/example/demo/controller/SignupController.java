@@ -39,10 +39,10 @@ public class SignupController {
 			return mav;
 		}
 		String inputedPassword = users.getPassword();		
-		users.setPassword(this.passwordEncoder.encode(inputedPassword));
-		this.signupService.inserauth(users.getUser_id());
+		users.setPassword(this.passwordEncoder.encode(inputedPassword));		
 		try {
 			this.signupService.insertUser(users);
+			this.signupService.inserauth(users.getUser_id());
 			 // 회원가입이 정상적으로 끝났으면, 성공 페이지로 이동
 	        mav.setViewName("gopreftest");  // 회원가입 성공 시 보여줄 페이지 이름
 	        mav.addObject("user", users); // 가입한 사용자 정보를 뷰로 전달
