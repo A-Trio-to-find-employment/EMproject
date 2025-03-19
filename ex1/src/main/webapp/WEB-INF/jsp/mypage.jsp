@@ -254,7 +254,7 @@
 		   		<font color="red"><form:errors path="user_name"/></font></td></tr>
 		   	<tr><th>아이디</th><td><form:input path="user_id" readonly="true"/>
 		    	<font color="red"><form:errors path="user_id"/></font></td></tr>
-		    <tr><th>비밀번호</th><td><form:password path="password" id="password"/>
+		    <tr><th>비밀번호</th><td><form:input path="password" id="password"/>
 		    	<font color="red"><form:errors path="password" /></font></td></tr>
 		    <tr><th>비밀번호 재입력</th><td><input type="password" name="confirmPassword" id="confirmPassword"/></td></tr>
 		    <tr><th>주소</th><td><form:input path="address" readonly="true"/>

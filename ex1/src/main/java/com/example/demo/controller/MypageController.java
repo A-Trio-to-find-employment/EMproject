@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,55 +50,98 @@ public class MypageController {
 	private JJimService jjimservice;
 	
 	
+//	@GetMapping(value = "/secondfa")
+//	public ModelAndView mypage(HttpSession session,HttpServletRequest request){
+//		String loginUser = (String)session.getAttribute("loginUser");
+//		if(loginUser == null) {
+//			ModelAndView mav = new ModelAndView("loginFail");
+//			return mav;
+//		}
+//		Users users = this.loginService.getUserById(loginUser);
+//		ModelAndView mav = new ModelAndView("secondfa");
+//		mav.addObject("users", users);
+//		// 쿠키에서 가져온 ISBN 목록을 처리
+//				String recentBookIsbnStr = null;
+//				Cookie[] cookies = request.getCookies();
+//				if (cookies != null) {
+//				    for (Cookie cookie : cookies) {
+//				        if (cookie.getName().equals("recentBook")) {
+//				            recentBookIsbnStr = cookie.getValue();
+//				            break;
+//				        }
+//				    }
+//				}
+//
+//				List<Book> recentBooks = new ArrayList<>();
+//				if (recentBookIsbnStr != null) {
+//				    try {
+//				        // 여러 ISBN이 파이프(|)로 구분되어 있다고 가정
+//				        String[] isbnList = recentBookIsbnStr.split("\\|");  // 파이프 구분자로 분리
+//				        
+//				        // 배열을 뒤집어서 최근에 본 책을 먼저 처리
+//				        for (int i = isbnList.length - 1; i >= 0; i--) {
+//				            String isbn = isbnList[i].trim();
+//				            long recentBookIsbn = Long.parseLong(isbn);
+//				            Book recentBook = this.fieldService.getBookDetail(recentBookIsbn);
+//				            if (recentBook != null) {
+//				                recentBooks.add(recentBook);
+//				            }
+//				        }
+//
+//				        // 뷰에 전달
+//				        mav.addObject("recentBooks", recentBooks);
+//				    } catch (NumberFormatException e) {
+//				        System.out.println("❌ 잘못된 ISBN 값: " + recentBookIsbnStr);
+//				    }
+//				}
+//		return mav;
+//	}
 	@GetMapping(value = "/secondfa")
-	public ModelAndView mypage(HttpSession session,HttpServletRequest request){
-		String loginUser = (String)session.getAttribute("loginUser");
-		if(loginUser == null) {
-			ModelAndView mav = new ModelAndView("loginFail");
-			return mav;
-		}
-		Users users = this.loginService.getUserById(loginUser);
-		ModelAndView mav = new ModelAndView("secondfa");
-		mav.addObject("users", users);
-		// 쿠키에서 가져온 ISBN 목록을 처리
-				String recentBookIsbnStr = null;
-				Cookie[] cookies = request.getCookies();
-				if (cookies != null) {
-				    for (Cookie cookie : cookies) {
-				        if (cookie.getName().equals("recentBook")) {
-				            recentBookIsbnStr = cookie.getValue();
-				            break;
-				        }
-				    }
-				}
+	public ModelAndView mypage(Model model, HttpSession session, HttpServletRequest request) {
+	    String loginUser = (String) session.getAttribute("loginUser");
+	    model.addAttribute("users",new Users());
+	    Users users = this.loginService.getUserById(loginUser);
+	    ModelAndView mav = new ModelAndView("myArea");
+//	    mav.addObject("users", users);
 
-				List<Book> recentBooks = new ArrayList<>();
-				if (recentBookIsbnStr != null) {
-				    try {
-				        // 여러 ISBN이 파이프(|)로 구분되어 있다고 가정
-				        String[] isbnList = recentBookIsbnStr.split("\\|");  // 파이프 구분자로 분리
-				        
-				        // 배열을 뒤집어서 최근에 본 책을 먼저 처리
-				        for (int i = isbnList.length - 1; i >= 0; i--) {
-				            String isbn = isbnList[i].trim();
-				            long recentBookIsbn = Long.parseLong(isbn);
-				            Book recentBook = this.fieldService.getBookDetail(recentBookIsbn);
-				            if (recentBook != null) {
-				                recentBooks.add(recentBook);
-				            }
-				        }
+	    // 최근 본 책 쿠키 처리 (기존 코드 유지)
+	    String recentBookIsbnStr = null;
+	    Cookie[] cookies = request.getCookies();
+	    if (cookies != null) {
+	        for (Cookie cookie : cookies) {
+	            if (cookie.getName().equals("recentBook")) {
+	                recentBookIsbnStr = cookie.getValue();
+	                break;
+	            }
+	        }
+	    }mav.addObject("BODY","secondfa.jsp");
 
-				        // 뷰에 전달
-				        mav.addObject("recentBooks", recentBooks);
-				    } catch (NumberFormatException e) {
-				        System.out.println("❌ 잘못된 ISBN 값: " + recentBookIsbnStr);
-				    }
-				}
-		return mav;
+	    List<Book> recentBooks = new ArrayList<>();
+	    if (recentBookIsbnStr != null) {
+	        try {
+	            String[] isbnList = recentBookIsbnStr.split("\\|");
+	            for (int i = isbnList.length - 1; i >= 0; i--) {
+	                String isbn = isbnList[i].trim();
+	                long recentBookIsbn = Long.parseLong(isbn);
+	                Book recentBook = this.fieldService.getBookDetail(recentBookIsbn);
+	                if (recentBook != null) {
+	                    recentBooks.add(recentBook);
+	                }
+	            }
+	            mav.addObject("recentBooks", recentBooks);
+	        } catch (NumberFormatException e) {
+	            System.out.println("❌ 잘못된 ISBN 값: " + recentBookIsbnStr);
+	        }
+	    }
+
+	    return mav;
 	}
+	
+	
 	@PostMapping(value = "/secondfa")
-	public ModelAndView secondfa(Users users, BindingResult br,HttpServletRequest request) {
+	public ModelAndView secondfa(Model model, Users users,HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
+		model.addAttribute("users", new Users());
 		// 쿠키에서 가져온 ISBN 목록을 처리
 				String recentBookIsbnStr = null;
 				Cookie[] cookies = request.getCookies();
@@ -132,25 +176,26 @@ public class MypageController {
 				        System.out.println("❌ 잘못된 ISBN 값: " + recentBookIsbnStr);
 				    }
 				}
-		if(br.hasErrors()) {
-			mav.getModel().putAll(br.getModel());
-		}
-		try {
-			Users loginUser = this.loginService.getUser(users);
-			if(loginUser != null) {
-				mav.setViewName("secondfaSuccess");
-//				mav.addObject("loginUser",loginUser);
+//		if(br.hasErrors()) {
+//			mav.getModel().putAll(br.getModel());
+//		}
+//		try {
+//			Users loginUser = this.loginService.getUser(users);
+//			if(loginUser != null) {
+//				mav.setViewName("secondfaSuccess");
+////				mav.addObject("loginUser",loginUser);
+//				return mav;
+//			}else {
+//				br.reject("error.login.users");
+//				mav.getModel().putAll(br.getModel());
+//				return mav;
+//			}
+//		}catch(EmptyResultDataAccessException e) {
+//			br.reject("error.login.users");
+//			mav.getModel().putAll(br.getModel());
+//			return mav;
+//		}
 				return mav;
-			}else {
-				br.reject("error.login.users");
-				mav.getModel().putAll(br.getModel());
-				return mav;
-			}
-		}catch(EmptyResultDataAccessException e) {
-			br.reject("error.login.users");
-			mav.getModel().putAll(br.getModel());
-			return mav;
-		}
 	}
 	
 	@GetMapping(value = "/myInfo")

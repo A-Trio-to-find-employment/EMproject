@@ -63,7 +63,13 @@ public class LoginController {
 		ModelAndView mav = new ModelAndView("login");
 		return mav;
 	}
-
+	@RequestMapping("/login/securityLogin.html")
+	public ModelAndView securityLoginFrom() {
+		ModelAndView mav = new ModelAndView("index");
+		mav.addObject(new Users());
+		mav.addObject("BODY","securitylogin.jsp");
+		return mav;
+	}
 	@PostMapping(value = "/login")
 	public ModelAndView secondfa(Users users, BindingResult br, HttpSession session, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
@@ -78,7 +84,6 @@ public class LoginController {
 				}
 			}
 		}
-
 		List<Book> recentBooks = new ArrayList<>();
 		if (recentBookIsbnStr != null) {
 			try {
@@ -94,7 +99,6 @@ public class LoginController {
 						recentBooks.add(recentBook);
 					}
 				}
-
 				// 뷰에 전달
 				mav.addObject("recentBooks", recentBooks);
 			} catch (NumberFormatException e) {
@@ -253,5 +257,4 @@ public class LoginController {
 		}
 
 	}
-
 }

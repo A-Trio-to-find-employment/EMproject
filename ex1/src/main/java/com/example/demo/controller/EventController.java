@@ -129,10 +129,10 @@ public class EventController {
 	@GetMapping(value="/getcoupon")
 	public ModelAndView getCoupon(Integer CP, HttpSession session) {
 		String loginUser = (String)session.getAttribute("loginUser");
-		if(loginUser == null) {
-			ModelAndView mav = new ModelAndView("loginFail");
-			return mav;
-		}
+//		if(loginUser == null) {
+//			ModelAndView mav = new ModelAndView("loginFail");
+//			return mav;
+//		}
 		Usercoupon uc = new Usercoupon();
 		uc.setCoupon_id(CP); uc.setUser_id(loginUser);
 		Integer coupon = this.couponService.findUserCoupon(uc);
@@ -144,7 +144,6 @@ public class EventController {
 		ModelAndView mav = new ModelAndView("getCouponSuccess");
 		return mav;
 	}
-	
 	@GetMapping(value="/myCoupon")
 	public ModelAndView myCoupon(HttpSession session,HttpServletRequest request) {
 		String loginUser = (String)session.getAttribute("loginUser");

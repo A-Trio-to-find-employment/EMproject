@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,8 @@ import jakarta.validation.Valid;
 public class SignupController {
 	@Autowired
 	private SignupService signupService;
-	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	@GetMapping(value="/signup")
 	public ModelAndView goSignup() {
 		ModelAndView mav = new ModelAndView("signup");
@@ -34,6 +36,9 @@ public class SignupController {
 			mav.setViewName("signup");
 			return mav;
 		}
+		String inputedPassword = users.getPassword();
+		
+		users.setPassword(this.passwordEncoder.encode(inputedPassword));
 		try {
 			this.signupService.insertUser(users);
 			 // 회원가입이 정상적으로 끝났으면, 성공 페이지로 이동

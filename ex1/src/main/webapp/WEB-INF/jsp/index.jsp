@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,14 +38,22 @@
         </div>
     </div>
         <a href="/eventlist">이벤트</a>
-        <c:if test="${sessionScope.loginUser != null}">
-            <p>사용자 : ${sessionScope.loginUser}</p>
-            <a href="/logout">로그아웃</a>
-        </c:if>
-        <c:if test="${sessionScope.loginUser == null}">
-            <a href="/signup">회원가입</a>
-            <a href="/login">로그인</a>
-        </c:if>
+<%--         <c:if test="${sessionScope.loginUser != null}"> --%>
+<%--             <p>사용자 : ${sessionScope.loginUser}</p> --%>
+<!--             <a href="/logout">로그아웃</a> -->
+<%--         </c:if> --%>
+			<sec:authorize access="isAuthenticated">
+				<p>사용자 : <sec:authentication property="principal.username"/></p>
+				<a href="/logout">로그아웃</a> 
+			</sec:authorize>
+<%--         <c:if test="${sessionScope.loginUser == null}"> --%>
+<!--             <a href="/signup">회원가입</a> -->
+<!--             <a href="/login">로그인</a> -->
+<%--         </c:if> --%>
+			<sec:authorize access="!isAuthenticated()">
+			    <a href="/signup">회원가입</a>
+			    <a href="/login">로그인</a>
+			</sec:authorize>
         <a href="/secondfa">마이페이지</a>
         <a href="/qna">고객센터</a>
     </div>

@@ -190,7 +190,6 @@ function removeSelection(button) {
         alert("최소 하나의 카테고리는 선택해야 합니다!");
         return false;
     }
-    
     var row = button.closest('tr');
     row.remove();  
 

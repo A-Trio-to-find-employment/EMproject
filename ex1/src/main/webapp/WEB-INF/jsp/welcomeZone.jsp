@@ -170,7 +170,7 @@
         <!-- 중앙 상단: 환영 메시지 -->
         <div class="welcome-message">
         	<h2>환영합니다, ${ sessionScope.loginUser }님!</h2>
-            <h2>오늘 ${USER.count }번 방문하셧군요!!</h2>
+            <h2>오늘 ${USER.daily_count }번 방문하셧군요!!</h2>
         </div>
         	<div class="content">
 				<!-- 이벤트 및 쿠폰 -->

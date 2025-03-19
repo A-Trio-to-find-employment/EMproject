@@ -2,6 +2,7 @@ package com.example.demo.model;
 
 import java.sql.Date;
 
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
