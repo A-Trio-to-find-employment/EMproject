@@ -1,32 +1,5 @@
 @charset "UTF-8";
 
-/* 본문 전체를 감싸는 컨테이너 */
-.nav { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center;
-    background: #f8f8f8; 
-    padding: 10px; 
-    width: 100%; 
-    box-sizing: border-box; 
-}
-
-.nav > div, .nav a { 
-    width: 100px;  
-    text-align: center; 
-    text-decoration: none; 
-    font-weight: bold; 
-    color: black; 
-    padding: 10px 0; 
-    border-right: 1px solid #ccc; 
-    cursor: pointer; 
-}
-
-.nav a:last-child { 
-    border-right: none; 
-}
-
-
 
 /* 테이블 스타일 */
 table {
