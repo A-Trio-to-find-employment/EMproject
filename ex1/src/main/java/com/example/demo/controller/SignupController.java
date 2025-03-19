@@ -38,6 +38,7 @@ public class SignupController {
 		}
 		String inputedPassword = users.getPassword();		
 		users.setPassword(this.passwordEncoder.encode(inputedPassword));
+
 		try {
 			this.signupService.insertUser(users);
 			this.signupService.inserauth(users.getUser_id());
