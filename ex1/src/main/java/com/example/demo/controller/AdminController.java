@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.demo.model.Authorities;
 import com.example.demo.model.Book;
 import com.example.demo.model.BookCategories;
 import com.example.demo.model.BookStatistics;
@@ -491,9 +492,12 @@ public class AdminController {
 	public ModelAndView updateUserAdmin(String ID, Integer GD) {
 		ModelAndView mav = new ModelAndView("redirect:/goUserDetailAdmin");
 		Users users = new Users();
+		Authorities ua = new Authorities();
 		users.setUser_id(ID); 
 		if(GD < 3) {
 			users.setGrade(9);
+        	ua.setUser_id(ID);
+        	ua.setAuth("ROLE_ADMIN");
 		}else {
 			Integer totalSum = this.cartService.getUserTotalPriceSum(ID);
 			if(totalSum < 150000) {
@@ -503,7 +507,10 @@ public class AdminController {
 			} else {
 				users.setGrade(2);
 			}
+			ua.setUser_id(ID);
+        	ua.setAuth("ROLE_MEMBER");
 		}
+		this.loginService.updateUserAuth(ua);
 		this.loginService.updateUserGrade(users);
 		mav.addObject("ID", ID);
 		return mav;

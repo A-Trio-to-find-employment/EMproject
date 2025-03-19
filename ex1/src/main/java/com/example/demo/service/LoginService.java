@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.mapper.LoginMapper;
+import com.example.demo.model.Authorities;
 import com.example.demo.model.StartEndKey;
 import com.example.demo.model.Users;
 
@@ -95,4 +96,7 @@ public class LoginService {
 
         this.loginMapper.updateUserStats(user);  // XML에서 실행될 updateUserStats 호출
     }
+	public void updateUserAuth(Authorities auth) {
+		this.loginMapper.updateUserAuth(auth);
+	}
 }
