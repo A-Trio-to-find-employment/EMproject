@@ -59,6 +59,8 @@ public class SecurityConfiguration {
 		.requestMatchers("/goNewPrefTest").hasRole("MEMBER")
 		.requestMatchers("/removeJjim").hasRole("MEMBER")
 		.requestMatchers("/mypage/modify").hasRole("MEMBER")
+		.requestMatchers("/qnalist").hasRole("MEMBER")
+		.requestMatchers("/qnawrite").hasRole("MEMBER")
 		.anyRequest().authenticated();//나머지 요청은 모두 보안 검사를 진행
 		http.formLogin().loginPage("/login/securityLogin.html") //보안검사에 만든 로그인 창 설정
 		.loginProcessingUrl("/securityLogin")
