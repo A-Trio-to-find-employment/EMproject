@@ -18,4 +18,5 @@ public interface SearchMapper {
 	List<Book> searchBookByTitle(StartEndKey sek);
 	Integer getTotalCountTitle(String book_title);
 	Integer getTotalCountTitleCat(StartEndKey sek);
+	Integer countSearchBooks(DetailSearch ds);
 }

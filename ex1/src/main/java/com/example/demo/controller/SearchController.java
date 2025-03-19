@@ -439,7 +439,7 @@ public class SearchController {
 
 	@GetMapping(value = "/detailSearch")
 	public ModelAndView detailSearch(String TITLE, String AUTHOR, String PUBLISHER, String PUB_DATE_START,
-			String PUB_DATE_END, Long BOOKID, String action, HttpSession session, String action1,
+			String PUB_DATE_END, Long BOOKID, String action, HttpSession session, String action1, Integer PAGE,
 			HttpServletRequest request) {
 		System.out.println("TITLE: " + TITLE);
 		System.out.println("AUTHOR: " + AUTHOR);
@@ -533,6 +533,20 @@ public class SearchController {
 		ds.setPublisher(PUBLISHER);
 		ds.setPub_date_start(PUB_DATE_START);
 		ds.setPub_date_end(PUB_DATE_END);
+		//
+		int currentPage = 1;
+		if (PAGE != null)
+			currentPage = PAGE;
+		int start = (currentPage - 1) * 5;
+		int end = ((currentPage - 1) * 5) + 6;
+		System.out.println("start : " + start + ", end : " + end);
+		ds.setStart(start);
+		ds.setEnd(end);
+		
+		
+		
+		
+		//
 		List<Book> testList = this.searchService.searchBooks(ds);
 		List<Book> searchList = new ArrayList<Book>();
 
@@ -654,7 +668,13 @@ public class SearchController {
 				System.out.println("❌ 잘못된 ISBN 값: " + recentBookIsbnStr);
 			}
 		}
-
+		int totalCount = this.searchService.countSearchBooks(ds);
+		int pageCount = totalCount / 5;
+		if (totalCount % 5 != 0)
+			pageCount++;
+		mav.addObject("currentPage", currentPage);
+		mav.addObject("PAGES", pageCount);
+		mav.addObject("totalCount", totalCount);
 		mav.addObject("topCatList", topCatList);
 		mav.addObject("TITLE", TITLE);
 		mav.addObject("AUTHOR", AUTHOR);
