@@ -29,8 +29,8 @@
 		</tr>
 		<tr>
 		<table>
-			<td align="center"><input type="submit" value="로그인"/></td>
-			<td align="center"><input type="reset" value="취 소"/></td>
+			<td align="center"><input type="submit" value="로그인"></td>
+			<td align="center"><input type="reset" value="취 소"></td>
 		</table>
 		</tr>
 	</table>

@@ -16,6 +16,12 @@
 		to_char(birth,'YYYY-MM-DD') "birth", phone, grade, count from users
 		where user_id=#{user_id} and password=#{password}
 	</select>
+	<select id="getUsername" parameterType="map" 
+							resultType="Users">
+		select user_id, password, user_name, address, address_detail, zipcode, email,
+		to_char(birth,'YYYY-MM-DD') "birth", phone, grade, count from users
+		where user_id=#{username} and password=#{password}
+	</select>
 	<update id="updateCount" parameterType="String">
 		update users set count = count + 1 where user_id=#{user_id}
 	</update>
@@ -89,6 +95,9 @@
 	<update id="updateUserAuth" parameterType="Authorities">
         update authorities set auth = #{auth} where user_id=#{user_id}
     </update>
+    <select id="getPasswordByUsername" resultType="String">
+    	select password from users where user_id=#{username}
+    </select>
 </mapper>
 
 	

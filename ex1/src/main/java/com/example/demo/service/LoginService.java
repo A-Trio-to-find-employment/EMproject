@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -99,4 +100,10 @@ public class LoginService {
 
         this.loginMapper.updateUserStats(user);  // XML에서 실행될 updateUserStats 호출
     }
+	public String getPasswordByUsername(String username) {
+		return this.loginMapper.getPasswordByUsername(username);
+	}
+	public Users getUsername(String username, String password) {
+		return this.loginMapper.getUsername(username, password);
+	}
 }

@@ -28,7 +28,6 @@ public class SignupController {
 		mav.addObject("users", new Users());
 		return mav;
 	}
-	
 	@PostMapping(value="/signupResult")
 	public ModelAndView signupResult(@Valid Users users, BindingResult br, HttpSession session) {
 		users.setGrade(0);
@@ -38,11 +37,12 @@ public class SignupController {
 			mav.setViewName("signup");
 			return mav;
 		}
-		String inputedPassword = users.getPassword();		
-		users.setPassword(this.passwordEncoder.encode(inputedPassword));		
+		String inputedPassword = users.getPassword();
+		users.setPassword(this.passwordEncoder.encode(inputedPassword));
+		this.signupService.insertAuth(users.getUser_id());
 		try {
 			this.signupService.insertUser(users);
-			this.signupService.inserauth(users.getUser_id());
+			this.signupService.insertAuth(users.getUser_id());
 			 // 회원가입이 정상적으로 끝났으면, 성공 페이지로 이동
 	        mav.setViewName("gopreftest");  // 회원가입 성공 시 보여줄 페이지 이름
 	        mav.addObject("user", users); // 가입한 사용자 정보를 뷰로 전달

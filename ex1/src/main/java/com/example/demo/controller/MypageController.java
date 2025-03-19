@@ -5,10 +5,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.model.Book;
@@ -47,6 +50,8 @@ public class MypageController {
 	private CategoryService categoryService;
 	@Autowired
 	private JJimService jjimservice;
+	@Autowired
+    private PasswordEncoder passwordEncoder;
 	
 	
 	@GetMapping(value = "/secondfa")
@@ -57,7 +62,7 @@ public class MypageController {
 			return mav;
 		}
 		Users users = this.loginService.getUserById(loginUser);
-		ModelAndView mav = new ModelAndView("secondfa");
+		ModelAndView mav = new ModelAndView("myArea");
 		mav.addObject("users", users);
 		// 쿠키에서 가져온 ISBN 목록을 처리
 				String recentBookIsbnStr = null;
@@ -70,7 +75,6 @@ public class MypageController {
 				        }
 				    }
 				}
-
 				List<Book> recentBooks = new ArrayList<>();
 				if (recentBookIsbnStr != null) {
 				    try {
@@ -86,18 +90,32 @@ public class MypageController {
 				                recentBooks.add(recentBook);
 				            }
 				        }
-
-				        // 뷰에 전달
 				        mav.addObject("recentBooks", recentBooks);
 				    } catch (NumberFormatException e) {
-				        System.out.println("❌ 잘못된 ISBN 값: " + recentBookIsbnStr);
+				        System.out.println("잘못된 ISBN 값: " + recentBookIsbnStr);
 				    }
 				}
+				mav.addObject("BODY","secondfa.jsp");
 		return mav;
 	}
 	@PostMapping(value = "/secondfa")
-	public ModelAndView secondfa(Users users, BindingResult br,HttpServletRequest request,HttpSession session ) {
-		ModelAndView mav = new ModelAndView();
+	public ModelAndView secondfa(
+			@RequestParam("username") String username, 
+            @RequestParam("password") String password, 
+            HttpSession session, Users users, BindingResult br,
+            HttpServletRequest request) {
+			ModelAndView mav = new ModelAndView("myArea");
+	        // DB에서 아이디에 해당하는 비밀번호 가져오기
+	        String getPassword = this.loginService.getPasswordByUsername(username);
+
+	        // 비밀번호 비교 (암호화된 비밀번호와 일치하는지 확인)
+	        if (getPassword != null && passwordEncoder.matches(password, getPassword)) {
+	            session.setAttribute("TWO_FACTOR_VERIFIED", true); // 2차 인증 완료 상태 저장
+	            mav.setViewName("redirect:/secondfaSuccess"); // 성공 페이지로 이동
+	        } else {
+	            mav.setViewName("redirect:/secondfa?error=true"); // 실패 시 다시 2차 인증 페이지로
+	        }
+	        mav.addObject("BODY","secondfa.jsp");
 		// 쿠키에서 가져온 ISBN 목록을 처리
 				String recentBookIsbnStr = null;
 				Cookie[] cookies = request.getCookies();
@@ -109,7 +127,6 @@ public class MypageController {
 				        }
 				    }
 				}
-
 				List<Book> recentBooks = new ArrayList<>();
 				if (recentBookIsbnStr != null) {
 				    try {
@@ -129,49 +146,70 @@ public class MypageController {
 				        // 뷰에 전달
 				        mav.addObject("recentBooks", recentBooks);
 				    } catch (NumberFormatException e) {
-				        System.out.println("❌ 잘못된 ISBN 값: " + recentBookIsbnStr);
+				        System.out.println("잘못된 ISBN 값: " + recentBookIsbnStr);
 				    }
 				}
-				if (br.hasErrors()) {
-				    mav.getModel().putAll(br.getModel());
-				}
-
-				try {
-				    // Retrieve user input values from the request
-				    String inputUserId = users.getUser_id();
-				    String inputPassword = users.getPassword();
-
-				    // Retrieve user_id and password from session
-				    String sessionUserId = (String) session.getAttribute("loginUser");
-				    String sessionPassword = (String) session.getAttribute("password");
-
-				    // Check if the session values match the input values
-				    if (sessionUserId != null && sessionPassword != null &&
-				        sessionUserId.equals(inputUserId) && sessionPassword.equals(inputPassword)) {
-
-				        // Successful login
-				        mav.setViewName("secondfaSuccess");
-				        // Optional: Add the loginUser object to the model if needed
-				        // mav.addObject("loginUser", loginUser);
-				        return mav;
-				    } else {
-				        // Invalid credentials
-				        br.reject("error.login.users");
-				        mav.getModel().putAll(br.getModel());
-				        return mav;
-				    }
-
-				} catch (EmptyResultDataAccessException e) {
-				    br.reject("error.login.users");
-				    mav.getModel().putAll(br.getModel());
-				    return mav;
-				}
-
+//				if(br.hasErrors()) {
+//					mav.getModel().putAll(br.getModel());
+//				}
+//				try {
+//					Users loginUser = this.loginService.getUser(users);
+//					if(loginUser != null) {
+//						mav.addObject("BODY","secondfaSuccess.jsp");
+//						return mav;
+//					}else {
+//						br.reject("error.login.users");
+//						mav.getModel().putAll(br.getModel());
+//						return mav;
+//					}
+//				}catch(EmptyResultDataAccessException e) {
+//					br.reject("error.login.users");
+//					mav.getModel().putAll(br.getModel());
+//					return mav;
+//				}
+				return mav;
+			}
+//				if (br.hasErrors()) {
+//				    mav.getModel().putAll(br.getModel());
+//				}
+//				try {
+//				    // Retrieve user input values from the request
+//				    String inputUserId = users.getUser_id();
+//				    String inputPassword = users.getPassword();
+//
+//				    // Retrieve user_id and password from session
+//				    String sessionUserId = (String) ((Cookie) session).getAttribute("loginUser");
+//				    String sessionPassword = (String) ((Cookie) session).getAttribute("password");
+//
+//				    // Check if the session values match the input values
+//				    if (sessionUserId != null && sessionPassword != null &&
+//				        sessionUserId.equals(inputUserId) && sessionPassword.equals(inputPassword)) {
+////				    	ModelAndView mav = new ModelAndView("myArea");
+//				        // Optional: Add the loginUser object to the model if needed
+//				        // mav.addObject("loginUser", loginUser);
+//				        return mav;
+//				    } else {
+//				        // Invalid credentials
+//				        br.reject("error.login.users");
+//				        mav.getModel().putAll(br.getModel());
+//				        return mav;
+//				    }
+//
+//				} catch (EmptyResultDataAccessException e) {
+//				    br.reject("error.login.users");
+//				    mav.getModel().putAll(br.getModel());
+//				    return mav;
+//				}
+				//일단 냅고 해보자
+	@RequestMapping(value = "/secondfaSuccess")
+	public ModelAndView secondfaSuccess() {
+		ModelAndView mav = new ModelAndView("myArea");
+		mav.addObject("BODY","secondfaSuccess.jsp");
+		return mav;
 	}
-	
 	@GetMapping(value = "/myInfo")
 	public ModelAndView myInfo(HttpSession session,HttpServletRequest request) {
-		ModelAndView mav = new ModelAndView("mypage");
+		ModelAndView mav = new ModelAndView("myArea");
 		// 쿠키에서 가져온 ISBN 목록을 처리
 				String recentBookIsbnStr = null;
 				Cookie[] cookies = request.getCookies();
@@ -218,6 +256,7 @@ public class MypageController {
 		}else {
 			mav.addObject("error", "회원 정보를 찾을 수 없습니다.");
 		}
+		mav.addObject("BODY","mypage.jsp");
 		return mav;
 	}
 	@PostMapping(value = "/mypage/modify")
@@ -272,9 +311,6 @@ public class MypageController {
 	            endRow = count;
 	        }
 	    }
-
-
-
         System.out.println(startRow);
         System.out.println(endRow);
         System.out.println(currentPage);
@@ -295,7 +331,6 @@ public class MypageController {
 	            ModelAndView loginFailMav = new ModelAndView("loginFail");
 	            return loginFailMav;
 	        }
-
 	        // JJim 객체 생성 및 값 설정
 	        JJim jjim = new JJim();
 	        jjim.setUser_id(loginUser);
@@ -312,7 +347,6 @@ public class MypageController {
 	            }
 	        }
 	    }
-
 	    // 찜 상태 및 찜한 사람 수 계산
 	    JJim jjim = new JJim();
 	    jjim.setUser_id(loginUser);
@@ -351,7 +385,6 @@ public class MypageController {
 	 		                recentBooks.add(recentBook);
 	 		            }
 	 		        }
-
 	 		        // 뷰에 전달
 	 		        mav1.addObject("recentBooks", recentBooks);
 	 		    } catch (NumberFormatException e) {
@@ -393,11 +426,9 @@ public class MypageController {
 	            this.prefService.updateScore(up);
 	        }
 	    }
-
 	    // 리다이렉트하면서 URL에 alert 파라미터 추가
 	    mav.setViewName("redirect:/jjimlist?alert=true");
 	    return mav;
 	}
-
 
 }
