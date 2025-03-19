@@ -62,7 +62,7 @@ public class MypageController {
 			return mav;
 		}
 		Users users = this.loginService.getUserById(loginUser);
-		ModelAndView mav = new ModelAndView("myArea");
+		ModelAndView mav = new ModelAndView("index");
 		mav.addObject("users", users);
 		// 쿠키에서 가져온 ISBN 목록을 처리
 				String recentBookIsbnStr = null;
