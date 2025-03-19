@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.mapper.LoginMapper;
+import com.example.demo.model.Authorities;
 import com.example.demo.model.StartEndKey;
 import com.example.demo.model.Users;
 
@@ -26,6 +27,9 @@ public class LoginService {
 //		}
 //		return user;
 //	}
+	public void updateUserAuth(Authorities auth) {
+        this.loginMapper.updateUserAuth(auth);
+    }
 	public Users getUser(Users users) {
 		return this.loginMapper.getUser(users);
 	}

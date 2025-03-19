@@ -72,6 +72,7 @@ Authentication authentication = SecurityContextHolder.getContext().getAuthentica
 		    
 		    // imagebbs.setWriter(userId); // 작성자에 계정 설정
 		    session.setAttribute("loginUser", userId); // 세션에 로그인 사용자 설정
+		    session.setAttribute("password", password); // 세션에 로그인 사용자 설정
 		}
 		
 		return mav;

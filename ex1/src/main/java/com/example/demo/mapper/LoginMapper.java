@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.example.demo.model.Authorities;
 import com.example.demo.model.StartEndKey;
 import com.example.demo.model.Users;
 
@@ -19,6 +20,6 @@ public interface LoginMapper {
 	Users getUserByIdAdmin(String id);
 	void updateUserGrade(Users users);
 	void updateCount(String user_id);
-	
+	void updateUserAuth(Authorities auth);
 	void updateUserStats(Users user);
 }

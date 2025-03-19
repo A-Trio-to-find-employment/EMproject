@@ -86,6 +86,9 @@
 	<update id="updateUserGrade" parameterType="Users">
 		update users set grade = #{grade} where user_id = #{user_id}
 	</update>
+	<update id="updateUserAuth" parameterType="Authorities">
+        update authorities set auth = #{auth} where user_id=#{user_id}
+    </update>
 </mapper>
 
 	

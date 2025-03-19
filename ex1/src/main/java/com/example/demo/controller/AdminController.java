@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
- 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.demo.model.Authorities;
 import com.example.demo.model.Book;
 import com.example.demo.model.BookCategories;
 import com.example.demo.model.BookStatistics;
@@ -28,6 +29,7 @@ import com.example.demo.model.DeliveryModel;
 import com.example.demo.model.Review;
 import com.example.demo.model.StartEndKey;
 import com.example.demo.model.Users;
+import com.example.demo.service.CartService;
 import com.example.demo.service.FieldService;
 import com.example.demo.service.GoodsService;
 import com.example.demo.service.LoginService;
@@ -42,6 +44,8 @@ import jakarta.validation.Valid;
 public class AdminController {
 	@Autowired
 	private GoodsService goodsService;
+    @Autowired
+	private CartService cartService;
 	@Autowired
 	private CoverValidator coverValidator;
 	@Autowired
@@ -495,4 +499,31 @@ public class AdminController {
 		this.orderService.updateDeliveryCount(dm);
 		return mav;
 	}
+	@GetMapping(value="/updateUserAdmin")
+    public ModelAndView updateUserAdmin(String ID, Integer GD) {
+        ModelAndView mav = new ModelAndView("redirect:/goUserDetailAdmin");
+        Users users = new Users();
+        Authorities ua = new Authorities();
+        users.setUser_id(ID); 
+        if(GD < 3) {
+            users.setGrade(9);
+            ua.setUser_id(ID);
+            ua.setAuth("ROLE_ADMIN");
+        }else {
+            Integer totalSum = this.cartService.getUserTotalPriceSum(ID);
+            if(totalSum < 150000) {
+                users.setGrade(0);
+            } else if(totalSum >= 150000 && totalSum < 300000) {
+                users.setGrade(1);
+            } else {
+                users.setGrade(2);
+            }
+            ua.setUser_id(ID);
+            ua.setAuth("ROLE_MEMBER");
+        }
+        this.loginService.updateUserAuth(ua);
+        this.loginService.updateUserGrade(users);
+        mav.addObject("ID", ID);
+        return mav;
+    }
 }
