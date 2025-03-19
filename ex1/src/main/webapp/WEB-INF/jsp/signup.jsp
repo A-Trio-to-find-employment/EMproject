@@ -100,8 +100,9 @@
                 <tr><th>전화번호</th><td><form:input path="phone" />
                 	<font color="red"><form:errors path="phone"/></font></td></tr>        
                 <tr><th>약관동의</th><td>
-                     <input type="radio" name="agreement" value="agree" id="agree"><label for="agree" >동의</label>
-    				<input type="radio" name="agreement" value="disagree" id="disagree"><label for="disagree">비동의</label></td></tr>
+                    <input type="radio" name="agreement" value="agree" id="agree"><label for="agree" >동의</label>
+    				<input type="radio" name="agreement" value="disagree" id="disagree"><label for="disagree">비동의</label>
+    				<input type="button" value="약관보기" onClick="watchAgree()"/></td></tr>
             </table>
             <input type="submit" value="회원가입" />
         </form:form>
@@ -163,6 +164,60 @@ document.addEventListener("click", function(event) {
         dropdown.style.display = "none";
     }
 });
+function watchAgree() {
+    let popup = window.open("", "termsPopup", "width=500,height=600,scrollbars=yes,resizable=yes");
+
+    if (!popup || popup.closed || typeof popup.closed == 'undefined') {
+        alert("팝업이 차단되었습니다. 브라우저 설정에서 팝업을 허용해주세요.");
+        return;
+    }
+
+    const termsContent = `
+        <html>
+        <head>
+            <title>이용약관</title>
+            <style>
+                body { font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; }
+                h2 { text-align: center; }
+                .content { max-height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; }
+                .btn-container { text-align: center; margin-top: 20px; }
+                button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+                button:hover { background: #0056b3; }
+            </style>
+        </head>
+        <body>
+            <h2>이용약관</h2>
+            <div class="content">
+                <p>1. 본 서비스는 사용자의 편의를 위해 제공되며, 안정적인 운영을 위해 최선을 다합니다.</p>
+                <p>   다만, 기술적 문제나 운영 정책에 따라 서비스 내용이 변경될 수 있습니다.</p>
+
+                <p>2. 회원은 서비스 이용 시 관련 법규 및 공공질서를 준수해야 하며, 부정한 방법으로 서비스를 이용할 수 없습니다.</p>
+                <p>   이를 위반할 경우 서비스 이용이 제한될 수 있습니다.</p>
+
+                <p>3. 개인정보 보호정책에 따라 회원의 개인정보는 안전하게 관리되며, 동의 없이 제3자에게 제공되지 않습니다.</p>
+                <p>   단, 법적 요구가 있을 경우 예외적으로 제공될 수 있습니다.</p>
+
+                <p>4. 회원은 계정 정보를 안전하게 관리할 책임이 있으며, 계정 도용으로 인한 피해는 본인이 부담해야 합니다.</p>
+                <p>   비밀번호 분실 및 유출 방지를 위해 주기적으로 변경하는 것을 권장합니다.</p>
+
+                <p>5. 서비스 내 콘텐츠 및 자료의 저작권은 회사에 있으며, 무단 복제 및 배포를 금지합니다.</p>
+                <p>   이를 위반할 경우 법적 조치가 취해질 수 있습니다.</p>
+
+                <p>6. 기타 서비스 이용과 관련된 사항은 별도로 공지된 정책 및 운영 방침을 따릅니다.</p>
+                <p>   회원은 주기적으로 공지사항을 확인해야 하며, 지속적인 이용은 정책 동의로 간주됩니다.</p>
+            </div>
+            <div class="btn-container">
+                <button onclick="window.close()">닫기</button>
+            </div>
+        </body>
+        </html>
+    `;
+
+    popup.document.open();
+    popup.document.write(termsContent);
+    popup.document.close();
+    popup.focus();
+}
 </script>
 </body>
 </html>

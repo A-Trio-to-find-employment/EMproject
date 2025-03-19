@@ -263,23 +263,6 @@ function isbnCheck(){
     }
 	return true;
 }
-function searchCheck() {
-    // 각 입력 필드 값 가져오기
-    var title = document.getElementById("TITLE").value;
-    var author = document.getElementById("AUTHOR").value;
-    var publisher = document.getElementById("PUBLISHER").value;
-    var pubDateStart = document.getElementById("PUB_DATE_START").value;
-    var pubDateEnd = document.getElementById("PUB_DATE_END").value;
-
-    // 필드 값이 비어 있으면 경고 메시지 표시하고 제출 중지
-    if (!title || !author || !publisher || !pubDateStart || !pubDateEnd) {
-        alert("도서에 대한 정보를 모두 입력해주세요.");
-        return false;  // 폼 제출을 중지
-    }
-
-    // 모든 필드가 채워지면 true 반환하여 폼 제출
-    return true;
-}
 
 // 드롭다운 기능
 function toggleDropdown() {

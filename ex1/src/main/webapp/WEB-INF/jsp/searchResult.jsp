@@ -248,6 +248,7 @@
 		<h2>검색된 도서 목록</h2>
 		<c:choose>
 			<c:when test="${not empty searchList}">
+				<h4 align="right">검색된 도서 수 : ${ totalCount }</h4>
 				<c:forEach var="book" items="${ searchList }">
 					<div class="book-item">
 						<!-- 책 이미지 -->
@@ -291,6 +292,31 @@
 						</form>
 					</div>
 				</c:forEach>
+				<div align="center" class="pagenation">
+				<c:set var="currentPage" value="${currentPage}" />
+				<c:set var="startPage"
+					value="${currentPage - (currentPage % 10 == 0 ? 10 :(currentPage % 10)) + 1 }" />
+				<c:set var="endPage" value="${startPage + 9}" />
+				<c:set var="pageCount" value="${ PAGES }" />
+				<c:if test="${endPage > pageCount }">
+					<c:set var="endPage" value="${pageCount }" />
+				</c:if>
+				<c:if test="${startPage > 10 }">
+					<a href="/searchByTitleCat?PAGE=${startPage - 1 }&cat_id=${ cat_id }&bookTitle=${ bookTitle }">[이전]</a>
+				</c:if>
+				<c:forEach begin="${startPage }" end="${endPage }" var="i">
+					<c:if test="${currentPage == i }">
+						<font size="4">
+					</c:if>
+					<a href="/searchByTitleCat?PAGE=${ i }&cat_id=${ cat_id }&bookTitle=${ bookTitle }">${ i }</a>
+					<c:if test="${currentPage == i }">
+						</font>
+					</c:if>
+				</c:forEach>
+				<c:if test="${endPage < pageCount }">
+					<a href="/searchByTitleCat?PAGE=${endPage + 1 }&cat_id=${ cat_id }&bookTitle=${ bookTitle }">[다음]</a>
+				</c:if>
+				</div>
 			</c:when>
 			<c:otherwise>
 				<p>등록된 도서가 없습니다.</p>
