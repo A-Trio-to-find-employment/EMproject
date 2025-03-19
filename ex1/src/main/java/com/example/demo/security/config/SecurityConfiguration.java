@@ -35,6 +35,9 @@ public class SecurityConfiguration {
 		.requestMatchers("/detailSearch").permitAll()
 		.requestMatchers("/goIsbnSearch").permitAll()
 		.requestMatchers("/searchByTitleCat").permitAll()
+		.requestMatchers("/eventlist").permitAll()
+		.requestMatchers("/eventdetail").permitAll()
+		.requestMatchers("/qna").permitAll()
 		
 		
 		
@@ -45,8 +48,25 @@ public class SecurityConfiguration {
 		
 		.requestMatchers("/secondfa").hasRole("MEMBER")
 		.requestMatchers("/eventlist").hasRole("MEMBER")
-		.requestMatchers("/qna").hasRole("MEMBER")
 		.requestMatchers("/myInfo").hasRole("MEMBER")
+		.requestMatchers("/qnalist").hasRole("MEMBER")
+		.requestMatchers("/qnawrite").hasRole("MEMBER")
+		.requestMatchers("/qnawriteform").hasRole("MEMBER")
+		.requestMatchers("/qnaDelete").hasRole("MEMBER")
+		.requestMatchers("/qnadetail").hasRole("MEMBER")
+		.requestMatchers("/myCoupon").hasRole("MEMBER")
+		.requestMatchers("/order/**").hasRole("MEMBER")
+		.requestMatchers("/gogenretest").hasRole("MEMBER")
+		.requestMatchers("/showprefresult").hasRole("MEMBER")
+		.requestMatchers("/cart").hasRole("MEMBER")
+		.requestMatchers("/jjimlist").hasRole("MEMBER")
+		.requestMatchers("/getCoupon").hasRole("MEMBER")
+		.requestMatchers("/preftest").hasRole("MEMBER")
+		.requestMatchers("/savepreference").hasRole("MEMBER")
+		.requestMatchers("/myPrefBookList").hasRole("MEMBER")
+		.requestMatchers("/goNewPrefTest").hasRole("MEMBER")
+		.requestMatchers("/removeJjim").hasRole("MEMBER")
+		.requestMatchers("/mypage/modify").hasRole("MEMBER")
 //		.requestMatchers("/index*").permitAll()
 //		.requestMatchers("/imgs/**","/css/**","/upload/**").permitAll()// /imgs/아래의 모든 요청, /css/아래의 모든 요청 허용
 //		.requestMatchers("/home/**").permitAll( )//home으로 시작하는 모든 요청 허용
