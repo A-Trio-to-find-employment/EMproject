@@ -175,47 +175,22 @@
 </style>
 </head>
 <body>
-   <div class="nav">
-    <!-- HOME 항목 -->
-    <a href="/index">HOME</a>
-
-    <div class="nav-right">
-    	<div style="position: relative;">
-        <a onclick="toggleDropdown()">분야보기</a>
-        <div id="categoryDropdown" class="dropdown">
-            <a href="/field.html?cat_id=0">국내도서</a>
-            <a href="/field.html?cat_id=1">외국도서</a>
-        </div>
-    </div>
-        <a href="/eventlist">이벤트</a>
-        <c:if test="${sessionScope.loginUser != null}">
-            <p>사용자 : ${sessionScope.loginUser}</p>
-            <a href="/logout">로그아웃</a>
-        </c:if>
-        <c:if test="${sessionScope.loginUser == null}">
-            <a href="/signup">회원가입</a>
-            <a href="/login">로그인</a>
-        </c:if>
-        <a href="/secondfa">마이페이지</a>
-        <a href="/qna">고객센터</a>
-    </div>
-</div>
 
     <div class="sidebar">
-        <c:choose>
-    		<c:when test="${ sessionScope.userGrade == 0}">
-				<h3>나의 등급 <span style="float: right;">일반 회원</span></h3>
-        		<p>최근 3개월 주문금액이 15만원 이상일 경우 VIP 회원이 됩니다.</p>
-			</c:when>
-			<c:when test="${ sessionScope.userGrade == 1}">
-				<h3>나의 등급 <span style="float: right;">VIP 회원</span></h3>
-        		<p>최근 3개월 주문금액이 30만원 이상일 경우 VVIP 회원이 됩니다.</p>
-			</c:when>
-			<c:when test="${ sessionScope.userGrade == 2}">
-				<h3>나의 등급 <span style="float: right;">VVIP 회원</span></h3>
-				<p>항상 감사합니다. VVIP 회원 ${ sessionScope.loginUser }님</p>
-			</c:when>
-    	</c:choose>
+<%--         <c:choose> --%>
+<%--     		<c:when test="${ sessionScope.userGrade == 0}"> --%>
+<!-- 				<h3>나의 등급 <span style="float: right;">일반 회원</span></h3> -->
+<!--         		<p>최근 3개월 주문금액이 15만원 이상일 경우 VIP 회원이 됩니다.</p> -->
+<%-- 			</c:when> --%>
+<%-- 			<c:when test="${ sessionScope.userGrade == 1}"> --%>
+<!-- 				<h3>나의 등급 <span style="float: right;">VIP 회원</span></h3> -->
+<!--         		<p>최근 3개월 주문금액이 30만원 이상일 경우 VVIP 회원이 됩니다.</p> -->
+<%-- 			</c:when> --%>
+<%-- 			<c:when test="${ sessionScope.userGrade == 2}"> --%>
+<!-- 				<h3>나의 등급 <span style="float: right;">VVIP 회원</span></h3> -->
+<%-- 				<p>항상 감사합니다. VVIP 회원 ${ sessionScope.loginUser }님</p> --%>
+<%-- 			</c:when> --%>
+<%--     	</c:choose> --%>
         <ul>
             <li><a href="/order/orderlist.html">주문내역/배송조회</a></li>                        
             <li><a href="/myCoupon">쿠폰조회</a></li>

@@ -21,5 +21,7 @@ public class SignupService{
 		String id = this.signupMapper.checkId(user_id);
 		return id;
 	}
-
+	public void insertAuth(String user_id) {
+		this.signupMapper.insertAuth(user_id);
+	}
 }

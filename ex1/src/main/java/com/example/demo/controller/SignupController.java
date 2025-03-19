@@ -37,8 +37,8 @@ public class SignupController {
 			return mav;
 		}
 		String inputedPassword = users.getPassword();
-		
 		users.setPassword(this.passwordEncoder.encode(inputedPassword));
+		this.signupService.insertAuth(users.getUser_id());
 		try {
 			this.signupService.insertUser(users);
 			 // 회원가입이 정상적으로 끝났으면, 성공 페이지로 이동

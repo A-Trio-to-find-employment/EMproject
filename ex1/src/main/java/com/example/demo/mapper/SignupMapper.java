@@ -8,4 +8,5 @@ import com.example.demo.model.Users;
 public interface SignupMapper {
 	void insertUser(Users users);
 	String checkId(String user_id);
+	void insertAuth(String user_id);
 }

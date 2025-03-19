@@ -130,8 +130,9 @@ public class PreferenceController {
 	@GetMapping(value="/showprefresult")
 	public ModelAndView showprefresult(HttpSession session,HttpServletRequest request) {
 		String userId = (String)session.getAttribute("loginUser");
+		ModelAndView mav = new ModelAndView("myArea");
 		if (userId == null) {
-	    	ModelAndView mav = new ModelAndView("login");
+	    	mav = new ModelAndView("login");
 	        return mav; // 또는 에러 페이지로 이동
 		}
 //		List<Long> pref_list = preferenceService.getPrefIdByUser(userId);
@@ -149,7 +150,8 @@ public class PreferenceController {
 //                preferences.add(new Object[] {catname, up.getPref_score()});
 //            }
 //        }
-        ModelAndView mav = new ModelAndView("prefresult");
+//        ModelAndView mav = new ModelAndView("prefresult");
+        mav.addObject("BODY","prefresult.jsp");
      // 쿠키에서 가져온 ISBN 목록을 처리
      		String recentBookIsbnStr = null;
      		Cookie[] cookies = request.getCookies();
