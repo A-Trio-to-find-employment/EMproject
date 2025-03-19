@@ -95,7 +95,8 @@ public class SecurityConfiguration {
 	@Primary   //3개의 BEAN중 가장 먼저 실행해라
 	@Bean
 	public AuthenticationManagerBuilder configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		
+		String tiger = passwordEncoder().encode("rhaudcjf");		
+		System.out.println("lion의 암호:"+tiger);
 		String queryForId = "select user_id, password, enabled from users where user_id=?";
 		String queryForAuth = "select u.user_id, a.auth from users u, authorities a "
 				+ "where u.user_id = a.user_id and a.user_id=?";
