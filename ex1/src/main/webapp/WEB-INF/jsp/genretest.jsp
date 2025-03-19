@@ -11,6 +11,14 @@
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
+    .sidebar { float: left; width: 20%; border: 1px solid #ddd; box-sizing: border-box; padding: 20px; text-align: left; }
+        .sidebar h3 { border-bottom: 1px solid #ccc; padding-bottom: 10px; }
+        .sidebar ul { list-style: none; padding: 0; }
+        .sidebar li { margin: 10px 0; }
+        .container { margin-left: 25%; padding: 20px; }
+        .secondfa { margin-top: 50px; }
+        .secondfa input { display: block; margin: 10px auto; padding: 10px; width: 300px; }
+        .secondfa button { padding: 10px 20px; margin-top: 20px; cursor: pointer; }
         .main-container {
             display: flex;
             margin-top: 20px;

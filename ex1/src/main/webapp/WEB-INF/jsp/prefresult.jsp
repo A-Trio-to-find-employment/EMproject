@@ -11,6 +11,16 @@
 <title>내 선호도 조사 결과</title>
 <link rel="stylesheet" type="text/css" href="/css/style.css">
 <link rel="stylesheet" type="text/css" href="/css/prefstyle.css">
+<style type="text/css">
+.sidebar { float: left; width: 20%; border: 1px solid #ddd; box-sizing: border-box; padding: 20px; text-align: left; }
+        .sidebar h3 { border-bottom: 1px solid #ccc; padding-bottom: 10px; }
+        .sidebar ul { list-style: none; padding: 0; }
+        .sidebar li { margin: 10px 0; }
+        .container { margin-left: 25%; padding: 20px; }
+        .secondfa { margin-top: 50px; }
+        .secondfa input { display: block; margin: 10px auto; padding: 10px; width: 300px; }
+        .secondfa button { padding: 10px 20px; margin-top: 20px; cursor: pointer; }
+</style>
 </head>
 <body>
     <div class="sidebar">

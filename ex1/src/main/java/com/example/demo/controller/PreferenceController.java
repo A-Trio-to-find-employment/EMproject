@@ -122,8 +122,9 @@ public class PreferenceController {
         	String cat_name = this.service.getCatName(up.getCat_id());
         	preferences.add(new Object[] {cat_name, up.getPref_score()});
         }
-        ModelAndView mav = new ModelAndView("prefresult");
+        ModelAndView mav = new ModelAndView("myArea");
         mav.addObject("preferences", preferences);
+        mav.addObject("BODY","prefresult.jsp");
         return mav;
     }
 	
