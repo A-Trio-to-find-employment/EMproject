@@ -46,4 +46,9 @@ public class SearchService {
 		if(count == null) return null;
 		else return count;
 	}
+	public Integer countSearchBooks(DetailSearch ds) {
+		Integer count = this.searchMapper.countSearchBooks(ds);
+		if(count == null) return null;
+		else return count;
+	}
 }

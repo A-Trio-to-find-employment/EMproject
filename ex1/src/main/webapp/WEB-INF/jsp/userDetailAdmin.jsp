@@ -90,21 +90,36 @@
 		<tr><th>이 메 일</th><td>${ userDetail.email }</td></tr>
 		<tr><th>생년월일</th><td>${ userDetail.birth}</td></tr>
 		<tr><th>전화번호</th><td>${ userDetail.phone }</td></tr>
-		<tr><th>등급</th><td>
+		<tr><th>등급</th><td><form action="/updateUserAdmin">
 						<c:choose>
 							<c:when test="${ userDetail.grade == '0' }">
-								일반 회원
+								
+								일반 회원 
+								<input type="hidden" name="ID" value="${ userDetail.user_id }"/>
+								<input type="hidden" name="GD" value="${ userDetail.grade }"/>
+								<input type="submit" value="관리자로 변환"/>
+								
 							</c:when>
 							<c:when test="${ userDetail.grade == '1' }">
 								VIP 회원
+								<input type="hidden" name="ID" value="${ userDetail.user_id }"/>
+								<input type="hidden" name="GD" value="${ userDetail.grade }"/>
+								<input type="submit" value="관리자로 변환"/>
 							</c:when>
 							<c:when test="${ userDetail.grade == '2' }">
 								VVIP 회원
+								
+								<input type="hidden" name="ID" value="${ userDetail.user_id }"/>
+								<input type="hidden" name="GD" value="${ userDetail.grade }"/>
+								<input type="submit" value="관리자로 변환"/>
 							</c:when>
 							<c:otherwise>
 								관리자
+								<input type="hidden" name="ID" value="${ userDetail.user_id }"/>
+								<input type="hidden" name="GD" value="${ userDetail.grade }"/>
+								<input type="submit" value="사용자로 변환"/>
 							</c:otherwise>
-						</c:choose></td></tr>
+						</c:choose></form></td></tr>
 	</table> 
 	</div> 
 </div>

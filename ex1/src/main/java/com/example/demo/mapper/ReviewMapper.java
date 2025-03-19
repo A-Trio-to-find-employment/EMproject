@@ -22,4 +22,5 @@ public interface ReviewMapper {
    List<MyReview> listReview(StartEnd se);
    Integer getTotalMine(String user_id);
    Double GetAvgReview(Long isbn);
+   void deleteReviewisbn(Long isbn);
 }

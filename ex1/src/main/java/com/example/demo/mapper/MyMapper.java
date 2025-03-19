@@ -18,7 +18,7 @@ public interface MyMapper {
 	Integer checkSubCategories(String cat_id); 
 	List<String> getCatIdFromIsbn(Long isbn);
 	List<Category> getsubcategory();//제일 하위카테고리들만 조회    
-	
+	Category getCategoryDetail(String cat_id);
 	
 	
 }

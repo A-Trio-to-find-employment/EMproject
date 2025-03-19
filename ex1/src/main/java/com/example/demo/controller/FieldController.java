@@ -125,7 +125,10 @@ public class FieldController {
 			se.setParent_id(cat_id);
 			se.setSort(sort);
 			System.out.print("parent_id:"+se.getParent_id());
-			List<Book> bookLists = service.getorderByBookBook(se);
+			List<Book> bookLists = service.getorderByBookBook(se);	
+			System.out.println("가져온 책의 개수: " + bookLists.size());
+			System.out.println(se.getStart());
+			System.out.println(se.getEnd());
 			String categoryName = service.getCategoriesName(cat_id); // 카테고리 이름 가져오기
 			//-----------------찜
 			if (action1 != null) {

@@ -58,16 +58,22 @@
 	<c:set var="endPage" value="${pageCount }" />
 </c:if>
 <c:if test="${startPage > 5 }">
-	<a href="/manageGoods?pageNo=${startPage - 1 }">[이전]</a>
+    <a href="/manageGoods/search?pageNo=${startPage - 1}&TITLE=${param.TITLE}">[이전]</a>
 </c:if>
-<c:forEach begin="${startPage }" end="${endPage }" var="i">
-	<c:if test="${currentPage == i }"><font size="6"></c:if>
-		<a href="/manageGoods?pageNo=${ i }">${ i }</a>
-	<c:if test="${currentPage == i }"></font></c:if>
+
+<c:forEach begin="${startPage}" end="${endPage}" var="i">
+    <c:if test="${currentPage == i }">
+        <font size="6">${i}</font>
+    </c:if>
+    <c:if test="${currentPage != i }">
+        <a href="/manageGoods/search?pageNo=${i}&TITLE=${param.TITLE}">${i}</a>
+    </c:if>
 </c:forEach>
+
 <c:if test="${endPage < pageCount }">
-	<a href="/manageGoods?pageNo=${endPage + 1 }">[다음]</a>
+    <a href="/manageGoods/search?pageNo=${endPage + 1}&TITLE=${param.TITLE}">[다음]</a>
 </c:if>
+
 </div>
 <script type="text/javascript">	
 function theOtherGoods(isbn, event) {

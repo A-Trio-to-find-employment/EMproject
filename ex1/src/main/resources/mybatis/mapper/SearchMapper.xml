@@ -6,6 +6,9 @@
 
 	<select id="searchBooks" parameterType="DetailSearch"
 		resultType="Book">
+		SELECT * FROM (
+		SELECT b.*, rownum rn
+		FROM (
 		SELECT DISTINCT
 		b.ISBN,
 		b.BOOK_TITLE,
@@ -14,27 +17,57 @@
 		LISTAGG(ba.AUTHOR, ', ') WITHIN GROUP (ORDER BY ba.AUTHOR) AS authors
 		FROM book b
 		JOIN book_author ba ON b.ISBN = ba.ISBN
-		WHERE
-		<if test="book_title != null and book_title != ''">
-			b.BOOK_TITLE LIKE '%' || #{book_title} || '%' AND
-		</if>
-		<if test="authors != null and authors != ''">
-			ba.AUTHOR LIKE '%' || #{authors} || '%' AND
-		</if>
-		<if test="publisher != null and publisher != ''">
-			b.PUBLISHER LIKE '%' || #{publisher} || '%' AND
-		</if>
-		<if test="pub_date_start != null and pub_date_end != null">
-			b.PUB_DATE >= TO_DATE(#{pub_date_start}, 'YYYY-MM-DD') AND
-			b.PUB_DATE <![CDATA[<=]]>
-			TO_DATE(#{pub_date_end}, 'YYYY-MM-DD') AND
-		</if>
-		1=1
+		<where>
+			<if test="book_title != null and book_title != ''">
+				b.BOOK_TITLE LIKE '%' || #{book_title} || '%'
+			</if>
+			<if test="authors != null and authors != ''">
+				AND ba.AUTHOR LIKE '%' || #{authors} || '%'
+			</if>
+			<if test="publisher != null and publisher != ''">
+				AND b.PUBLISHER LIKE '%' || #{publisher} || '%'
+			</if>
+			<if test="pub_date_start != null and pub_date_start !=''">
+				AND b.PUB_DATE >= TO_DATE(#{pub_date_start}, 'YYYY-MM-DD')
+			</if>
+			<if test="pub_date_end != null and pub_date_end !=''">
+				AND b.PUB_DATE <![CDATA[<=]]>
+				TO_DATE(#{pub_date_end}, 'YYYY-MM-DD')
+			</if>
+		</where>
 		GROUP BY b.ISBN, b.BOOK_TITLE, b.PUBLISHER, b.PUB_DATE
-		ORDER BY
-		b.PUB_DATE DESC
-	</select>
+		ORDER BY b.PUB_DATE DESC
+		) b
+		WHERE rownum <![CDATA[<]]>
+		#{end}
+		) WHERE rn > #{start}
 
+	</select>
+	<select id="countSearchBooks" parameterType="DetailSearch" resultType="Integer">
+    SELECT COUNT(*) 
+    FROM (
+        SELECT DISTINCT b.ISBN
+        FROM book b
+        JOIN book_author ba ON b.ISBN = ba.ISBN
+        <where>
+            <if test="book_title != null and book_title != ''">
+                b.BOOK_TITLE LIKE '%' || #{book_title} || '%'
+            </if>
+            <if test="authors != null and authors != ''">
+                AND ba.AUTHOR LIKE '%' || #{authors} || '%'
+            </if>
+            <if test="publisher != null and publisher != ''">
+                AND b.PUBLISHER LIKE '%' || #{publisher} || '%'
+            </if>
+            <if test="pub_date_start != null and pub_date_start !=''">
+                AND b.PUB_DATE >= TO_DATE(#{pub_date_start}, 'YYYY-MM-DD')
+            </if>
+            <if test="pub_date_end != null and pub_date_end !=''">
+                AND b.PUB_DATE <![CDATA[<=]]> TO_DATE(#{pub_date_end}, 'YYYY-MM-DD')
+            </if>
+        </where>
+    )
+</select>
 
 	<select id="searchByIsbn" parameterType="java.lang.Long"
 		resultType="Book">
@@ -46,56 +79,137 @@
 		select * from book_author where isbn = #{ISBN}
 	</select>
 
+
 	<select id="searchBookByTitleCat" parameterType="StartEndKey"
 		resultType="Book">
-		select * from (
-		select b.*, rownum rn
-		from (
-		select b.*
-		from book b
-		join book_categories bc on b.isbn = bc.isbn
-		join categories c on bc.cat_id = c.cat_id
-		where (bc.cat_id = #{cat_id} or c.parent_id = #{cat_id})
-		and b.book_title like '%' || #{book_title} || '%'
-		order by b.book_title
-		) b
+		SELECT * FROM (
+		SELECT b.*, rownum rn
+		FROM (
+		SELECT b.isbn, b.price,
+		b.publisher, b.book_title, b.image_name, b.authors
+		FROM (
+		SELECT b.isbn,
+		b.price, b.publisher, b.book_title, b.image_name,
+		LISTAGG(ba.author, ',
+		') WITHIN GROUP (ORDER BY ba.author) AS authors
+		FROM book b
+		JOIN
+		book_author ba ON b.isbn = ba.isbn
+		WHERE b.isbn IN (
+		SELECT DISTINCT
+		bc.isbn
+		FROM book_categories bc
+		JOIN categories c ON bc.cat_id =
+		c.cat_id
+		<choose>
+			<when test="key == 'top'">
+				where c.cat_id in
+				(select cat_id from categories where
+				parent_id in
+				(select cat_id from categories where parent_id =
+				#{cat_id} or cat_id =
+				#{cat_id})) or c.cat_id = #{cat_id}
+			</when>
+			<when test="key == 'mid'">
+				where c.parent_id = #{cat_id} or c.cat_id = #{cat_id}
+			</when>
+			<when test="key == 'sub'">
+				where bc.cat_id = #{cat_id}
+			</when>
+		</choose>
 		)
-		where rn > #{start} and rn <![CDATA[<]]> #{end}
+		<if test="book_title != null and book_title != ''">
+			AND b.book_title LIKE '%' || #{book_title} || '%'
+		</if>
+		GROUP BY b.isbn, b.price, b.publisher, b.book_title, b.image_name
+		) b
+		ORDER BY b.book_title
+		) b )
+		WHERE rn > #{start} AND rn <![CDATA[<]]>
+		#{end}
 	</select>
 
 	<select id="searchBookByTitle" parameterType="StartEndKey"
 		resultType="Book">
-		select * from (
-		select b.*, row_number() over (order by b.book_title) as rn
-		from (
-		select distinct b.book_title, b.isbn
-		from book b
-		where b.book_title like '%' || #{book_title} || '%'
-		order by b.pub_date
+		SELECT * FROM (
+		SELECT b.isbn, b.price, b.publisher, b.book_title,
+		b.image_name, b.authors,
+		rownum rn
+		FROM (
+		SELECT b.isbn, b.price,
+		b.publisher, b.book_title, b.image_name,
+		LISTAGG(ba.author, ', ')
+		WITHIN GROUP (ORDER BY ba.author) AS authors
+		FROM book b
+		JOIN
+		book_author ba ON b.isbn = ba.isbn
+		WHERE b.isbn IN (
+		SELECT DISTINCT
+		bc.isbn
+		FROM book_categories bc
+		JOIN categories c ON bc.cat_id =
+		c.cat_id
+		WHERE c.cat_id IN (
+		SELECT cat_id
+		FROM categories
+		WHERE parent_id
+		IN (
+		SELECT cat_id
+		FROM categories
+		WHERE parent_id = #{cat_id} OR cat_id
+		= #{cat_id}
+		)
+		)
+		)
+		AND b.book_title LIKE '%' || #{book_title} || '%'
+		GROUP
+		BY b.isbn, b.price, b.publisher, b.book_title, b.image_name
+		ORDER BY
+		b.book_title
 		) b
 		)
-		where rn > #{start} and rn <![CDATA[<]]> #{end}
+		WHERE rn > #{start} AND rn <![CDATA[<]]>
+		#{end}
 	</select>
 
 	<select id="getTotalCountTitle" parameterType="String"
 		resultType="Integer">
-		select count(*)
-		from book
-		where book_title like '%' ||
-		#{book_title} || '%'
+		SELECT COUNT(DISTINCT b.isbn)
+		FROM book b
+		WHERE b.book_title
+		LIKE '%' || #{book_title} || '%'
 	</select>
 
 	<select id="getTotalCountTitleCat" parameterType="StartEndKey"
 		resultType="Integer">
-		select count(*)
-		from book b
-		join book_categories bc on b.isbn
-		= bc.isbn
-		join categories c on bc.cat_id = c.cat_id
-		where b.book_title
-		like '%' || #{book_title} || '%'
-		and (bc.cat_id = #{cat_id} or
-		c.parent_id = #{cat_id})
+		SELECT COUNT(DISTINCT b.isbn)
+		FROM book b
+		JOIN book_categories bc ON
+		b.isbn = bc.isbn
+		JOIN categories c ON bc.cat_id = c.cat_id
+		WHERE 1=1
+
+		<choose>
+			<when test="key == 'top'">
+				AND c.cat_id IN
+				(SELECT cat_id FROM categories WHERE
+				parent_id IN
+				(SELECT cat_id FROM categories WHERE parent_id =
+				#{cat_id} OR cat_id =
+				#{cat_id})
+				) or c.cat_id = #{cat_id}
+			</when>
+			<when test="key == 'mid'">
+				AND c.parent_id = #{cat_id} or c.cat_id = #{cat_id}
+			</when>
+			<when test="key == 'sub'">
+				AND bc.cat_id = #{cat_id}
+			</when>
+		</choose>
+
+		<if test="book_title != null and book_title != ''">
+			AND b.book_title LIKE '%' || #{book_title} || '%'
+		</if>
 	</select>
 </mapper>
 

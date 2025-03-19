@@ -248,6 +248,7 @@
 		<h2>검색된 도서 목록</h2>
 		<c:choose>
 			<c:when test="${not empty searchList}">
+				<h4 align="right">검색된 도서 수 : ${ totalCount }</h4>
 				<c:forEach var="book" items="${ searchList }">
 					<div class="book-item">
 						<!-- 책 이미지 -->
@@ -291,6 +292,31 @@
 						</form>
 					</div>
 				</c:forEach>
+				<div align="center" class="pagenation">
+				<c:set var="currentPage" value="${currentPage}" />
+				<c:set var="startPage"
+					value="${currentPage - (currentPage % 10 == 0 ? 10 :(currentPage % 10)) + 1 }" />
+				<c:set var="endPage" value="${startPage + 9}" />
+				<c:set var="pageCount" value="${ PAGES }" />
+				<c:if test="${endPage > pageCount }">
+					<c:set var="endPage" value="${pageCount }" />
+				</c:if>
+				<c:if test="${startPage > 10 }">
+					<a href="/searchByTitleCat?PAGE=${startPage - 1 }&cat_id=${ cat_id }&bookTitle=${ bookTitle }">[이전]</a>
+				</c:if>
+				<c:forEach begin="${startPage }" end="${endPage }" var="i">
+					<c:if test="${currentPage == i }">
+						<font size="4">
+					</c:if>
+					<a href="/searchByTitleCat?PAGE=${ i }&cat_id=${ cat_id }&bookTitle=${ bookTitle }">${ i }</a>
+					<c:if test="${currentPage == i }">
+						</font>
+					</c:if>
+				</c:forEach>
+				<c:if test="${endPage < pageCount }">
+					<a href="/searchByTitleCat?PAGE=${endPage + 1 }&cat_id=${ cat_id }&bookTitle=${ bookTitle }">[다음]</a>
+				</c:if>
+				</div>
 			</c:when>
 			<c:otherwise>
 				<p>등록된 도서가 없습니다.</p>
@@ -377,31 +403,36 @@ function toggleDropdown() {
             });
         }
 
-        // 탭 선택: 단일 클릭 시 처리
         function selectTab(tab) {
             var level = tab.getAttribute("data-level"); // "top", "mid", "sub"
             var catId = tab.getAttribute("data-cat-id");
             var catName = tab.getAttribute("data-cat-name");
             var levelIndex = (level === "top") ? 0 : (level === "mid") ? 1 : 2;
-            // 같은 레벨 동일 선택 무시
+
+            // 같은 레벨에서 동일한 항목을 선택하면 무시
             if (selectedPath[levelIndex] && selectedPath[levelIndex].cat_id === catId) return;
+
+            // 선택된 경로를 업데이트
             selectedPath = selectedPath.slice(0, levelIndex);
             selectedPath[levelIndex] = { level: level, cat_id: catId, cat_name: catName };
             updatePathDisplay();
+
+            // 현재 레벨의 모든 탭에서 'selected' 클래스 제거 후 선택된 탭에 추가
             var siblings = tab.parentNode.querySelectorAll(".filter-tab");
-            siblings.forEach(function(sib) {
+            siblings.forEach(function (sib) {
                 sib.classList.remove("selected");
             });
             tab.classList.add("selected");
 
+            // 선택한 카테고리 ID를 폼에 업데이트
+            document.getElementById("cat_id").value = catId;
+
             if (level === "top") {
-                loadNextOptions("mid", catId);
+                loadNextOptions("mid", catId); // mid 카테고리 불러오기
             } else if (level === "mid") {
-                loadNextOptions("sub", catId);
+                loadNextOptions("sub", catId); // sub 카테고리 불러오기
             } else {
-                // sub 단계이면 최종 선택
-                document.getElementById("cat_id").value = catId;
-                // 모달 선택 완료 후 닫기
+                // sub 단계 선택 시 모달 닫기
                 closeFilterModal();
             }
         }

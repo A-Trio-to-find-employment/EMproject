@@ -51,4 +51,8 @@ public class CategoryService {
 		List<Category> catList = this.mymapper.getAllCategories();
 		return catList;
 	}
+	public Category getCategoryDetail(String cat_id) {
+		Category cat = this.mymapper.getCategoryDetail(cat_id);
+		return cat;
+	}
 }
