@@ -14,11 +14,25 @@
 function submitForm(event) {
     event.preventDefault(); // 기본 폼 제출 방지
 
+    var title = document.querySelector('[name="qna_title"]').value.trim();
+    var detail = document.querySelector('[name="qna_detail"]').value.trim();
+
+    if (title === "") {
+        alert("제목을 입력해주세요.");
+        return;
+    }
+    
+    if (detail === "") {
+        alert("내용을 입력해주세요.");
+        return;
+    }
+
     if (confirm("등록되었습니다.\n문의내역으로 이동하시겠습니까?")) {
         document.getElementById("qnaForm").submit(); // 폼 제출
     }
 }
 </script>
+
 
 </head>
 <body>
