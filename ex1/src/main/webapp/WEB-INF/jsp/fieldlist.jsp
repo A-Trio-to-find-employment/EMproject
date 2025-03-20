@@ -182,10 +182,13 @@
 
     <!-- 정렬 옵션 -->
     <div class="sorting">
-       	<a href="?cat_id=${param.cat_id}&sort=sales">판매량순</a> | 
-       	<a href="?cat_id=${param.cat_id}&sort=review">리뷰순</a> |
-        <a href="?cat_id=${param.cat_id}&sort=rating">평점순</a> |
-        <a href="?cat_id=${param.cat_id}&sort=new">최신순</a>
+       	<div class="sorting">       
+    <a href="?cat_id=${param.cat_id}&sort=sales&PAGE_NUM=${currentPage}">판매량순</a> | 
+    <a href="?cat_id=${param.cat_id}&sort=review&PAGE_NUM=${currentPage}">리뷰순</a> |
+    <a href="?cat_id=${param.cat_id}&sort=rating&PAGE_NUM=${currentPage}">평점순</a> |
+    <a href="?cat_id=${param.cat_id}&sort=new&PAGE_NUM=${currentPage}">최신순</a>
+</div>
+
     </div>
 
     <!-- 도서 목록 -->

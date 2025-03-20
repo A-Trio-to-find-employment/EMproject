@@ -383,6 +383,7 @@ public class FieldController {
 		se.setEnd(endRow);
 		se.setCat_id(cat_id);
 		se.setSort(sort);
+		 System.out.println("받은 sort 값: " + sort); // 실제 받은 값 출력
 		System.out.print(cat_id);
 		List<Book> bookLists = service.getorderByBook(se); // 정렬된 도서 목록 가져오기
 		ModelAndView mav1 = new ModelAndView("fieldlayout");
