@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.demo.model.Book;
 import com.example.demo.model.JJim;
 import com.example.demo.model.StartEndKey;
+import com.example.demo.model.UserInfo;
 import com.example.demo.model.User_pref;
 import com.example.demo.model.Users;
 import com.example.demo.service.CartService;
@@ -26,6 +27,7 @@ import com.example.demo.service.JJimService;
 import com.example.demo.service.LoginService;
 import com.example.demo.service.PrefService;
 import com.example.demo.utils.LoginValidator;
+import com.example.demo.utils.MyinfoValidator;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,6 +40,8 @@ public class MypageController {
 	public LoginService loginService;
 	@Autowired
 	public LoginValidator loginValidator; 
+	@Autowired
+	public MyinfoValidator myinfoValidator; 
 	@Autowired
 	private FieldService service;
 	@Autowired
@@ -62,7 +66,7 @@ public class MypageController {
 			return mav;
 		}
 		Users users = this.loginService.getUserById(loginUser);
-		ModelAndView mav = new ModelAndView("index");
+		ModelAndView mav = new ModelAndView("index"); 
 		mav.addObject("users", users);
 		// 쿠키에서 가져온 ISBN 목록을 처리
 				String recentBookIsbnStr = null;
@@ -249,10 +253,19 @@ public class MypageController {
 			mav.addObject("error", "로그인을 한 후 다시 시도해주세요.");
 			return mav;
 		}
-		Users users = this.loginService.getUserById(loginUser);
-		if(users != null) {
-			mav.addObject("users",users);
-			mav.addObject("user_id", users.getUser_id());
+//		Users users = this.loginService.getUserById(loginUser);
+//		if(users != null) {
+//			mav.addObject("users",users);
+//			mav.addObject("user_id", users.getUser_id());
+//		}else {
+//			mav.addObject("error", "회원 정보를 찾을 수 없습니다.");
+//		}
+//		mav.addObject("BODY","mypage.jsp");
+//		return mav;
+		UserInfo userInfo = this.loginService.getUserInfoById(loginUser);
+		if(userInfo != null) {
+			mav.addObject("userInfo",userInfo);
+			mav.addObject("user_id", userInfo.getUser_id());
 		}else {
 			mav.addObject("error", "회원 정보를 찾을 수 없습니다.");
 		}
@@ -260,21 +273,33 @@ public class MypageController {
 		return mav;
 	}
 	@PostMapping(value = "/mypage/modify")
-	public ModelAndView modify(@Valid Users users, BindingResult br) {
-		ModelAndView mav = new ModelAndView("mypage");
-		this.loginValidator.validate(users, br);
+	public ModelAndView modify(@Valid UserInfo userInfo, BindingResult br) {
+		ModelAndView mav = new ModelAndView("myArea");
+		//this.myinfoValidator.validate(userInfo, br);
+		
+		System.out.println("user)name:"+userInfo.getUser_name());
+		System.out.println("address:"+userInfo.getAddress());
+		System.out.println("address detail:"+userInfo.getAddress_detail());
+		System.out.println("Izipcode:"+userInfo.getZipcode());
+		System.out.println("email:"+userInfo.getEmail());
+		System.out.println("birth:"+userInfo.getBirth());
+		System.out.println("phone:"+userInfo.getPhone());
+		
 		if(br.hasErrors()) {
 			mav.addObject("errors", br.getAllErrors());
 			mav.getModel().putAll(br.getModel());
+			mav.addObject("userInfo", userInfo);
+			mav.addObject("BODY","mypage.jsp");
+			System.out.println("### has Errors !!!");
 			return mav;
 		}
-		this.loginService.modifyUser(users);
+		this.loginService.modifyUser(userInfo);
 //		Users newuser = this.loginService.getUser(users);
-		Users newuser = this.loginService.getUserById(users.getUser_id());
+		UserInfo newuser = this.loginService.getUserInfoById(userInfo.getUser_id());
 		if(newuser != null) {
-			mav.addObject(newuser);
-			mav.addObject("users",users);
-			mav.addObject("myInfoupdate");
+			mav.addObject("userInfo",newuser);
+			mav.addObject("userInfo",userInfo);
+			mav.addObject("BODY","myInfoupdate.jsp");
 		}else {
 			mav.addObject("error", "회원 정보 수정 실패");
 		}
