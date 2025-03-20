@@ -79,15 +79,16 @@
             document.getElementById("editEventForm").submit();
         }
     }
-    function confirmEditt() {
-        const isConfirmed = confirm("정말로 삭제하시겠습니까?");
-        
-        // 사용자가 '예'를 클릭하면 폼을 제출
-        if (isConfirmed) {
-            alert("성공적으로 삭제되었습니다.");
-            // 폼을 제출
-            document.getElementById("editEventtForm").submit();
+    function confirmEditt() {    
+        var confirmation = confirm("정말로 삭제하시겠습니까?");
+        if (!confirmation) {
+            event.preventDefault(); // 폼 제출 방지
+            return false;
         }
+        alert("성공적으로 삭제되었습니다.");
+        // 폼을 제출
+        document.getElementById("editEventtForm").submit();
+        return true; // 폼 제출 허용
     }
 </script>
 <script type="text/javascript">
