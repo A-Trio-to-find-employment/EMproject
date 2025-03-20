@@ -4,23 +4,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+
+import com.example.demo.model.UserInfo;
 import com.example.demo.model.Users;
 
 @Service
-public class LoginValidator implements Validator {
+public class MyinfoValidator implements Validator {
 
 	@Override
 	public boolean supports(Class<?> clazz) {
-		return Users.class.isAssignableFrom(clazz);
+		return UserInfo.class.isAssignableFrom(clazz);
 	}
 
 	public void validate(Object target, Errors errors) {
-		Users users = (Users)target;
+		UserInfo user = (UserInfo)target;
 		
-		if( ! StringUtils.hasLength(users.getUser_id())) {
+		if( ! StringUtils.hasLength(user.getUser_id())) {
 			errors.rejectValue("user_id", "error.empty");
 		}
-		if( ! StringUtils.hasLength(users.getPassword())) {
+		if( ! StringUtils.hasLength(user.getPassword())) {
 			errors.rejectValue("password", "error.empty");
 		}
 		if(errors.hasErrors()) {
