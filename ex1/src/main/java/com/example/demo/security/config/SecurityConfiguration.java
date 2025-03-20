@@ -39,6 +39,7 @@ public class SecurityConfiguration {
 		.requestMatchers("/eventlist").permitAll()
 		.requestMatchers("/eventdetail").permitAll()
 		.requestMatchers("/qna").permitAll()
+		.requestMatchers("/getcoupon").permitAll()
 		
 		.requestMatchers("/secondfa").authenticated()
 //		.requestMatchers("/secondfa").hasRole("MEMBER")
@@ -54,7 +55,7 @@ public class SecurityConfiguration {
 		.requestMatchers("/showprefresult").hasRole("MEMBER")
 		.requestMatchers("/cart").hasRole("MEMBER")
 		.requestMatchers("/jjimlist").hasRole("MEMBER")
-		.requestMatchers("/getCoupon").hasRole("MEMBER")
+		
 		.requestMatchers("/preftest").hasRole("MEMBER")
 		.requestMatchers("/savepreference").hasRole("MEMBER")
 		.requestMatchers("/myPrefBookList").hasRole("MEMBER")

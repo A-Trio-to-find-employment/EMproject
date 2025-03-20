@@ -53,7 +53,7 @@
         </option>
     </c:forEach>
 </select>
-</select>
+
 
 
         <br><br>

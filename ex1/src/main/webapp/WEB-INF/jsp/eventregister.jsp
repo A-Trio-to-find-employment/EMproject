@@ -39,10 +39,13 @@
                 </td>
             </tr>        
         </table>
+<label for="couponSearch">쿠폰 검색:</label>
+<input type="text" id="couponSearch" placeholder="쿠폰 코드를 검색하세요" oninput="filterCoupons()"/>
 
         <!-- 쿠폰 선택 폼 -->
         <label>사용할 쿠폰:</label>
         <form:select path="coupon_id">
+        
             <c:forEach var="coupon" items="${coupon}">
                 <option value="${coupon.coupon_id}" 
                     <c:if test="${coupon.coupon_id eq event.coupon_id}">selected</c:if>>
@@ -92,6 +95,27 @@
             alert("이벤트가 성공적으로 등록되었습니다.");
             // 폼을 제출
             document.getElementById("editEventForm").submit();
+        }
+    }
+</script>
+<script type="text/javascript">
+    function filterCoupons() {
+        // 검색어 가져오기
+        var searchQuery = document.getElementById('couponSearch').value.toLowerCase();
+        
+        // 쿠폰 선택창의 옵션 요소들을 가져오기
+        var options = document.querySelectorAll('select[name="coupon_id"] option');
+        
+        // 각 옵션을 순차적으로 돌며 검색어와 일치하는 항목을 보여주고, 일치하지 않으면 숨깁니다.
+        for (var i = 0; i < options.length; i++) {
+            var option = options[i];
+            var couponCode = option.innerText.toLowerCase(); // 옵션의 텍스트 내용 (쿠폰 코드)을 소문자로 변환
+            
+            if (couponCode.includes(searchQuery)) {
+                option.style.display = '';  // 검색어와 일치하면 보이게
+            } else {
+                option.style.display = 'none';  // 검색어와 일치하지 않으면 숨김
+            }
         }
     }
 </script>

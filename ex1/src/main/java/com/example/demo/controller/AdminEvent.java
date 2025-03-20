@@ -98,37 +98,37 @@ public class AdminEvent {
 	}
 
 	@GetMapping(value = "/eventregister")
-	public ModelAndView eventregister() {
-		ModelAndView mav = new ModelAndView("admineventmenu");
-		mav.addObject("BODY", "eventregister.jsp");
-		List<Coupon> coupon = this.couponService.admingetcoupon();
-		mav.addObject(new Event());
-		mav.addObject("coupon", coupon);
-		return mav;
-	}
+    public ModelAndView eventregister() {
+        ModelAndView mav = new ModelAndView("admineventmenu");
+        mav.addObject("BODY", "eventregister.jsp");
+        List<Coupon> coupon = this.couponService.admingetcoupon();
+        mav.addObject(new Event());
+        mav.addObject("coupon", coupon);
+        return mav;
+    }
 
 	@PostMapping(value = "/eventregisterform")
-	public ModelAndView eventregisterform(@Valid Event event, BindingResult br, Integer coupon_id) {
-		if (br.hasErrors()) {
-			System.out.println("Form has errors: " + br.getAllErrors()); // 오류 출력
-			ModelAndView mav = new ModelAndView("admineventmenu");
-			List<Coupon> coupon = this.couponService.admingetcoupon();
-			mav.addObject("coupon", coupon);
-			mav.getModel().putAll(br.getModel());
-			mav.addObject("BODY", "eventregister.jsp");
-			return mav;
-		}
-		Long count = this.eventService.maxcount();
-		Event eventt = new Event();
-		eventt.setCoupon_id(coupon_id);
-		eventt.setEvent_code(count);
-		eventt.setEvent_content(event.getEvent_content());
-		eventt.setEvent_title(event.getEvent_title());
-		eventt.setEvent_end(event.getEvent_end());
-		eventt.setEvent_start(event.getEvent_start());
-		this.eventService.insertevent(eventt);
-		return new ModelAndView("redirect:/adminevent"); // 리다이렉트 URL을 설정
-	}
+    public ModelAndView eventregisterform(@Valid Event event, BindingResult br, Integer coupon_id) {
+        if (br.hasErrors()) {
+            System.out.println("Form has errors: " + br.getAllErrors()); // 오류 출력
+            ModelAndView mav = new ModelAndView("admineventmenu");
+            List<Coupon> coupon = this.couponService.admingetcoupon();
+            mav.addObject("coupon", coupon);
+            mav.getModel().putAll(br.getModel());
+            mav.addObject("BODY", "eventregister.jsp");
+            return mav;
+        }
+        Long count = this.eventService.maxcount();
+        Event eventt = new Event();
+        eventt.setCoupon_id(coupon_id);
+        eventt.setEvent_code(count);
+        eventt.setEvent_content(event.getEvent_content());
+        eventt.setEvent_title(event.getEvent_title());
+        eventt.setEvent_end(event.getEvent_end());
+        eventt.setEvent_start(event.getEvent_start());
+        this.eventService.insertevent(eventt);
+        return new ModelAndView("redirect:/adminevent"); // 리다이렉트 URL을 설정
+    }
 
 	@GetMapping(value = "/admincouponlist")
 	public ModelAndView admincouponlist(Integer PAGE_NUM) {
