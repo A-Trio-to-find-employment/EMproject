@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.mapper.LoginMapper;
 import com.example.demo.model.Authorities;
 import com.example.demo.model.StartEndKey;
+import com.example.demo.model.UserInfo;
 import com.example.demo.model.Users;
 
 @Service
@@ -18,6 +19,9 @@ public class LoginService {
 	@Autowired
 	private LoginMapper loginMapper;
 	
+	public UserInfo getUserInfoById(String id) {
+		return this.loginMapper.getUserInfoById(id);
+	}
 	public Users getUserById(String id) {
 		return this.loginMapper.getUserById(id);
 	}
@@ -38,7 +42,7 @@ public class LoginService {
 		this.loginMapper.updateCount(user_id);
 	}
 	
-	public void modifyUser(Users users) {
+	public void modifyUser(UserInfo users) {
 		this.loginMapper.modifyUser(users);
 	}
 	public List<Users> getUserList(StartEndKey sek){

@@ -7,13 +7,15 @@ import org.apache.ibatis.annotations.Param;
 
 import com.example.demo.model.Authorities;
 import com.example.demo.model.StartEndKey;
+import com.example.demo.model.UserInfo;
 import com.example.demo.model.Users;
 
 @Mapper
 public interface LoginMapper {
 	Users getUser(Users users);
-	void modifyUser(Users users);
+	void modifyUser(UserInfo users);
 	Users getUserById(String id);
+	UserInfo getUserInfoById(String id);
 	List<Users> getUserList(StartEndKey sek);
 	List<Users> getUserListSearch(StartEndKey sek);
 	Integer getUserCount();
