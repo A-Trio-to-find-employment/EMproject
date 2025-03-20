@@ -260,5 +260,5 @@ public class LoginController {
 		mav.addObject("BODY", "securitylogin.jsp");
 		return mav;
 	}
-
 }
+

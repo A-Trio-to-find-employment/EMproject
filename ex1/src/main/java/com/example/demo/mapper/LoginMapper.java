@@ -3,6 +3,7 @@ package com.example.demo.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.example.demo.model.Authorities;
 import com.example.demo.model.StartEndKey;
@@ -22,4 +23,6 @@ public interface LoginMapper {
 	void updateCount(String user_id);
 	void updateUserAuth(Authorities auth);
 	void updateUserStats(Users user);
+	String getPasswordByUsername(@Param("username")String username);
+	Users getUsername(@Param("username")String username, String password);
 }
