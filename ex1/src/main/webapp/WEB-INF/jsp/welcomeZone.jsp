@@ -167,7 +167,7 @@
 <body>		
 <div align="center">
 <div class="container">
-	        <div class="welcome-message">
+	        <div class="welcome-message"> 
 			    <h2>환영합니다, ${sessionScope.loginUser}님!</h2>
 			    <c:choose>
 			        <c:when test="${USER.daily_count <= 5}">

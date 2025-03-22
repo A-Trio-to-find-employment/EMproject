@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.mapper.WelcomeMapper;
 
-@Service
+@Service 
 public class WelcomeService {
 	@Autowired
 	private WelcomeMapper welcomeMapper;
