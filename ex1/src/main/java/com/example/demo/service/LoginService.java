@@ -80,7 +80,7 @@ public class LoginService {
             if (lastLoginDate.plusDays(1).isEqual(today)) {
                 user.setContinue_count(user.getContinue_count() + 1);
             } else {
-                user.setContinue_count(1);
+                user.setContinue_count(0);
             }
 
             if (lastLoginDate.isEqual(today)) {
@@ -95,7 +95,8 @@ public class LoginService {
                 user.setMonthly_count(1);
             }
         } else {
-            user.setContinue_count(1);
+        	//continue_count는 연속방문 횟수이기에 0으로 초기화
+            user.setContinue_count(0);
             user.setDaily_count(1);
             user.setMonthly_count(1);
         }

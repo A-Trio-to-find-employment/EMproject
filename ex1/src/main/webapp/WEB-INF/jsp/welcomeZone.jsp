@@ -167,11 +167,31 @@
 <body>		
 <div align="center">
 <div class="container">
-        <!-- 중앙 상단: 환영 메시지 -->
-        <div class="welcome-message">
-        	<h2>환영합니다, ${ sessionScope.loginUser }님!</h2>
-            <h2>오늘 ${USER.daily_count }번 방문하셧군요!!</h2>
-        </div>
+	        <div class="welcome-message">
+			    <h2>환영합니다, ${sessionScope.loginUser}님!</h2>
+			    <c:choose>
+			        <c:when test="${USER.daily_count <= 5}">
+			            <h2>오늘 ${USER.daily_count}번 방문하셨군요!!</h2>
+			        </c:when>
+			        <c:when test="${5 < USER.daily_count && USER.daily_count < 20}">
+			            <h2>또 오셨네요~^^, 오늘만 벌써 ${USER.daily_count}번 방문하셨어요!!</h2>
+			        </c:when>
+			        <c:when test="${USER.daily_count >= 20}">
+			            <h2>우와 ${USER.user_name}님 😍😍😍 완전 감사합니다!! 오늘만 ${USER.daily_count}번 방문!!, 즐독 되세용!</h2>
+			        </c:when>
+			    </c:choose>
+			
+			    <c:choose>
+			        <c:when test="${0 < USER.continue_count && USER.continue_count <= 5}">
+			            <h2>${USER.continue_count}번 연속 방문이신군요!!, 오늘은 또 어떤 책을 찾으시나요? ${USER.user_name}님!!</h2>
+			        </c:when>
+			        <c:when test="${USER.continue_count > 5}">
+			            <h2>${USER.continue_count}번 연속 방문이신군요!! 😘😘</h2><br/>
+			            <h2>이번 달, ${USER.monthly_count}번 방문이세요~^^</h2><br/>
+			            <h2>항상 최고의 사이트가 되도록 노력할게요!!</h2>
+			        </c:when>
+			    </c:choose>
+			</div>
         	<div class="content">
 				<!-- 이벤트 및 쿠폰 -->
 				<div class="left-section">
@@ -325,6 +345,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         // 📌 장르별 구매 기록 데이터 (파이 차트)
+//         const categoryIds = [];
         let categoryLabels = [];
         let categoryData = [];
 
@@ -363,6 +384,13 @@
                             weight: "bold",
                             size: 14
                         }
+                    }
+                },
+                onClick: (event, elements) => {
+                    if (elements.length > 0) {
+                        const index = elements[0].index;
+                        const categoryId = categoryIds[index];  // categoryIds 배열에서 가져오기
+                        window.location.href = `/field.html?category=${categoryId}`;
                     }
                 }
             },
