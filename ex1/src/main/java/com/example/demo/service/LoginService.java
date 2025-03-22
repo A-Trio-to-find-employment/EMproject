@@ -74,7 +74,7 @@ public class LoginService {
 	public void updateLoginStats(Users user) {
         LocalDate today = LocalDate.now();
 
-        if (user.getLast_date() != null) {
+        if (user.getLast_date() != null) { 
             LocalDate lastLoginDate = user.getLast_date().toLocalDate();
 
             if (lastLoginDate.plusDays(1).isEqual(today)) {
