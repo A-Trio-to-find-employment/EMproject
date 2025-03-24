@@ -16,4 +16,5 @@ public interface JJimMapper {
 	Integer getLikeCount(Long isnb);
 	List<Book> getorderByjjim(StartEndKey key);
 	Integer getjjimCount(String user_id);
+	void deleteJjimisbn(Long isbn);
 }

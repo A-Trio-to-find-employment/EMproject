@@ -398,7 +398,9 @@ LEFT JOIN Category_Hierarchy ch ON bc.cat_id = ch.cat_id
 WHERE bc.cat_id IN (SELECT cat_id FROM Category_Hierarchy)
    OR bc.cat_id = #{parent_id}
 </select>
-
+<delete id="deletebookCategories" parameterType="java.lang.Long">
+delete from book_categories where isbn=#{isbn}
+</delete>
 
 </mapper>
 

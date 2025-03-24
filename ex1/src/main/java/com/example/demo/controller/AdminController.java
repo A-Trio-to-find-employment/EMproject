@@ -32,6 +32,7 @@ import com.example.demo.model.Users;
 import com.example.demo.service.CartService;
 import com.example.demo.service.FieldService;
 import com.example.demo.service.GoodsService;
+import com.example.demo.service.JJimService;
 import com.example.demo.service.LoginService;
 import com.example.demo.service.OrderService;
 import com.example.demo.service.ReviewService;
@@ -57,7 +58,8 @@ public class AdminController {
 	private OrderService orderService;
 	@Autowired
 	private ReviewService reviewservice;
-
+	@Autowired
+	private JJimService jjimservice;
 	
 	private List<Category> categories;
 	
@@ -350,6 +352,10 @@ public class AdminController {
 		ModelAndView mav = new ModelAndView("admin");				
 			book.setAuthors(authors);
 			Long isbn = book.getIsbn();
+			//
+			this.fieldService.deletebookCategories(isbn);
+			this.jjimservice.deleteJjimisbn(isbn);
+			this.orderService.nullisbn(isbn);
 			this.reviewservice.deleteReviewisbn(isbn);
 			this.goodsService.deleteBookAuthors(isbn);
 			this.goodsService.deleteCatInfo(book.getIsbn()); // 기존 데이터 삭제

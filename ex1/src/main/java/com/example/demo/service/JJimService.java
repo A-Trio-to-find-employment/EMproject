@@ -34,4 +34,7 @@ public class JJimService {
 	public Integer getjjimCount(String user_id) {
 		return this.mapper.getjjimCount(user_id);
 	}
+	public void deleteJjimisbn(Long isbn) {
+		this.mapper.deleteJjimisbn(isbn);
+	}
 }

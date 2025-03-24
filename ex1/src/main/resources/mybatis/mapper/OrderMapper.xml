@@ -148,6 +148,11 @@ where od.order_detail_id =#{order_detail_id}
 <select id="findOdByOdId" parameterType="String" resultType="Orders_detail">
 	select * from orders_detail where order_detail_id=#{order_detail_id}
 </select>
+<delete id="nullisbn" parameterType="java.lang.Long">
+delete from orders_detail 
+WHERE isbn = #{isbn}
+</delete>
+
 </mapper>
 
 	

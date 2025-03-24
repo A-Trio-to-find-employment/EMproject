@@ -55,6 +55,10 @@ ORDER BY a.rn
 <select id="getCategoriesName" parameterType="String" resultType="String">
 		select cat_name from categories where cat_id=#{cat_id}
 	</select>
+	<delete id="deleteJjimisbn" parameterType="java.lang.Long">
+        DELETE FROM jjim
+        WHERE isbn = #{isbn}
+    </delete>
 </mapper>
 
 	

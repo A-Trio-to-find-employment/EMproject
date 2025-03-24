@@ -49,6 +49,9 @@ public class OrderService {
 		return this.orderMapper.getCouponName(quponid);
 	}
 	
+	public void nullisbn(Long isbn) {
+		this.orderMapper.nullisbn(isbn);
+	}
 	public void insertOrdersDetailTwo(Orders_detail detail) {
 		this.orderMapper.insertOrdersDetailTwo(detail);
 	}

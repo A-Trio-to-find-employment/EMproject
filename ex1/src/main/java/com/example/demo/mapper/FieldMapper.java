@@ -33,7 +33,7 @@ public interface FieldMapper {
 	 Integer getBookCategoriesCount(String cat_id);
 
 	 String getCategoryPathByCatId(String cat_id);
-
+	 void deletebookCategories(Long isbn);
 	 Book getBookDetaill(Long isbn);
 	 List<Book>getorderByBookBook(StartEnd se);	 
 	 Integer getbooklistcount(String parent_id);
