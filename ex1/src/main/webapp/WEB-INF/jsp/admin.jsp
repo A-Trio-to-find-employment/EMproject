@@ -33,28 +33,10 @@
     <c:choose>
 
         <c:when test="${empty BODY}">  
-            <div class="container">
-                <div class="search-bar">
-                    <label for="filter">필터</label>
-                    <input type="text" id="filter" name="filter">
-                    <button type="submit">검색</button>
-                    <a href="#">상세검색</a>
-                </div>
-                
-                <div class="book-section">
-                    <h3>맞춤 도서</h3>
-                    <p>관리자는 맞춤도서 시스템이 적용되지 않습니다.</p>
-                </div>
-                
-                <div class="book-section">
-                    <h3>화제의 베스트셀러 ></h3>
-                </div>
-                
-                <div class="book-section">
-                    <h3>장르별</h3>
-                    <p>인문학 | 자기계발 | 경제·경영 | 장르소설 | 종교/역학 | 에세이 | 역사</p>
-                </div>
-            </div>
+        	<div align="center">
+        		<h1>관리자 화면입니다.</h1><br/>
+        		<h2>사이트의 전반을 관리할 수 있습니다.</h2>
+			</div>
         </c:when>
         <c:otherwise>
             <div class="content">
