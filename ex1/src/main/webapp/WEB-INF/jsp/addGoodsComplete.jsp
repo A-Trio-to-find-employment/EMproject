@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h2 align="center">새로운 상품이 추가되었습니다!! 관리자: 님</h2>
+<h2 align="center">새로운 상품이 추가되었습니다!! 관리자:${USER.user_name } 님</h2>
 </body>
 </html>
