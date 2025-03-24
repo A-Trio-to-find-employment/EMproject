@@ -33,6 +33,6 @@ public interface OrderMapper {
 	Integer getOrderDetailCount();
 	
 	void updateDeliveryCount(DeliveryModel dm);
-	
+	void nullisbn(Long isbn);
 	Orders_detail findOdByOdId(String order_detail_id);
 }

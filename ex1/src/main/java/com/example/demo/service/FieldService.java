@@ -26,6 +26,9 @@ public class FieldService {
 	 public String getCategoriesName(String cat_id) {
 		 return mapper.getCategoriesName(cat_id);
 	 }
+	 public void deletebookCategories(Long isbn) {
+		 this.mapper.deletebookCategories(isbn);
+	 }
 	 public Book getBookDetail(Long isbn) {
 		 Book book = mapper.getBookDetail(isbn);
 	        if (book == null) return null;
