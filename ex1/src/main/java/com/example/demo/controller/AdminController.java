@@ -172,6 +172,7 @@ public class AdminController {
 			BindingResult br, HttpSession session, @RequestParam("cat_id") 
 			List<String> selectedCat, @RequestParam("authors") String authors) {
 		ModelAndView mav = new ModelAndView("admin");
+		String loginUser = (String)session.getAttribute("loginUser");
 		this.coverValidator.validate(book, br);
 		if(br.hasErrors()) {
 			mav.addObject("BODY","addGoods.jsp");
@@ -222,6 +223,8 @@ public class AdminController {
 		}
 		System.out.println("선택된 카테고리 ID들: " + selectedCat);
 		System.out.println("INSERT SQL 실행: " + book);
+		Users users = this.loginService.getUserById(loginUser);
+		mav.addObject("USER",users);
 		mav.addObject("BODY","addGoodsComplete.jsp");
 		return mav;
 	}
