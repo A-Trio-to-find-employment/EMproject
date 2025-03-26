@@ -4,7 +4,9 @@ import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -318,27 +320,47 @@ public class AdminController {
 	        return mav;
 		}
 		List<String> existingCats = this.goodsService.getCategoryByIsbn(book.getIsbn());
-
+		System.out.println("📌 기존 카테고리: " + existingCats);
+		
 		selectedCat = selectedCat.stream()
                 .filter(catId -> catId != null && !catId.trim().isEmpty() && !"0".equals(catId))
+                .distinct()
                 .collect(Collectors.toList());
+		List<String> mergedCategories = new ArrayList<>(existingCats); 
+		
+		mergedCategories.addAll(selectedCat);
+	    selectedCat = new ArrayList<>(mergedCategories);
+		System.out.println("📌 병합된 카테고리: " + selectedCat);
 		List<String> categoriesToDelete = new ArrayList<>();
 		for (String catId : existingCats) {
 		    if (!selectedCat.contains(catId)) {
 		        categoriesToDelete.add(catId);
 		    }
-		}
+		}System.out.println("🗑 삭제할 카테고리: " + categoriesToDelete);
 		List<String> categoriesToAdd = new ArrayList<>();
 		for (String catId : selectedCat) {
 		    if (!existingCats.contains(catId)) {
 		        categoriesToAdd.add(catId);
 		    }
+		} System.out.println("➕ 추가할 카테고리: " + categoriesToAdd);
+		for (String catId : categoriesToAdd) {
+		    if (!mergedCategories.contains(catId)) {
+		        mergedCategories.add(catId);
+		    }
 		}
-		this.goodsService.deleteCategoriesByIsbn(book.getIsbn(), categoriesToDelete); 
-		System.out.println("병합된 카테고리 ID 목록: " + selectedCat);
+		if (!categoriesToDelete.isEmpty()) {
+	        goodsService.deleteCategoriesByIsbn(book.getIsbn(), categoriesToDelete);
+	    }
+	    if (!categoriesToAdd.isEmpty()) {
+	        goodsService.updateInfoCategory(book.getIsbn(), mergedCategories);
+	    }
+		
+//		this.goodsService.deleteCategoriesByIsbn(book.getIsbn(), categoriesToDelete); 
+//		System.out.println("병합된 카테고리 ID 목록: " + selectedCat);
+		
 		book.setAuthors(authors);
 		this.goodsService.updateGoods(book);
-		this.goodsService.updateInfoCategory(book.getIsbn(), selectedCat);
+//		this.goodsService.updateInfoCategory(book.getIsbn(), selectedCat);
 		mav.addObject("isbnChecked",book.getIsbn());
 		mav.addObject("book",new Book());
 		mav.addObject("BODY","updateComplete.jsp");

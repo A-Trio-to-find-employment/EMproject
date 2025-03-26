@@ -303,6 +303,12 @@
 
 
 	<script>
+	document.querySelectorAll('.swiper-slide p').forEach(function (p) {
+        const text = p.textContent.trim();
+        if (text.length > 12) {
+            p.textContent = text.substring(0, 10) + '...';
+        }
+    });
 function toggleDropdown() {
 	var dropdown = document.getElementById("categoryDropdown");
 		dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
