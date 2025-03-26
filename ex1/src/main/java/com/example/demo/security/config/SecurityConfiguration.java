@@ -41,7 +41,8 @@ public class SecurityConfiguration {
 		.requestMatchers("/qna").permitAll()
 		.requestMatchers("/getcoupon").permitAll()
 		.requestMatchers("/manageGoods/isbnCheck").permitAll()
-		
+		.requestMatchers("/getMidCategories").permitAll()
+        .requestMatchers("/getSubCategories").permitAll()
 		.requestMatchers("/secondfa").authenticated()
 //		.requestMatchers("/secondfa").hasRole("MEMBER")
 		
