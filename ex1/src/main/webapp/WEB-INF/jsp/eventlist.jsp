@@ -194,7 +194,7 @@
 	<h3>이벤트 검색</h3>
 	<form action="/eventlist">
 	<input type="text" name="KEY"/>
-	<input type="submit">
+	<input type="submit">	
 	</form>
 	<h3>이벤트 목록</h3>
 	<table border="1">

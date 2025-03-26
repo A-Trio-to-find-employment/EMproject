@@ -60,6 +60,7 @@ public class AdminEvent {
 		mav.addObject("PAGES", pageCount);
 		mav.addObject("eventList", eventList);
 		return mav;
+		
 	}
 
 	@GetMapping(value = "/admineventdetail")

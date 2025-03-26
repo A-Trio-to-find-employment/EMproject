@@ -63,7 +63,7 @@ from (
         </where>
         order by event_start ASC
     ) a
-    where rownum <![CDATA[<=]]> #{end}
+    where rownum <![CDATA[<]]> #{end}
 ) where rn > #{start}
 
     </select>

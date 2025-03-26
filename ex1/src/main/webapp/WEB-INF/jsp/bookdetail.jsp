@@ -381,7 +381,8 @@ function checkPurchaseBeforeReview(isbn) {
         })
         .catch(error => {
             console.error("Error:", error);
-            alert("오류가 발생했습니다.");
+            alert("로그인이 필요합니다.");
+            location.href = '/login';
         });
 }
 function reportReview(review_id) {

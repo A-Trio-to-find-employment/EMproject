@@ -481,6 +481,12 @@ function toggleDropdown() {
             modal.style.display = "none";
         }
     }
+    document.querySelectorAll('.swiper-slide p').forEach(function (p) {
+        const text = p.textContent.trim();
+        if (text.length > 12) {
+            p.textContent = text.substring(0, 10) + '...';
+        }
+    });
     </script>
 
 
