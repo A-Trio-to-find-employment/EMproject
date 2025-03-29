@@ -4,11 +4,11 @@
 	
 <mapper namespace="com.example.demo.mapper.OrderMapper">
 	<select id="getMaxOrderId" resultType="String">
-		select count(*) from orders
-	</select>
-	<select id="getMaxOrderDetailId" resultType="String">
-		select count(*) from orders_detail
-	</select>
+        select NVL(MAX(TO_NUMBER(order_id)), 0) from orders
+    </select>
+    <select id="getMaxOrderDetailId" resultType="String">
+        select NVL(MAX(TO_NUMBER(order_detail_id)), 0) from orders_detail
+    </select>
 	<insert id="insertOrders" parameterType="Orders">
 		insert into orders values(#{order_id}, #{user_id}, #{address}, #{address_detail}, 
 			#{zipcode}, #{total_price}, 0, CURRENT_TIMESTAMP)

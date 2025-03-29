@@ -81,8 +81,7 @@
     <div class="table-container">
     <h2>회 원 상 세</h2>
 	<table border="1">
-		<tr><th>회원 ID</th><td>${ userDetail.user_id }</td></tr>
-		<tr><th>회원 PW</th><td>${ userDetail.password }</td></tr>
+		<tr><th>회원 ID</th><td>${ userDetail.user_id }</td></tr>		
 		<tr><th>회원 이름</th><td>${ userDetail.user_name }</td></tr>
 		<tr><th>회원 주소</th><td>${ userDetail.address }</td></tr>
 		<tr><th>주소 상세</th><td>${ userDetail.address_detail }</td></tr>

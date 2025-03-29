@@ -561,6 +561,7 @@ public class AdminController {
             ua.setUser_id(ID);
             ua.setAuth("ROLE_MEMBER");
         }
+        System.out.print(GD);
         this.loginService.updateUserAuth(ua);
         this.loginService.updateUserGrade(users);
         mav.addObject("ID", ID);
