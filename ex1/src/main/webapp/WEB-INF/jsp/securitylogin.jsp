@@ -37,28 +37,5 @@
 	</form>
 	</div>
 </div>
-<!-- 	<div class="container"> -->
-<!-- 	<div class="login"> -->
-<%-- 		<form:form action="/securityLogin" method="post" modelAttribute="users"> --%>
-<%-- 			<spring:hasBindErrors name="users"> --%>
-<!-- 			<font color="red"> -->
-<%-- 			<c:forEach var="error" items="${errors.globalErrors}"> --%>
-<%-- 				<spring:message code="${error.code}"/> --%>
-<%-- 			</c:forEach> --%>
-<!-- 			</font> -->
-<%-- 		</spring:hasBindErrors> --%>
-<!-- 		<table> -->
-<%-- 			<tr height="40px"><th>아이디</th><td><form:input path="user_id"/> --%>
-<%-- 				<font color="red"><form:errors path="user_id"/></font></td></tr> --%>
-<%-- 			<tr height="40px"><th>암호</th><td><form:password path="password"/> --%>
-<%-- 				<font color="red"><form:errors path="password"/></font> --%>
-<!-- 		</table> -->
-<!-- 		<table> -->
-<!-- 			<tr><td align="center"><input type="submit" value="로그인"/></td> -->
-<!-- 				<td align="center"><input type="reset" value="취소"/></td> -->
-<!-- 		</table> -->
-<%-- 		</form:form> --%>
-<!-- 	</div> -->
-<!-- </div> -->
 </body>
 </html>

@@ -96,9 +96,9 @@
 	<select id="getCategoryByIsbn" parameterType="java.lang.Long" resultType="String">
     	select cat_id from book_categories where isbn = #{isbn}
 	</select>
-<!-- 	<update id="updateInfoCategory" parameterType="BookCategories"> -->
-<!-- 		update book_categories set cat_id=#{cat_id} where isbn=#{isbn}  -->
-<!-- 	</update> -->
+	<update id="updateInfoCategory" parameterType="BookCategories">
+		update book_categories set cat_id=#{cat_id} where isbn=#{isbn} 
+	</update>
 	<update id="updateBookAuthors" parameterType="map">
         update book_author set author=#{author} where isbn=#{isbn}
     </update>
@@ -114,17 +114,18 @@
 	<select id="getGoodsTitle" parameterType="java.lang.Long" resultType="String">
 	 select book_title from book where isbn =#{isbn, jdbcType=BIGINT}
 	</select>
-	
+
 	<delete id="deleteCategoriesByIsbn">
-    DELETE FROM book_categories 
-    WHERE isbn = #{isbn}
-    <if test="categoriesToDelete != null and categoriesToDelete.size() > 0">
-        AND cat_id IN 
-        <foreach item="catId" collection="categoriesToDelete" open="(" separator="," close=")">
-            #{catId}
-        </foreach>
-    </if>
+	    delete from book_categories 
+	    where isbn = #{isbn}
+	    and cat_id IN 
+	    <foreach item="catId" collection="categoriesToDelete" open="(" separator="," close=")">
+	        #{catId}
+	    </foreach>
 	</delete>
+	<select id="checkBookCategoryExists" resultType="int">
+    SELECT COUNT(*) FROM book_categories WHERE isbn = #{isbn} AND cat_id = #{catId}
+</select>
 </mapper>
 
 	

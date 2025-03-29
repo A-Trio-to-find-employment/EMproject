@@ -72,10 +72,6 @@ public class SecurityConfiguration {
 		.loginProcessingUrl("/securityLogin")
 		.defaultSuccessUrl("/index")
 		.permitAll();
-//		http.formLogin().loginPage("/secondfa")
-//		.loginProcessingUrl("/secondfa")
-//		.defaultSuccessUrl("/secondfaSuccess",true)
-//		.permitAll();
 		http.logout().logoutUrl("/logout")//일반 로그아웃의 매핑은 spring과 동일
 		.logoutSuccessUrl("/index").permitAll();
 		return http.build();

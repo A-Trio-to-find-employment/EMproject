@@ -48,33 +48,32 @@
 
 		</c:forEach>	
 		</tr></table>
-<div align="center">
-<c:set var="currentPage" value="${requestScope.currentPage }"/>
-<c:set var="startPage"
-	value="${currentPage-(currentPage%5==0 ? 5:(currentPage%5))+1 }"/>
-<c:set var="endPage" value="${startPage + 4}"/>	
-<c:set var="pageCount" value="${PAGES }"/>
-<c:if test="${endPage > pageCount }">
-	<c:set var="endPage" value="${pageCount }" />
-</c:if>
-<c:if test="${startPage > 5 }">
-    <a href="/manageGoods/search?pageNo=${startPage - 1}&TITLE=${param.TITLE}">[이전]</a>
-</c:if>
-
-<c:forEach begin="${startPage}" end="${endPage}" var="i">
-    <c:if test="${currentPage == i }">
-        <font size="6">${i}</font>
-    </c:if>
-    <c:if test="${currentPage != i }">
-        <a href="/manageGoods/search?pageNo=${i}&TITLE=${param.TITLE}">${i}</a>
-    </c:if>
-</c:forEach>
-
-<c:if test="${endPage < pageCount }">
-    <a href="/manageGoods/search?pageNo=${endPage + 1}&TITLE=${param.TITLE}">[다음]</a>
-</c:if>
-
-</div>
+		<div align="center">
+			<c:set var="currentPage" value="${requestScope.currentPage }"/>
+			<c:set var="startPage"
+				value="${currentPage-(currentPage%5==0 ? 5:(currentPage%5))+1 }"/>
+			<c:set var="endPage" value="${startPage + 4}"/>	
+			<c:set var="pageCount" value="${PAGES }"/>
+			<c:if test="${endPage > pageCount }">
+				<c:set var="endPage" value="${pageCount }" />
+			</c:if>
+			<c:if test="${startPage > 5 }">
+			    <a href="/manageGoods/search?pageNo=${startPage - 1}&TITLE=${param.TITLE}">[이전]</a>
+			</c:if>
+		
+			<c:forEach begin="${startPage}" end="${endPage}" var="i">
+			    <c:if test="${currentPage == i }">
+			        <font size="6">${i}</font>
+			    </c:if>
+			    <c:if test="${currentPage != i }">
+			        <a href="/manageGoods/search?pageNo=${i}&TITLE=${param.TITLE}">${i}</a>
+			    </c:if>
+			</c:forEach>
+			
+			<c:if test="${endPage < pageCount }">
+			    <a href="/manageGoods/search?pageNo=${endPage + 1}&TITLE=${param.TITLE}">[다음]</a>
+			</c:if>
+		</div>
 <script type="text/javascript">	
 function theOtherGoods(isbn, event) {
     event.preventDefault();  // 기본 submit 방지

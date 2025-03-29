@@ -331,12 +331,5 @@ function validate(frm) {
     return true; // 정상 제출
 }
 </script>
-
-
-
-
-
-
-
 </body>
 </html>

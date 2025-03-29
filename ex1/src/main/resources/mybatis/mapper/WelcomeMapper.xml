@@ -30,8 +30,6 @@
 		GROUP BY TO_CHAR(o.CREATED_AT, 'YYYY-MM')
 		ORDER BY purchase_month ASC
 	</select>
-
-
 </mapper>
 
 	

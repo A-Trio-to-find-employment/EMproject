@@ -4,9 +4,8 @@ import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -267,28 +266,32 @@ public class AdminController {
 		mav.addObject("BODY","goodsDetail.jsp");
 		return mav;
 	}
-	@PostMapping(value = "/manageGoods/update") 
+	//수정
+	@PostMapping(value = "/manageGoods/update")
 	public ModelAndView updateGoods(@Valid Book book,
-				BindingResult br, HttpSession session, @RequestParam("cat_id")
-				List<String> selectedCat, @RequestParam("authors")String authors) {
-	    System.out.println("도서: " + book);
-		ModelAndView mav = new ModelAndView("admin");
-		this.coverValidator.validate(book, br);
-		if(br.hasErrors()) {
-			List<String> exCat = this.goodsService.getCategoryByIsbn(book.getIsbn());
-			List<String> catPath = new ArrayList<>();
-			for(String catId : exCat) {
-				catPath.add(this.goodsService.getCategoryPath(catId));
-			}
-			mav.addObject("GOODS",book);
-			mav.addObject("catIds",exCat);
-			mav.addObject("categoryPath",catPath);
-			mav.addObject("BODY","goodsDetail.jsp");
-			mav.getModel().putAll(br.getModel());
-			System.out.println("검증 오류 발생: " + br.getAllErrors());
-			return mav;
-		}
-		System.out.println("수정 대상 도서: " + book);
+	                                BindingResult br,
+	                                HttpSession session,
+	                                @RequestParam("cat_id") List<String> selectedCat,
+	                                @RequestParam("authors") String authors,
+	                                @RequestParam(value = "delete_cat_id[]", required = false) List<String> deleteCats) {
+	    ModelAndView mav = new ModelAndView("admin");
+	    
+	    // 검증 오류 처리
+	    this.coverValidator.validate(book, br);
+	    if (br.hasErrors()) {
+	        List<String> exCat = this.goodsService.getCategoryByIsbn(book.getIsbn());
+	        List<String> catPath = new ArrayList<>();
+	        for (String catId : exCat) {
+	            catPath.add(this.goodsService.getCategoryPath(catId));
+	        }
+	        mav.addObject("GOODS", book);
+	        mav.addObject("catIds", exCat);
+	        mav.addObject("categoryPath", catPath);
+	        mav.addObject("BODY", "goodsDetail.jsp");
+	        mav.getModel().putAll(br.getModel());
+	        return mav;
+	    }
+	    System.out.println("수정 대상 도서: " + book);
 	    System.out.println("선택된 카테고리 ID 목록: " + selectedCat);
 	    System.out.println("저자 정보: " + authors);
 		//이미지 업로드
@@ -319,51 +322,58 @@ public class AdminController {
 	        mav.addObject("imageError", "앞표지를 업로드해야 합니다.");
 	        return mav;
 		}
-		List<String> existingCats = this.goodsService.getCategoryByIsbn(book.getIsbn());
-		System.out.println("📌 기존 카테고리: " + existingCats);
-		
-		selectedCat = selectedCat.stream()
+		System.out.println(deleteCats);
+		// 기존 카테고리 가져오기
+        List<String> existingCats = this.goodsService.getCategoryByIsbn(book.getIsbn());
+        System.out.println("📌 기존 카테고리: " + existingCats);
+
+        // 선택된 카테고리 정리 (유효한 값만 필터링)
+        selectedCat = selectedCat.stream()
                 .filter(catId -> catId != null && !catId.trim().isEmpty() && !"0".equals(catId))
                 .distinct()
                 .collect(Collectors.toList());
-		List<String> mergedCategories = new ArrayList<>(existingCats); 
-		
-		mergedCategories.addAll(selectedCat);
-	    selectedCat = new ArrayList<>(mergedCategories);
-		System.out.println("📌 병합된 카테고리: " + selectedCat);
-		List<String> categoriesToDelete = new ArrayList<>();
-		for (String catId : existingCats) {
-		    if (!selectedCat.contains(catId)) {
-		        categoriesToDelete.add(catId);
-		    }
-		}System.out.println("🗑 삭제할 카테고리: " + categoriesToDelete);
-		List<String> categoriesToAdd = new ArrayList<>();
-		for (String catId : selectedCat) {
-		    if (!existingCats.contains(catId)) {
-		        categoriesToAdd.add(catId);
-		    }
-		} System.out.println("➕ 추가할 카테고리: " + categoriesToAdd);
-		for (String catId : categoriesToAdd) {
-		    if (!mergedCategories.contains(catId)) {
-		        mergedCategories.add(catId);
-		    }
-		}
-		if (!categoriesToDelete.isEmpty()) {
-	        goodsService.deleteCategoriesByIsbn(book.getIsbn(), categoriesToDelete);
-	    }
-	    if (!categoriesToAdd.isEmpty()) {
-	        goodsService.updateInfoCategory(book.getIsbn(), mergedCategories);
-	    }
-		
-//		this.goodsService.deleteCategoriesByIsbn(book.getIsbn(), categoriesToDelete); 
-//		System.out.println("병합된 카테고리 ID 목록: " + selectedCat);
-		
-		book.setAuthors(authors);
-		this.goodsService.updateGoods(book);
-//		this.goodsService.updateInfoCategory(book.getIsbn(), selectedCat);
-		mav.addObject("isbnChecked",book.getIsbn());
-		mav.addObject("book",new Book());
-		mav.addObject("BODY","updateComplete.jsp");
+        System.out.println("✅ 정리된 선택된 카테고리: " + selectedCat);
+
+        // 삭제할 카테고리 처리 (JSP에서 전달된 delete_cat_id[] 값 활용)
+        List<String> categoriesToDelete = new ArrayList<>();
+        if (deleteCats != null && !deleteCats.isEmpty()) {
+            categoriesToDelete = deleteCats.stream()
+                    .filter(id -> id != null && !id.trim().isEmpty())
+                    .distinct()
+                    .collect(Collectors.toList());
+            System.out.println("🗑️ JSP에서 전달된 삭제 대상: " + categoriesToDelete);
+        } else {
+            System.out.println("🚨 삭제 대상이 없습니다.");
+        }
+
+        // 추가할 카테고리 결정 (기존에 없는 카테고리만)
+        List<String> categoriesToAdd = selectedCat.stream()
+                .filter(catId -> !existingCats.contains(catId))
+                .collect(Collectors.toList());
+        System.out.println("➕ 최종 추가 대상: " + categoriesToAdd);
+
+        try {
+            // 도서 정보 업데이트
+            book.setAuthors(authors);
+            this.goodsService.updateGoods(book);
+
+            // 기존 카테고리 중 선택 해제된 것만 삭제
+            if (!categoriesToDelete.isEmpty()) {
+                this.goodsService.deleteCategoriesByIsbn(book.getIsbn(), categoriesToDelete);
+            }
+
+            // 새로 선택된 카테고리만 추가
+            if (!categoriesToAdd.isEmpty()) {
+                this.goodsService.addCategories(book.getIsbn(), categoriesToAdd);
+            }
+        } catch (Exception e) {
+            System.out.println("❌ 업데이트 실패: " + e.getMessage());
+            throw e; // 트랜잭션 롤백을 위해 예외 전파
+        }
+
+		mav.addObject("isbnChecked", book.getIsbn());
+		mav.addObject("book", new Book());
+		mav.addObject("BODY", "updateComplete.jsp");
 		}
 		return mav;
 	}

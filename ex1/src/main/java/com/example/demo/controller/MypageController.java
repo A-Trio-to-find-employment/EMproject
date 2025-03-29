@@ -153,58 +153,8 @@ public class MypageController {
 				        System.out.println("잘못된 ISBN 값: " + recentBookIsbnStr);
 				    }
 				}
-//				if(br.hasErrors()) {
-//					mav.getModel().putAll(br.getModel());
-//				}
-//				try {
-//					Users loginUser = this.loginService.getUser(users);
-//					if(loginUser != null) {
-//						mav.addObject("BODY","secondfaSuccess.jsp");
-//						return mav;
-//					}else {
-//						br.reject("error.login.users");
-//						mav.getModel().putAll(br.getModel());
-//						return mav;
-//					}
-//				}catch(EmptyResultDataAccessException e) {
-//					br.reject("error.login.users");
-//					mav.getModel().putAll(br.getModel());
-//					return mav;
-//				}
 				return mav;
 			}
-//				if (br.hasErrors()) {
-//				    mav.getModel().putAll(br.getModel());
-//				}
-//				try {
-//				    // Retrieve user input values from the request
-//				    String inputUserId = users.getUser_id();
-//				    String inputPassword = users.getPassword();
-//
-//				    // Retrieve user_id and password from session
-//				    String sessionUserId = (String) ((Cookie) session).getAttribute("loginUser");
-//				    String sessionPassword = (String) ((Cookie) session).getAttribute("password");
-//
-//				    // Check if the session values match the input values
-//				    if (sessionUserId != null && sessionPassword != null &&
-//				        sessionUserId.equals(inputUserId) && sessionPassword.equals(inputPassword)) {
-////				    	ModelAndView mav = new ModelAndView("myArea");
-//				        // Optional: Add the loginUser object to the model if needed
-//				        // mav.addObject("loginUser", loginUser);
-//				        return mav;
-//				    } else {
-//				        // Invalid credentials
-//				        br.reject("error.login.users");
-//				        mav.getModel().putAll(br.getModel());
-//				        return mav;
-//				    }
-//
-//				} catch (EmptyResultDataAccessException e) {
-//				    br.reject("error.login.users");
-//				    mav.getModel().putAll(br.getModel());
-//				    return mav;
-//				}
-				//일단 냅고 해보자
 	@RequestMapping(value = "/secondfaSuccess")
 	public ModelAndView secondfaSuccess() {
 		ModelAndView mav = new ModelAndView("myArea");
@@ -253,15 +203,6 @@ public class MypageController {
 			mav.addObject("error", "로그인을 한 후 다시 시도해주세요.");
 			return mav;
 		}
-//		Users users = this.loginService.getUserById(loginUser);
-//		if(users != null) {
-//			mav.addObject("users",users);
-//			mav.addObject("user_id", users.getUser_id());
-//		}else {
-//			mav.addObject("error", "회원 정보를 찾을 수 없습니다.");
-//		}
-//		mav.addObject("BODY","mypage.jsp");
-//		return mav;
 		UserInfo userInfo = this.loginService.getUserInfoById(loginUser);
 		if(userInfo != null) {
 			mav.addObject("userInfo",userInfo);

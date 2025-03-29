@@ -71,37 +71,44 @@ public class GoodsService {
 	public void addInfoCategory(BookCategories bookcat) {
 		this.goodsMapper.addInfoCategory(bookcat);
 	}
+	public void addCategories(Long isbn, List<String> categoriesToAdd) {
+		if (categoriesToAdd == null || categoriesToAdd.isEmpty()) return;
+	    for (String catId : categoriesToAdd) {
+	        BookCategories bookcat = new BookCategories();
+	        bookcat.setIsbn(isbn);
+	        bookcat.setCat_id(catId);
+	        this.goodsMapper.addInfoCategory(bookcat);
+	    }
+	}
 	public List<String> getCategoryByIsbn(Long isbn) {
 		return this.goodsMapper.getCategoryByIsbn(isbn);
 	}
 	public String getGoodsTitle(Long isbn) {
 		return this.goodsMapper.getGoodsTitle(isbn);
 	}
-//	public void updateInfoCategory(Long isbn, List<String> catIds) {
-//		this.goodsMapper.deleteCatInfo(isbn);
-//		for(String catId : catIds) {
-//			BookCategories bookcat = new BookCategories();
-//			bookcat.setIsbn(isbn);
-//			bookcat.setCat_id(catId);
-//			this.goodsMapper.addInfoCategory(bookcat);
-//		}
-//	}
-//	public void updateInfoCategory(Long isbn, List<String> catIds) {
-//	    List<String> existingCats = goodsMapper.getCategoryByIsbn(isbn); // 현재 DB에 저장된 카테고리 조회
+//	public void updateInfoCategory(Long isbn, List<String> selectedCat) {
+//	    List<String> existingCats = goodsMapper.getCategoryByIsbn(isbn); // 현재 저장된 카테고리 가져오기
 //
-//	    // 삭제할 카테고리 찾기 (기존에 있었지만 선택되지 않은 것)
-//	    List<String> categoriesToDelete = existingCats.stream()
-//	        .filter(catId -> !catIds.contains(catId))
-//	        .collect(Collectors.toList());
-//
-//	    // 추가할 카테고리 찾기 (새롭게 추가된 것)
-//	    List<String> categoriesToAdd = catIds.stream()
-//	        .filter(catId -> !existingCats.contains(catId))
-//	        .collect(Collectors.toList());
-//
-//	    // 불필요한 삭제 방지 (삭제할 항목이 있으면 실행)
+//	    // 삭제할 카테고리 (기존에 있었지만 선택되지 않은 것)
+//	    List<String> categoriesToDelete = new ArrayList<>();
+//	    for (String catId : existingCats) {
+//	        if (!selectedCat.contains(catId)) {
+//	            categoriesToDelete.add(catId);
+//	        }
+//	    }
+//	    // 추가할 카테고리 (기존에 없는 것만 추가)
+//	    List<String> categoriesToAdd = new ArrayList<>();
+//	    for (String catId : selectedCat) {
+//	        if (!existingCats.contains(catId)) {
+//	            categoriesToAdd.add(catId);
+//	        }
+//	    }
+//	    // 기존 것 중에서 삭제할 것만 삭제
 //	    if (!categoriesToDelete.isEmpty()) {
+//	    	 System.out.println("삭제할 카테고리: " + categoriesToDelete);
 //	        goodsMapper.deleteCategoriesByIsbn(isbn, categoriesToDelete);
+//	    }else {
+//	        System.out.println("삭제할 카테고리가 없음.");
 //	    }
 //
 //	    // 새로운 카테고리 추가
@@ -112,68 +119,26 @@ public class GoodsService {
 //	        goodsMapper.addInfoCategory(bookcat);
 //	    }
 //	}
-//	public void updateInfoCategory(Long isbn, List<String> catIds) {
-//	    List<String> existingCats = goodsMapper.getCategoryByIsbn(isbn);
-//
-//	    // 선택된 카테고리에서 중복 제거
-//	    Set<String> uniqueCatIds = new HashSet<>(catIds); 
-//
-//	    // 삭제할 카테고리 (기존에 있었지만 선택되지 않은 것)
-//	    List<String> categoriesToDelete = existingCats.stream()
-//	        .filter(catId -> !uniqueCatIds.contains(catId)) // 선택되지 않은 기존 카테고리만 삭제
-//	        .collect(Collectors.toList());
-//
-//	    // 추가할 카테고리 (기존에 없는 것만 추가)
-//	    List<String> categoriesToAdd = uniqueCatIds.stream()
-//	        .filter(catId -> !existingCats.contains(catId)) // 기존에 없는 것만 추가
-//	        .collect(Collectors.toList());
-//
-//	    // 삭제 실행 (필요할 경우만)
-//	    if (!categoriesToDelete.isEmpty()) {
-//	        goodsMapper.deleteCategoriesByIsbn(isbn, categoriesToDelete);
-//	    }
-//
-//	    // 새로운 카테고리 추가 실행
-//	    for (String catId : categoriesToAdd) {
-//	        BookCategories bookcat = new BookCategories();
-//	        bookcat.setIsbn(isbn);
-//	        bookcat.setCat_id(catId);
-//	        goodsMapper.addInfoCategory(bookcat);
-//	    }
-//	}
-	
 	public void updateInfoCategory(Long isbn, List<String> selectedCat) {
-	    List<String> existingCats = goodsMapper.getCategoryByIsbn(isbn); // 현재 저장된 카테고리 가져오기
-
-	    // 삭제할 카테고리 (기존에 있었지만 선택되지 않은 것)
-	    List<String> categoriesToDelete = new ArrayList<>();
-	    for (String catId : existingCats) {
-	        if (!selectedCat.contains(catId)) {
-	            categoriesToDelete.add(catId);
-	        }
-	    }
-
-	    // 추가할 카테고리 (기존에 없는 것만 추가)
-	    List<String> categoriesToAdd = new ArrayList<>();
-	    for (String catId : selectedCat) {
-	        if (!existingCats.contains(catId)) {
-	            categoriesToAdd.add(catId);
-	        }
-	    }
-
-	    // 기존 것 중에서 삭제할 것만 삭제
-	    if (!categoriesToDelete.isEmpty()) {
-	        goodsMapper.deleteCategoriesByIsbn(isbn, categoriesToDelete);
-	    }
-
-	    // 새로운 카테고리 추가
-	    for (String catId : categoriesToAdd) {
-	        BookCategories bookcat = new BookCategories();
+		for(String catId : selectedCat) {
+			BookCategories bookcat = new BookCategories();
 	        bookcat.setIsbn(isbn);
 	        bookcat.setCat_id(catId);
 	        goodsMapper.addInfoCategory(bookcat);
-	    }
+		}
 	}
+//	public void updateGoods(Book book, List<String> selectedCat) {
+//	    this.goodsMapper.updateGoods(book);
+//	    //기존 저자 삭제
+//	    this.goodsMapper.deleteBookAuthors(book.getIsbn());
+//	    //수정된 저자 정보 추가
+//	    if (book.getAuthors() != null && !book.getAuthors().isEmpty()) {
+//	        List<String> authorList = Arrays.asList(book.getAuthors().split(","));
+//	        for (String author : authorList) {
+//	            goodsMapper.addBookAuthors(book.getIsbn(), author.trim());
+//	        }
+//	    }
+//	}
 	public void updateGoods(Book book) {
 	    this.goodsMapper.updateGoods(book);
 	    //기존 저자 삭제
@@ -185,7 +150,44 @@ public class GoodsService {
 	            goodsMapper.addBookAuthors(book.getIsbn(), author.trim());
 	        }
 	    }
+//	    List<String> existingCats = this.goodsMapper.getCategoryByIsbn(book.getIsbn());
+//	    System.out.println("📌 기존 카테고리: " + existingCats);
+//	    System.out.println("📌 선택된 카테고리: " + selectedCat);
+//	    List<String> categoriesToDelete = new ArrayList<>();
+//	    List<String> categoriesToAdd = new ArrayList<>();
+//
+//	    // 기존 카테고리 중에서 유지된 것 제외하고 삭제할 것 찾기
+//	    for (String existingCat : existingCats) {
+//	        if (!selectedCat.contains(existingCat)) {  
+//	            categoriesToDelete.add(existingCat);
+//	        }
+//	    }
+//
+//	    // 선택된 카테고리 중에서 기존에 없던 것만 추가
+//	    for (String catId : selectedCat) {
+//	        if (!existingCats.contains(catId)) {  
+//	            categoriesToAdd.add(catId);
+//	        }
+//	    }
+//
+//	    // 🔥 로그 출력 (디버깅용)
+//	    System.out.println("🛑 삭제할 카테고리: " + categoriesToDelete);
+//	    System.out.println("✅ 추가할 카테고리: " + categoriesToAdd);
+//
+//	    // 삭제 실행 (삭제할 게 있을 때만 실행)
+//	    if (!categoriesToDelete.isEmpty()) {
+//	        goodsMapper.deleteCategoriesByIsbn(book.getIsbn(), categoriesToDelete);
+//	    }
+//
+//	    // 추가 실행
+//	    for (String catId : categoriesToAdd) {
+//	        BookCategories bookcat = new BookCategories();
+//	        bookcat.setIsbn(book.getIsbn());
+//	        bookcat.setCat_id(catId);
+//	        goodsMapper.addInfoCategory(bookcat);
+//	    }
 	}
+	
 	public void deleteGoods(Long isbn) {
 		this.goodsMapper.deleteBookAuthors(isbn);
 		this.goodsMapper.deleteCatInfo(isbn);
@@ -202,12 +204,15 @@ public class GoodsService {
 	}
 	
 	public void deleteCategoriesByIsbn(Long isbn, List<String> categoriesToDelete) {
-        if (categoriesToDelete == null || categoriesToDelete.isEmpty()) {
-            return; // 삭제할 것이 없으면 실행하지 않음
-        }
-        goodsMapper.deleteCategoriesByIsbn(isbn, categoriesToDelete);
+        if (categoriesToDelete == null || categoriesToDelete.isEmpty()) 
+        	return; // 삭제할 것이 없으면 실행하지 않음
+        
+        this.goodsMapper.deleteCategoriesByIsbn(isbn, categoriesToDelete);
     }
 	public Integer getGoodsCountList(String book_title) {
 		return this.goodsMapper.getGoodsCountList(book_title);
+	}
+	public Integer checkBookCategoryExists(Long isbn, String catId) {
+		return this.goodsMapper.checkBookCategoryExists(isbn, catId);
 	}
 }
