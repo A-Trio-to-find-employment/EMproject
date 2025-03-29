@@ -553,12 +553,9 @@ public class AdminController {
     public ModelAndView updateUserAdmin(String ID, Integer GD) {
         ModelAndView mav = new ModelAndView("redirect:/goUserDetailAdmin");
         Users users = new Users();
-        Authorities ua = new Authorities();
         users.setUser_id(ID); 
         if(GD < 3) {
             users.setGrade(9);
-            ua.setUser_id(ID);
-            ua.setAuth("ROLE_ADMIN");
         }else {
             Integer totalSum = this.cartService.getUserTotalPriceSum(ID);
             if(totalSum < 150000) {
@@ -568,10 +565,8 @@ public class AdminController {
             } else {
                 users.setGrade(2);
             }
-            ua.setUser_id(ID);
-            ua.setAuth("ROLE_MEMBER");
         }
-        this.loginService.updateUserAuth(ua);
+        System.out.print(GD);
         this.loginService.updateUserGrade(users);
         mav.addObject("ID", ID);
         return mav;

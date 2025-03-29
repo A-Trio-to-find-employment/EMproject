@@ -43,7 +43,7 @@
 	</update>
 	<update id="updateGoods" parameterType="Book">
         update book set image_name=#{image_name}, book_title=#{book_title},
-        publisher=#{publisher}, pub_date=#{pub_date}, price=#{price}, stock=#{stock} 
+        publisher=#{publisher}, pub_date=to_date(#{pub_date},'YYYY/MM/DD'), price=#{price}, stock=#{stock} 
         where isbn=#{isbn}
     </update>
 	<select id="getIsbnDup" parameterType="java.lang.Long" resultType="Integer">
@@ -51,7 +51,8 @@
 	</select>
 	<insert id="addGoods" parameterType="Book">
         insert into book (image_name, isbn, book_title, publisher, pub_date, reg_date, price, stock, total_rating)
-        values (#{image_name}, #{isbn}, #{book_title}, #{publisher}, #{pub_date}, sysdate, #{price}, #{stock}, 0)
+        values (#{image_name}, #{isbn}, #{book_title}, 
+        #{publisher}, to_date(#{pub_date},'YYYY/MM/DD'), sysdate, #{price}, #{stock}, 0)
     </insert>
     <update id="insertStock" parameterType="map">
     	update book set stock = stock + #{amount} where isbn = #{isbn}
