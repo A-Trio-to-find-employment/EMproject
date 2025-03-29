@@ -23,11 +23,8 @@
         <a href="/goStatistics">통계 내역</a>
 
         <a href="/categories">필터 관리</a>
-<!--         관리자 grade==9만들동안 이용 -->
-<%--         <c:if test="${sessionScope.loginUser != null}"> --%>
-<%--         	<p>사용자 : ${ sessionScope.loginUser }</p> --%>
+
    			<a href="/logout">로그아웃</a>   		
-<%-- 		</c:if> --%>
  </div>
 	<div class="sidebar">
         <h3>이벤트 관리</h3>        

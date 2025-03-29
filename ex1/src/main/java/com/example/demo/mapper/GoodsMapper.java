@@ -42,4 +42,5 @@ public interface GoodsMapper {
 	void deleteCategoriesByIsbn(@Param("isbn") Long isbn, 
 			@Param("categoriesToDelete") List<String> categoriesToDelete);
 	Integer getGoodsCountList(String book_title);
+	Integer checkBookCategoryExists(Long isbn, String catId);
 }

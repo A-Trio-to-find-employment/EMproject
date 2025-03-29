@@ -90,14 +90,14 @@ WHERE rank > #{start} AND rank <![CDATA[<]]> #{end}
 
 	</select>
 	<select id="GetAvgReview" parameterType="java.lang.Long" resultType="java.lang.Double">
-	SELECT    
-    ROUND(AVG(RATING), 1) AS AVG_RATING
-FROM 
-    review
-WHERE 
-    ISBN = #{isbn}
-GROUP BY 
-    ISBN	
+		SELECT    
+	    ROUND(AVG(RATING), 1) AS AVG_RATING
+	FROM 
+	    review
+	WHERE 
+	    ISBN = #{isbn}
+	GROUP BY 
+	    ISBN	
 	</select>
 </mapper>
 

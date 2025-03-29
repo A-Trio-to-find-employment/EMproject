@@ -47,12 +47,4 @@ public class Book {
 	private boolean isLiked;
 	private Integer likecount;
 	private String user_id;
-//	public String getAuthors() {
-//        return authors;
-//    }
-//
-//    public void setAuthors(String authors) {
-//        this.authors = authors;
-//    }
-	
 }

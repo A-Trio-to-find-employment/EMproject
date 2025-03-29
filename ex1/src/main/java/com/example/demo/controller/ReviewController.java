@@ -70,11 +70,6 @@ public class ReviewController {
 		    mav.setViewName("redirect:/login");  
 		    return mav;
 		}
-//		if(!this.service.checkingOrder(id, ISBN)) {
-//			mav.addObject("error","구매한 도서에만 리뷰작성이 가능합니다.");
-//			mav.setViewName("redirect:/booklist.html?ISBN="+ISBN);
-//			return mav;
-//		}
 		Long isbn = ISBN;
 		Book book = this.goodsService.getGoodsDetail(isbn);
 		Review review = new Review();

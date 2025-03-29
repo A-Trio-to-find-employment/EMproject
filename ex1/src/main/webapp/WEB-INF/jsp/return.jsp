@@ -340,8 +340,6 @@ table {
         // 라디오 버튼이 선택되었으면 폼을 제출
         return confirm("신청하시겠습니까?");
     }
-
-
 </script>
     <script type="text/javascript">
  // 팝업 모달 열기

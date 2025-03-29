@@ -303,13 +303,7 @@
 
 
 	<script>
-	document.querySelectorAll('.swiper-slide p').forEach(function (p) {
-        const text = p.textContent.trim();
-        if (text.length > 12) {
-            p.textContent = text.substring(0, 10) + '...';
-        }
-    });
-function toggleDropdown() {
+	function toggleDropdown() {
 	var dropdown = document.getElementById("categoryDropdown");
 		dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
 	}
@@ -323,7 +317,7 @@ function toggleDropdown() {
         	dropdown.style.display = "none";
 		}
 	});
-</script>
+	</script>
 
 	<!-- 필터 탭 및 Ajax 동작 스크립트 (모달 내) -->
 	<script>
@@ -494,7 +488,5 @@ function toggleDropdown() {
         }
     });
     </script>
-
-
 </body>
 </html>

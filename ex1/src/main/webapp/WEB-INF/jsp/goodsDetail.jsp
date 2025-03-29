@@ -48,8 +48,10 @@ enctype="multipart/form-data" onsubmit="return validate(this)" >
             <td colspan="2" align="center">
 			    <input type="file" name="coverImage" id="coverImage" onchange="previewImage(event)">
 			    <font color="red"><form:errors path="coverImage"/></font><br>
+			    <div id="imagePreview">
 			    <img  alt="" id="previewImg" 
-			    src="${pageContext.request.contextPath }/upload/${GOODS.image_name}" width="500" height="400"/>
+			    src="${pageContext.request.contextPath }/upload/${GOODS.image_name}" 
+			    width="500" height="400"/></div>
 			</td>
         </tr>
         <tr>
@@ -93,35 +95,25 @@ enctype="multipart/form-data" onsubmit="return validate(this)" >
                 <form:errors path="isbnChecked"/></font>
             </td>
         </tr>
+        <tr>
+        	<th>주의 사항</th>
+        	<td><font color="red">기존 카테고리 삭제시에는 다시한번 선택하여 확정한 후에 -버튼을 눌러야 정상적으로 삭제됩니다.</font></h2></td>
+        </tr>
         </table>
         <table id="categoryTable">
-<%-- 		<c:forEach var="catPath" items="${categoryPath}" varStatus="status"> --%>
-<!-- 		    <tr> -->
-<%-- 		        <th>카테고리 ${status.index + 1}</th> --%>
-<!-- 		        <td> -->
-<%-- 		            <button type="button" onclick="openCategoryModal('selectedCategory${status.index}', --%>
-<%-- 		             									'cat_id${status.index}')">카테고리 선택</button> --%>
-<%-- 		            <input type="hidden" class="cat_id" name="cat_id[]" id="cat_id${status.index}"  --%>
-<%-- 		            									value="${catIds[status.index]}" /> --%>
-<%-- 		            <span id="selectedCategory${status.index}">${catPath}</span> --%>
-<!-- 		            <button type="button" onclick="addSelection()">+</button> -->
-<!-- 		            <button type="button" onclick="removeSelection(this)">-</button> -->
-<!-- 		        </td> -->
-<!-- 		    </tr> -->
-<%-- 		</c:forEach> --%>
 		<c:forEach var="catPath" items="${categoryPath}" varStatus="status">
-<tr>
-<th>카테고리 ${status.index + 1}</th>
-<td>
-    <button type="button" onclick="openCategoryModal('selectedCategory${status.index}','cat_id${status.index}')">카테고리 선택</button>
-    <!-- 기존 카테고리를 정확히 전달 -->
-    <input type="hidden" class="cat_id" name="cat_id[]" id="cat_id${status.index}" value="${catIds[status.index]}" />
-    <span id="selectedCategory${status.index}">${catPath}</span>
-    <button type="button" onclick="addSelection()">+</button>
-    <button type="button" onclick="removeSelection(this)">-</button>
-</td>
-</tr>
-</c:forEach>
+        <tr class="category-row" data-category-index="${status.index}">
+            <th>카테고리 ${status.index + 1}</th>
+            <td>
+                <button type="button" onclick="openCategoryModal('selectedCategory${status.index}','cat_id${status.index}')">카테고리 선택</button>
+                <input type="hidden" class="cat_id" name="cat_id[]" id="cat_id${status.index}" value="${catIds[status.index]}" />
+                <input type="hidden" class="delete_cat_id" name="delete_cat_id[]" id="deleteInput${status.index}" value="${catIds[status.index]}" />
+                <span class="selected-category-span" id="selectedCategory${status.index}">${catPath}</span>
+                <button type="button" onclick="addSelection()">+</button>
+                <button type="button" onclick="removeSelection(this)">-</button>
+            </td>
+        </tr>
+    </c:forEach>
     	<div id="categoryModal" 
 			style="display:none; position:fixed; top:20%; left:30%; width:40%; 
 			height:50%; background:#fff; border:1px solid #ccc; padding:20px;">
@@ -134,6 +126,8 @@ enctype="multipart/form-data" onsubmit="return validate(this)" >
 		    <button type="button" onclick="confirmCategory()">선택</button>
 		    <button type="button" onclick="closeCategoryModal()">닫기</button>
 		</div>
+		</table>
+		
 		<table>
         <tr>
             <th>저자</th>
@@ -146,8 +140,6 @@ enctype="multipart/form-data" onsubmit="return validate(this)" >
             <td colspan="2" align="center">
                 <input type="submit" value="수정">
                 <input type="reset" value="취소">
-<%--                 <form action="manageGoods/delete"> --%>
-<%--                 <input type="submit" value="삭제"></form> --%>
             </td>
         </tr>
     </table>
@@ -167,9 +159,10 @@ let categoryCount = document.querySelectorAll('.cat_id').length;
 function addSelection() {
     let table = document.getElementById('categoryTable');
     let newRow = table.insertRow(-1); 
+    newRow.className = 'category-row';
     let origin = newRow.insertCell(0);
     let addCell = newRow.insertCell(1);
-    origin.innerHTML = `<b>카테고리 ${count}</b>`;
+    origin.innerHTML = `<b>카테고리 ${categoryCount}</b>`;
     
     myselectedId = 'selectedCategory' + categoryCount;
     mycatId = 'cat_id' + categoryCount;
@@ -183,34 +176,78 @@ function addSelection() {
     addCell.innerHTML = html;   
     categoryCount++;
 }
+//수정
 function removeSelection(button) {
-	let table = document.getElementById('categoryTable');
-	var rows = document.querySelectorAll('.category-row');
-    if (table.rows.length == 1) {
+    const row = button.closest('tr.category-row');
+    const table = document.getElementById('categoryTable');
+    const form = document.querySelector('form');  // 폼 요소 찾기
+
+    // 1. 최소 개수 검증
+    if (table.querySelectorAll('tr.category-row').length <= 1) {
         alert("최소 하나의 카테고리는 선택해야 합니다!");
         return false;
     }
-    var row = button.closest('tr');
-    row.remove();  
 
-    var categoryCount = document.querySelectorAll('.category-row').length;
-    console.log("삭제 후 categoryCount:", categoryCount);
-
-    var lastRow = document.querySelector('.category-row:last-child'); 
-    if (lastRow) {
-        selectedCategorySpan = lastRow.querySelector('.selected-category-span');
-        selectedCategoryInput = lastRow.querySelector('.selected-category-input');
-        console.log("선택요소 확인 -> Span:", selectedCategorySpan, " Input:", selectedCategoryInput);
-    } else {
-        selectedCategorySpan = null;
-        selectedCategoryInput = null;
-        console.log("모든 카테고리 삭제");
+    // 2. 카테고리 ID 처리
+    const inputField = row.querySelector('.cat_id');
+    const catId = inputField ? inputField.value : null;
+    
+    if (catId && catId.trim() !== '') {
+        // 삭제 대상 ID를 폼에 직접 추가 (행이 아닌 폼에 추가)
+        const deleteInput = document.createElement('input');
+        deleteInput.type = 'hidden';
+        deleteInput.name = 'delete_cat_id[]';
+        deleteInput.value = catId;
+        form.appendChild(deleteInput);  // 폼에 직접 추가하여 행이 삭제되어도 값이 유지됨
+        
+        console.log("🗑️ 삭제 대상으로 추가:", catId);
     }
 
-    selectedId = selectedCategoryInput ? selectedCategoryInput.value : "";
-    catId = selectedCategorySpan ? selectedCategorySpan.innerText : "";
+    // 3. 행 완전 제거
+    row.remove();
 
-    console.log("selectedId:", selectedId, " catId:", catId);
+    // 카테고리 번호 재정렬
+    updateCategoryNumbers();
+ // 4. 남은 카테고리 확인 및 로깅
+    const remainingRows = table.querySelectorAll('tr.category-row');
+    console.log("🗑️ 삭제 후 남은 카테고리:", remainingRows.length);
+
+    // 6. 마지막 카테고리 정보 로깅
+    if (remainingRows.length > 0) {
+        const lastRow = remainingRows[remainingRows.length - 1];
+        const selectedCategorySpan = lastRow.querySelector('span[id^="selectedCategory"]');
+        const selectedCategoryInput = lastRow.querySelector('.cat_id');
+
+        const selectedId = selectedCategoryInput ? selectedCategoryInput.value : "";
+        const catIdText = selectedCategorySpan ? selectedCategorySpan.textContent : "";
+
+        console.log("🔍 최종 선택 ID:", selectedId, "| 텍스트:", catIdText);
+    } else {
+        console.log("⚠️ 모든 카테고리가 삭제되었습니다.");
+    }
+}
+
+function updateCategoryNumbers() {
+    const rows = document.querySelectorAll('#categoryTable tr.category-row');
+    rows.forEach((row, index) => {
+        const th = row.querySelector('th');
+        if (th) {
+            th.textContent = `카테고리 ${index + 1}`;
+        }
+    });
+}
+function ensureCategoryIdExists(row) {
+    let inputField = row.querySelector('.cat_id');
+
+    if (!inputField) {
+        console.warn("⚠️ `.cat_id` input이 기존 카테고리에 없음. 새로 생성합니다.");
+        inputField = document.createElement('input');
+        inputField.type = 'hidden';
+        inputField.className = 'cat_id';
+        row.appendChild(inputField);
+    }
+
+    return inputField;
 }
 let selectedCategorySpan = null;
 let selectedCategoryInput = null;
@@ -328,7 +365,7 @@ function previewImage(event) {
     var reader = new FileReader();
     reader.onload = function() {
         var output = document.getElementById('imagePreview');
-        output.innerHTML = '<img src="' + reader.result + '" width="400" height="300"/>';
+        output.innerHTML = '<img src="' + reader.result + '" width="600" height="400"/>';
     }
     reader.readAsDataURL(event.target.files[0]);
 }	

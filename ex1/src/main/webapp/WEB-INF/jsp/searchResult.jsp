@@ -243,7 +243,6 @@
 	</div>
 	<br />
 	<br />
-
 	<div class="book-list">
 		<h2>검색된 도서 목록</h2>
 		<c:choose>

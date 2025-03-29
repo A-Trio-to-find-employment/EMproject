@@ -47,9 +47,6 @@
 </div>
 
 <script type="text/javascript">
-
-
-
 function goDelete(qna_number, qna_index) {
     if (confirm("정말 삭제하시겠습니까?")) {
         location.href = "/qnaDelete?qna_number=" + qna_number + "&qna_index=" + qna_index;

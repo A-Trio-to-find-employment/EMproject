@@ -22,7 +22,6 @@
                 }
             });
         }
-
         function validateForm() {
             return confirm("이대로 남기시겠습니까?");
         }
@@ -39,7 +38,7 @@
 	            										onsubmit="return validateForm()">
 	                <input type="hidden" name="isbn" value="${review.isbn}">
 	                <input type="hidden" id="rating" name="rating" value="0">
-	                
+
 	                <label>별점:</label>
 	                <span id="rate">
 	                    <span onclick="setRating(1)" style="cursor:pointer;">☆</span>
@@ -50,7 +49,6 @@
 
 	                </span>
 	                <br>
-	                
 	                <label>독서 후기:</label><br>
 	                <form:textarea path="content" rows="5" cols="50"/>
 	                <font color="red"><form:errors path="content"/></font>

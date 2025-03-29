@@ -324,26 +324,6 @@ public class CartController {
             } 
             List<String> catList= this.categoryService.getCatIdFromIsbn(cart.getIsbn());
             for (String cat_id : catList) { // 구매시 선호도 반영해보기.
-                // 사용자의 선호도(pref_id) 리스트 가져오기
-//                List<Long> prefIds = this.preferenceService.getPrefIdByUser(loginUser);
-//                for (Long prefId : prefIds) {
-                    // 해당하는 cat_id가 이미 존재하는지 확인
-//                    UserPreference up = this.preferenceService.getUserPref(prefId);
-//                    if (! up.getCat_id().equals(cat_id)) {
-//                        // 선호도가 존재하면 1.2배 증가
-//                    	Double updatePScore = Math.min(9.9, Math.round(up.getPref_score() * 1.2 * 10.0) / 10.0);
-//                    	up.setPref_score(updatePScore);
-//                        this.preferenceService.updateScore(up);
-//                    } else {
-//                        // 없으면 새로운 선호도 추가
-//                        Long newPrefId = this.preferenceService.getMaxPrefId() + 1;
-//                        PreferenceTest pt = new PreferenceTest();
-//                        pt.setPref_id(newPrefId); pt.setUser_id(loginUser);
-//                        this.preferenceService.insertPref(pt);
-//                        up.setPref_id(newPrefId); up.setCat_id(cat_id); up.setPref_score(1.0);
-//                        this.preferenceService.insertUserPref(up);
-//                    }
-//                }
             	// 동일한 cat_id 보유한지 찾아보기
             	User_pref up = new User_pref();
             	up.setUser_id(loginUser); up.setCat_id(cat_id);
