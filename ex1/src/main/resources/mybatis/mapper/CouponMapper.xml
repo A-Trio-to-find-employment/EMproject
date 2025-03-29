@@ -65,8 +65,9 @@
     SELECT coupon_code FROM coupon WHERE coupon_code = #{coupon_code}
 </select>
 	<insert id="InsertCoupon" parameterType="Coupon">
-		insert into coupon values(#{coupon_id},#{discount_percentage},#{valid_from},#{valid_until},#{coupon_code},#{cat_id})
+		insert into coupon values(#{coupon_id},#{discount_percentage},to_date(#{valid_from},'YYYY/MM/DD'),to_date(#{valid_until},'YYYY/MM/DD'),#{coupon_code},#{cat_id})
 	</insert>
+	
 	<select id="getAvailableCoupons" parameterType="String" resultType="UserCouponModel">
     	select uc.coupon_id, uc.is_used, c.coupon_code, c.cat_id, 
 			c.discount_percentage,

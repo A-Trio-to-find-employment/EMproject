@@ -44,8 +44,9 @@
     	select MAX(event_code) from event
     </select>
     <insert id="insertevent" parameterType="Event">
-    	insert into event values(#{event_code},#{event_title},#{event_content},#{coupon_id},#{event_start},#{event_end})
+    	insert into event values(#{event_code},#{event_title},#{event_content},#{coupon_id},to_date(#{event_start},'YYYY/MM/DD'),to_date(#{event_end},'YYYY/MM/DD'))
     </insert>
+    
     <select id="AdminGetEventList" parameterType="StartEndKey" resultType="Event">
   select event_code, event_title, event_start, event_end
 from (
